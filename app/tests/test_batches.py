@@ -463,6 +463,9 @@ def test_every_example_batch_is_spoken_whole_by_the_valdrenn_cast(path, tmp_path
     monkeypatch.setattr(library, 'VOICES', tmp_path / 'voices')
     monkeypatch.setattr(stable, 'VOICES', tmp_path / 'voices')
     monkeypatch.setattr(batches, 'BATCHES', tmp_path / 'batches')
+    # A dry run checks that a model able to clone is installed; the lists are what is tested
+    # here, not this machine's models (a fresh copy of the release has none).
+    monkeypatch.setattr(delivery.catalog, 'installed', lambda key: True)
     library.import_bundle(next(bundle for bundle in examples.bundles() if 'valdrenn' in bundle.name))
     with tempfile.TemporaryDirectory() as root, tool.create_runtime(root) as runtime:
         result = _run(runtime, 'speak_batch_file', {'file': str(path), 'dry_run': True})

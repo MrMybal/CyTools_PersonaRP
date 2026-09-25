@@ -17,13 +17,17 @@ holds exactly what the repository holds; a working folder with uncommitted chang
 
 The private CPython is a copy of an official CPython 3.11 installation (the one the development
 runtime was created from, unless --python names another), without site-packages, caches, Tk,
-IDLE or the test suite. Its interpreter is also placed in runtime/python/Scripts, next to the
-DLLs it loads, so every path the Tool already uses (the launcher, the manifest, the ComfyUI
-nodes, the voice engine setup) finds it where a virtual environment would have put it; Python
-finds its standard library by searching upwards from the executable. Its site.py disables the
-per-user site-packages, so packages a user installed for their own Python 3.11 can never shadow
-the Tool's. Packages are installed at the versions of the development runtime the tests ran
-with (constraints taken from its pip freeze), without byte-code, and every path of the build
+IDLE or the test suite. Its interpreter lives in runtime/python/Scripts, next to the DLLs it
+loads, so every path the Tool already uses (the launcher, the manifest, the ComfyUI nodes, the
+voice engine setup) finds it where a virtual environment would have put it; Python finds Lib/
+by searching upwards from the executable.
+
+runtime/python/pyvenv.cfg holds only `include-system-site-packages = false`. With no `home`
+line, the interpreter still takes this folder as its own installation, but site.py (frozen into
+the 3.11 executable, so editing Lib/site.py would change nothing) reads that line and turns the
+per-user site-packages off: packages someone installed for their own Python 3.11 can never
+shadow the Tool's. Packages are installed at the versions of the development runtime the tests
+ran with (constraints taken from its pip freeze), without byte-code, and every path of the build
 machine is checked for before anything is archived.
 """
 import argparse
@@ -48,7 +52,6 @@ BUILD = ROOT / 'runtime' / 'build' / 'release'
 LEFT_OUT = {'.gitignore', '.gitattributes', NAME + '.sh'}
 INTERPRETER = ('python.exe', 'pythonw.exe', 'python3.dll', 'python311.dll',
                'vcruntime140.dll', 'vcruntime140_1.dll')
-PYTHON_FILES = INTERPRETER + ('LICENSE.txt',)
 PYTHON_FOLDERS = ('DLLs', 'Lib', 'libs', 'include')
 # Tk and IDLE have no use here; the test suite and caches are large and would carry the paths
 # of the machine the stdlib was compiled on.
@@ -56,7 +59,10 @@ PYTHON_SKIP = {'__pycache__', 'site-packages', 'test', 'idlelib', 'tkinter', 'tu
                '_tkinter.pyd', 'tcl86t.dll', 'tk86t.dll'}
 # Only needed to run the tests; never part of the package.
 TEST_ONLY = {'pytest', 'iniconfig', 'pluggy', 'pygments'}
-USER_SITE_LINE = 'ENABLE_USER_SITE = None\n'
+# No "home" line: the interpreter keeps runtime/python as its prefix, and site.py only reads
+# this switch. (Python compares keys, so a comment line must not contain an equals sign.)
+PYVENV = ('# Private runtime of CyTools_PersonaRP: per-user site-packages never apply.\n'
+          'include-system-site-packages = false\n')
 
 
 def run(command, **options):
@@ -117,22 +123,18 @@ def copy_python(base, target):
     if not version.startswith('3.11.'):
         raise SystemExit('The runtime ABI of this Tool is Python 3.11; %s is %s.' % (base, version))
     target.mkdir(parents=True)
-    for name in PYTHON_FILES:
-        shutil.copy2(base / name, target / name)
+    shutil.copy2(base / 'LICENSE.txt', target / 'LICENSE.txt')
     ignore = lambda folder, names: [name for name in names if name in PYTHON_SKIP]
     for name in PYTHON_FOLDERS:
         shutil.copytree(base / name, target / name, ignore=ignore)
     (target / 'Lib' / 'site-packages').mkdir()
+    # Only in Scripts: an interpreter at the top would take the parent folder for its prefix
+    # once pyvenv.cfg is there (site.py looks for it next to the executable first).
     scripts = target / 'Scripts'
     scripts.mkdir()
     for name in INTERPRETER:
         shutil.copy2(base / name, scripts / name)
-    site = target / 'Lib' / 'site.py'
-    text = site.read_text(encoding='utf-8')
-    if text.count(USER_SITE_LINE) != 1:
-        raise SystemExit('site.py of %s does not have the expected ENABLE_USER_SITE switch.' % base)
-    site.write_text(text.replace(USER_SITE_LINE, 'ENABLE_USER_SITE = False  # private runtime of '
-                                 + NAME + ': user site-packages never apply\n'), encoding='utf-8')
+    (target / 'pyvenv.cfg').write_text(PYVENV, encoding='utf-8')
     return version
 
 
@@ -198,8 +200,11 @@ def check_isolation(stage, python):
              'files = {n: getattr(importlib.import_module(n), "__file__", "") for n in names}\n'
              'print(json.dumps({"prefix": sys.prefix, "base": sys.base_prefix, "path": sys.path,\n'
              '                  "userSite": site.ENABLE_USER_SITE, "files": files}))\n')
+    # As a user's machine would start it: PYTHONNOUSERSITE would hide the very thing checked.
+    environment = clean_environment()
+    environment.pop('PYTHONNOUSERSITE')
     seen = json.loads(run([python, '-c', probe], capture_output=True, text=True, cwd=BUILD,
-                          env=clean_environment()).stdout)
+                          env=environment).stdout)
     inside = str(stage.resolve()).casefold()
     outside = [entry for entry in seen['path'] + list(seen['files'].values())
                if entry and not str(Path(entry).resolve()).casefold().startswith(inside)]

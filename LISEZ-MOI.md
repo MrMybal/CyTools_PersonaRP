@@ -7,6 +7,17 @@ JSON à écrire.
 l'interface, chacun avec sa licence à accepter : voir *Premier lancement* ci-dessous.
 PersonaRP garde ses propres copies et ne dépend d'aucun autre outil.
 
+## Installer la version binaire (Windows x64)
+
+Chaque release du dépôt (https://github.com/MrMybal/CyTools_PersonaRP/releases) contient
+`CyTools_PersonaRP-<version>-windows-x64.zip` : le lanceur, l'application et un Python 3.11
+privé avec tout ce dont elle a besoin. Extraire le zip dans un dossier où vous pouvez écrire,
+puis double-cliquer sur `CyTools_PersonaRP.exe` : ni Python, ni git, ni compilateur ne sont
+nécessaires. Une fois le moteur de parole installé, ne déplacez plus le dossier : ce moteur est
+un environnement Python lié à son emplacement. `SHA256SUMS.txt` donne les empreintes des
+fichiers de la release ; `cytools-app.zip` est l'application seule, utilisée par l'onglet
+**Mises à jour**.
+
 ## Premier lancement
 
 1. Onglet **Modèles** : installer le moteur de conversation (**CUDA** pour une carte NVIDIA,

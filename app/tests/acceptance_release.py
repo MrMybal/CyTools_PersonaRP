@@ -81,6 +81,18 @@ def check_layout(root):
     return ok, {'root': sorted(present), 'runtime': sorted(runtime)}
 
 
+def shadowed(python, folder):
+    """Plant a module in a per-user site-packages and see whether this interpreter imports it."""
+    user_base = folder / 'user base'
+    packages = user_base / 'Python311' / 'site-packages'
+    packages.mkdir(parents=True, exist_ok=True)
+    (packages / 'shadow_probe.py').write_text('PLANTED = True\n', encoding='utf-8')
+    environment = dict(bare_environment(), PYTHONUSERBASE=str(user_base))
+    finished = subprocess.run([str(python), '-c', 'import shadow_probe'], cwd=str(folder),
+                              env=environment, capture_output=True, timeout=60)
+    return finished.returncode == 0
+
+
 def check_interpreter(root, python, elsewhere):
     code, out, err = run([python, '-c', PROBE], elsewhere)
     if code:
@@ -88,9 +100,15 @@ def check_interpreter(root, python, elsewhere):
     seen = json.loads(out)
     outside = [entry for entry in seen['path'] + list(seen['files'].values())
                if entry and not inside(entry, root)]
-    return (seen['userSite'] is False and inside(seen['prefix'], root) and not outside,
+    # The control: an ordinary CPython 3.11 of this machine, if there is one, does import it.
+    control = Path(os.environ.get('LOCALAPPDATA', '')) / 'Programs/Python/Python311/python.exe'
+    reached = shadowed(python, elsewhere)
+    control_reached = shadowed(control, elsewhere) if control.is_file() else None
+    return (seen['userSite'] is False and inside(seen['prefix'], root) and not outside
+            and not reached and control_reached is not False,
             {'prefix': seen['prefix'], 'userSite': seen['userSite'], 'outside': outside,
-             'modules': len(seen['files'])})
+             'modules': len(seen['files']), 'plantedUserPackageImported': reached,
+             'controlInterpreterImportsIt': control_reached})
 
 
 def check_cli(root, python, elsewhere):
@@ -128,8 +146,15 @@ async def _mcp(root, python, elsewhere):
             raise RuntimeError('%s: %s' % (name, json.dumps(job.get('error'))))
         return job.get('outputs', job)
 
+    # Importing a file is reserved to a client granted filesystemExternal, as a user would
+    # create it; the token goes through the environment, never a command line or the report.
+    code, out, err = run([python, root / 'app/tool.py', 'create-client', '--name', 'acceptance',
+                          '--permission', 'filesystemExternal'], elsewhere)
+    if code:
+        raise RuntimeError('create-client: ' + err[-400:])
+    environment = dict(bare_environment(), CYTOOLS_TOKEN=json.loads(out)['token'])
     server = StdioServerParameters(command=str(python), args=[str(root / 'app/tool.py'), 'mcp'],
-                                   cwd=str(elsewhere), env=bare_environment())
+                                   cwd=str(elsewhere), env=environment)
     async with stdio_client(server) as (read, write):
         async with ClientSession(read, write) as session:
             await session.initialize()
@@ -146,11 +171,18 @@ async def _mcp(root, python, elsewhere):
             'promptCharacters': preview['context']['promptCharacters']}
 
 
+def _leaves(error):
+    if isinstance(error, BaseExceptionGroup):
+        return [leaf for inner in error.exceptions for leaf in _leaves(inner)]
+    return [error]
+
+
 def check_mcp(root, python, elsewhere):
     try:
         seen = asyncio.run(_mcp(root, python, elsewhere))
     except Exception as error:                                   # reported, never hidden
-        return False, {'error': '%s: %s' % (type(error).__name__, str(error)[:800])}
+        return False, {'error': ['%s: %s' % (type(leaf).__name__, str(leaf)[:600])
+                                 for leaf in _leaves(error)]}
     return seen['operations'] >= 60 and len(seen['personas']) >= 3 and seen['promptCharacters'] > 0, seen
 
 
@@ -223,7 +255,9 @@ def main():
     parser.add_argument('zip', nargs='?', default=str(default))
     parser.add_argument('--tests', action='store_true', help='also run the test suite in the copy')
     parser.add_argument('--keep', action='store_true', help='keep the extracted copy')
+    parser.add_argument('--only', default='', help='comma-separated checks to run, e.g. mcp,cli')
     options = parser.parse_args()
+    only = {name for name in options.only.split(',') if name}
     package = Path(options.zip)
     folder = Path(tempfile.mkdtemp(prefix='PersonaRP release '))
     elsewhere = folder / 'somewhere else'
@@ -241,6 +275,8 @@ def main():
                             ('window', lambda: check_window(root, elsewhere)),
                             ('venv', lambda: check_venv(root, python, elsewhere))) + \
                 (((('tests', lambda: check_tests(root, python)),) if options.tests else ())):
+            if only and name not in only:
+                continue
             began = time.time()
             ok, detail = check()
             checks[name] = {'ok': ok, 'seconds': round(time.time() - began, 1), **detail}

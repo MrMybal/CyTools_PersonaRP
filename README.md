@@ -45,13 +45,25 @@ The interface is in English by default and fully in French from **Options**.
 ## Requirements
 
 - Windows 10/11 x64 (the only platform executed by the author; a Linux launcher script is
-  provided but was never run), Python 3.11, Git on the PATH.
+  provided but was never run). The release archive brings its own Python; installing from
+  source needs Python 3.11 and Git on the PATH.
 - An NVIDIA GPU with CUDA for comfortable use; conversation models also run on the CPU. The
   speech engine is about 8 GB on disk.
 - Model weights are **not** in this repository; they are downloaded from the Models and Voice
   tabs.
 
-## Installation
+## Download (Windows x64)
+
+Each [release](https://github.com/MrMybal/CyTools_PersonaRP/releases) carries
+`CyTools_PersonaRP-<version>-windows-x64.zip`: the launcher, the application and a private
+Python 3.11 with every package the application needs. Extract it into any folder you can write
+to, then double-click `CyTools_PersonaRP.exe`; no Python, git or compiler is needed. Models and
+engines are not in the archive: install them from the application (see *First launch* below).
+Keep the folder where it is once the speech engine is installed, since that engine is a virtual
+environment tied to its path. `SHA256SUMS.txt` lists the checksums of the release files;
+`cytools-app.zip` is the application alone, used by the Updates tab.
+
+## Installation from source
 
 ```powershell
 git clone https://github.com/MrMybal/CyTools_PersonaRP.git
@@ -64,7 +76,10 @@ app\build_launcher.cmd
 ```
 
 Then double-click `CyTools_PersonaRP.exe`, or run `runtime\python\Scripts\pythonw.exe app\desktop.py`.
-On first launch:
+The release archive itself is built with `.\runtime\python\Scripts\python.exe app\build_release.py`
+and checked with `app\tests\acceptance_release.py` (see [app/README.md](app/README.md)).
+
+## First launch
 
 1. **Models** tab: install the conversation engine (CUDA or CPU), then at least one
    conversation model.

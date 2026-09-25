@@ -35,6 +35,8 @@ one trailing blank line aside). **git must be on the PATH**: pip clones that com
 | Translation with and without the scene's context (about 1 min of GPU) | `runtime/python/Scripts/python.exe app/tests/acceptance_translation_context.py [llm-model ...]` |
 | Voice batches: sequential vs batched on the real model (about 3 min of GPU) | `runtime/python/Scripts/python.exe app/tests/acceptance_batch.py [--lines 8] [--check-only]` |
 | Build the Colab project (no model) | `runtime/python/Scripts/python.exe app/build_colab.py` |
+| Build the Windows release (portable zip, cytools-app.zip, SHA256SUMS.txt) | `runtime/python/Scripts/python.exe app/build_release.py` |
+| Run the release as a user would (extracted copy, bare environment) | `runtime/python/Scripts/python.exe app/tests/acceptance_release.py [zip] [--tests] [--keep]` |
 | Every tab of the window | `runtime/python/Scripts/python.exe app/tests/smoke_ui.py` |
 | Every tab, in French | `runtime/python/Scripts/python.exe app/tests/smoke_ui.py --language fr` |
 | French strings the catalogue lacks | `runtime/python/Scripts/python.exe app/tests/locale_strings.py` |
@@ -97,6 +99,35 @@ the engine and talk over the JSON-lines protocol in `personarp/workerhost.py`.
 The workers import `personarp.voice.annotations` and nothing else of ours, which is why the
 mark vocabulary sits in `personarp/marks.py` on the standard library alone — the SDK is not
 installed in the engine.
+
+### The binary release
+
+`app/build_release.py` builds the release from the commit HEAD (`git archive`; uncommitted
+changes are refused) into `runtime/build/release/<version>/`. In the portable zip,
+`runtime/python` is not a virtual environment but a private CPython 3.11, copied from an
+official installation without site-packages, byte-code, Tk, IDLE or the test suite. Its
+interpreter and the DLLs it loads live in `runtime/python/Scripts`, so every path the Tool
+already uses (the launcher, the manifest's `executable`, the ComfyUI nodes, the voice engine
+setup) finds it where a virtual environment would put it; Python finds `Lib/` by searching
+upwards from the executable. `runtime/python/pyvenv.cfg` holds only
+`include-system-site-packages = false`: with no `home` line the interpreter keeps its own
+folder as prefix, and `site` (frozen into the 3.11 executable, so editing `Lib/site.py` would
+change nothing) turns the per-user site-packages off, so a user's own packages never shadow the
+Tool's. Packages are installed at the versions of the development runtime (constraints from its
+`pip freeze`), console-script wrappers (which hold the absolute path of the build machine) and
+every `__pycache__` are removed, `runtime/python/THIRD-PARTY.md` lists each package and its
+licence, and `runtime/build-info.json` records the commit and the versions. The build fails if
+the packaged interpreter reads anything outside the package, or if any file of the package names
+the project folder, the base Python, the user profile (long or 8.3 form) or the machine name.
+The voice engine is created from this interpreter with `venv`, which the copy keeps.
+
+`app/tests/acceptance_release.py` extracts the zip into a new folder with a space in its name
+and runs it with PATH reduced to Windows, no `PYTHON*` variable and a working directory outside
+the package: layout, interpreter isolation (including a module planted in a per-user
+site-packages, which must stay invisible while the machine's own CPython, the control, imports
+it), the CLI, a real MCP session whose client is granted `filesystemExternal` and imports an
+example world, the launcher opening two tabs, a `venv` made from the private interpreter, and
+with `--tests` the whole suite inside the copy.
 
 ## Voice
 
