@@ -1,0 +1,12 @@
+# Lot d'exemple : une scène de Valdrenn, en script.
+# Une ligne par réplique : « Nom: texte », ou « ID | Nom: texte » pour lui donner son ID
+# (sa prise s'appelle alors ID.wav). Une ligne sans nom continue la réplique précédente.
+# Les personnages sont ceux du monde d'exemple Valdrenn (Bibliothèque › Exemples › Importer).
+COL-01 | Maëlis: [ton: bas] Le col est fermé depuis trois jours. Personne ne monte plus.
+COL-02 | Brannoc: Alors on passera par la rivière.
+  Elle est gelée, ça porte.
+COL-03 | Ilyenne: [pause: 400ms] La glace porte ceux que la rivière veut bien porter.
+COL-04 | Vasric: Personne ne passe sans mon accord, et je ne l'ai donné à personne.
+Maëlis: Tu crois que la glace tiendra sous les chevaux ?
+Brannoc: [soupir] Elle a tenu l'hiver dernier. Elle tiendra encore un soir.
+Vasric: À l'aube, la herse sera levée. Pas avant.

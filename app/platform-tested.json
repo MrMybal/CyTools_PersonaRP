@@ -1,0 +1,10 @@
+[
+  {
+    "osVersion": "Windows 10 x64 (build 19044)",
+    "device": "NVIDIA GPU, 24 GB VRAM, CUDA 12.8",
+    "driver": "610.47",
+    "runtime": "Python 3.11.5, CyToolsCore 0.9.0, llama.cpp b11057 CUDA, PyTorch 2.8.0+cu128, Qwen3-TTS 0.1.1, Whisper large-v3 turbo, Qwen2.5-VL 7B",
+    "date": "2026-09-22",
+    "status": "Executed: launcher from another working directory, Dear ImGui window on every tab, real CUDA generation, two-pass scene directive, multi-turn saved session, speech synthesis, a voice invented from a written description, a stable voice cloned from a 12-24 s take, Whisper transcription, a model downloaded and verified from Hugging Face, reference photographs attached to a sheet, appearance read from a photograph by a vision model under a decoding grammar, CLI and a real MCP stdio session. Linux and a published GitHub release were not exercised."
+  }
+]

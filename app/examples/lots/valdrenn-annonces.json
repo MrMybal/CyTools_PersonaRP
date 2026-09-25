@@ -1,0 +1,7 @@
+{
+  "lignes": [
+    {"personnage": "Ilyenne", "texte": "Écoutez. Le vent a tourné cette nuit.", "fichier": "annonce-vent"},
+    {"personnage": "Maëlis", "texte": "[ton: décidé] Nous partons à l'aube. Tous.", "fichier": "annonce-depart"},
+    {"voix": "maelis-de-corvanne", "texte": "Une voix stable seule peut aussi dire une réplique, sans personnage.", "fichier": "voix-seule"}
+  ]
+}

@@ -1,0 +1,46 @@
+# Everything that belongs to the person using the Tool, or to this machine, stays local.
+
+# User data: characters, worlds, scenes, voices and their recordings, photographs, jobs,
+# logs, settings (including the desktop credential), exports, reports — and the models,
+# which are downloaded from the interface (Models tab, Voice tab), never shipped.
+/data/
+
+# The private Python environment, the engines, staged updates, downloads and build output.
+/runtime/
+
+# Built binaries: the launcher is built by app/build_launcher.cmd and attached to a release.
+*.exe
+*.dll
+*.pdb
+*.obj
+
+# The CyToolsCore SDK is public (https://github.com/MrMybal/CyToolsCore, GPL-3.0-only) and
+# app/requirements.txt installs it from there; a wheel built from it is a build artefact.
+/app/packages/*.whl
+
+# Python and test caches.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.cytools/
+
+# Anything a model could be: weights never enter the repository, wherever they land.
+*.gguf
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.onnx
+
+# Local and editor files.
+.env
+.env.*
+*.log
+*.tmp
+*.bak
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store

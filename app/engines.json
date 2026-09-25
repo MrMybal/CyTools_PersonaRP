@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "python": ">=3.11,<3.13",
+  "engines": {
+    "voice": {
+      "label": "Voice engine (PyTorch, Qwen3-TTS, Whisper)",
+      "directory": "runtime/engines/voice",
+      "torch": {
+        "packages": ["torch==2.8.0+cu128", "torchaudio==2.8.0+cu128"],
+        "index": "https://download.pytorch.org/whl/cu128",
+        "cpu": {
+          "packages": ["torch==2.8.0", "torchaudio==2.8.0"],
+          "index": "https://download.pytorch.org/whl/cpu"
+        }
+      },
+      "requirements": "requirements-engine-voice.txt",
+      "verify": ["torch", "torchaudio", "transformers", "qwen_tts", "soundfile", "librosa", "numpy"],
+      "backends": ["qwen3tts", "whisper"],
+      "estimatedBytes": 8000000000,
+      "notes": "Private to this Tool. Speech synthesis, voice cloning and the transcription used to build a stable voice all run here."
+    }
+  }
+}

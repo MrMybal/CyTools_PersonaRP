@@ -1,0 +1,236 @@
+{
+  "nymphaea": {
+    "name": "Nymphaea RP 4B Q4_K_M",
+    "repo": "mradermacher/Qwen3-4B-Nymphaea-RP-GGUF",
+    "revision": "855b6b759cae2e4f3be170a5313b2c42478156fc",
+    "page": "https://huggingface.co/0xA50C1A1/Qwen3-4B-Nymphaea-RP",
+    "license": "Apache-2.0",
+    "files": [
+      {
+        "name": "Qwen3-4B-Nymphaea-RP.Q4_K_M.gguf",
+        "size": 2497281216,
+        "sha256": "7896e1c1e498554887ea6439c44939216f67146fa3c3298ee7a95c2cf206376d"
+      }
+    ],
+    "ramGiB": 8,
+    "vramGiB": 5
+  },
+  "qwen3-8b": {
+    "name": "Qwen3 8B Q4_K_M",
+    "repo": "Qwen/Qwen3-8B-GGUF",
+    "revision": "7c41481f57cb95916b40956ab2f0b139b296d974",
+    "page": "https://huggingface.co/Qwen/Qwen3-8B-GGUF",
+    "license": "Apache-2.0",
+    "files": [
+      {
+        "name": "Qwen3-8B-Q4_K_M.gguf",
+        "size": 5027783488,
+        "sha256": "d98cdcbd03e17ce47681435b5150e34c1417f50b5c0019dd560e4882c5745785"
+      }
+    ],
+    "ramGiB": 12,
+    "vramGiB": 8
+  },
+  "qwen3-14b": {
+    "name": "Qwen3 14B Q4_K_M",
+    "repo": "Qwen/Qwen3-14B-GGUF",
+    "revision": "530227a7d994db8eca5ab5ced2fb692b614357fd",
+    "page": "https://huggingface.co/Qwen/Qwen3-14B-GGUF",
+    "license": "Apache-2.0",
+    "files": [
+      {
+        "name": "Qwen3-14B-Q4_K_M.gguf",
+        "size": 9001752960,
+        "sha256": "500a8806e85ee9c83f3ae08420295592451379b4f8cf2d0f41c15dffeb6b81f0"
+      }
+    ],
+    "ramGiB": 18,
+    "vramGiB": 12
+  },
+  "hermes-3-3b": {
+    "name": "Hermes 3 Llama 3.2 3B Q4_K_M",
+    "repo": "NousResearch/Hermes-3-Llama-3.2-3B-GGUF",
+    "revision": "3cd927095d8cbab12c743f932aa63b6f7bbfa141",
+    "page": "https://huggingface.co/NousResearch/Hermes-3-Llama-3.2-3B",
+    "license": "llama3",
+    "files": [
+      {
+        "name": "Hermes-3-Llama-3.2-3B.Q4_K_M.gguf",
+        "size": 2019373888,
+        "sha256": "91776fe0f6cd7483d9d5e06162fdd1f8f0262c15ced269791b4d96a655e8a5a2"
+      }
+    ],
+    "ramGiB": 6,
+    "vramGiB": 4
+  },
+  "dolphin3-8b": {
+    "name": "Dolphin 3.0 Llama 3.1 8B Q4_K_M",
+    "repo": "dphn/Dolphin3.0-Llama3.1-8B-GGUF",
+    "revision": "be0be5e42b14c7b0052705d146a79a9e9ee8e6eb",
+    "page": "https://huggingface.co/dphn/Dolphin3.0-Llama3.1-8B",
+    "license": "llama3.1",
+    "files": [
+      {
+        "name": "Dolphin3.0-Llama3.1-8B-Q4_K_M.gguf",
+        "size": 4920745856,
+        "sha256": "4c001f29d4edbd9327a6df8e16e2b7907a64e0e31b0a7abe9c779a96773f304e"
+      }
+    ],
+    "ramGiB": 10,
+    "vramGiB": 8
+  },
+  "self-after-dark": {
+    "name": "Self After Dark 8B Q4_K_M",
+    "repo": "Gurubot/self-after-dark",
+    "revision": "9f82c63dd7503b27fca67449c461fee2d63c2dbf",
+    "page": "https://huggingface.co/Gurubot/self-after-dark",
+    "license": "apache-2.0",
+    "files": [
+      {
+        "name": "selfAfterDark-8b.Q4_K_M.gguf",
+        "size": 4920735104,
+        "sha256": "aedd3fb0f632d369efc791916d946b5bc5b397a67022d4b1dcd45520599244b3"
+      }
+    ],
+    "ramGiB": 10,
+    "vramGiB": 8
+  },
+  "gemma4-e4b": {
+    "name": "Gemma 4 E4B HauhauCS Aggressive Q4_K_M",
+    "repo": "HauhauCS/Gemma-4-E4B-Uncensored-HauhauCS-Aggressive",
+    "revision": "45b6a334b4bcd1d7f37179df58b3b1d66a184e5d",
+    "page": "https://huggingface.co/HauhauCS/Gemma-4-E4B-Uncensored-HauhauCS-Aggressive",
+    "license": "gemma",
+    "files": [
+      {
+        "name": "Gemma-4-E4B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf",
+        "size": 5335285728,
+        "sha256": "d0027dd3a9128d9323e9f282c8bf010a8526c46477584535991dc1a869b56e96"
+      }
+    ],
+    "ramGiB": 12,
+    "vramGiB": 10
+  },
+  "gpt-oss-20b-heretic": {
+    "name": "GPT-OSS 20B Heretic ARA v3 MXFP4",
+    "repo": "mradermacher/gpt-oss-20b-heretic-ara-v3-GGUF",
+    "revision": "8d6180dc546fe498ec76b0577550145991ed597b",
+    "page": "https://huggingface.co/p-e-w/gpt-oss-20b-heretic-ara-v3",
+    "license": "apache-2.0",
+    "files": [
+      {
+        "name": "gpt-oss-20b-heretic-ara-v3.MXFP4_MOE.gguf",
+        "size": 12109567296,
+        "sha256": "646e85a132eeb91cd4cc35c8258677e26af29546e7b52628ee2696ea189e9013"
+      }
+    ],
+    "ramGiB": 18,
+    "vramGiB": 16,
+    "reasoningEffort": "low"
+  },
+  "qwen36-12b-hightop": {
+    "name": "Qwen 3.6 12B Hightop V2 Q4_K_M",
+    "repo": "hellork/Qwen3.6-12B-IQ-Ultra-Heretic-Uncensored-Thinking-V2-Hightop-Q4_K_M-GGUF",
+    "revision": "72f286b2bf07b83852b1b2d216051be9a28f7f86",
+    "page": "https://huggingface.co/DavidAU/Qwen3.6-12B-IQ-Ultra-Heretic-Uncensored-Thinking-V2-Hightop",
+    "license": "apache-2.0",
+    "files": [
+      {
+        "name": "qwen3.6-12b-iq-ultra-heretic-uncensored-thinking-v2-hightop-q4_k_m.gguf",
+        "size": 7323108608,
+        "sha256": "b01a3594e90019cf6bfa5f659e0d919f33cfd392e6487deecc5007077f9e6725"
+      }
+    ],
+    "ramGiB": 14,
+    "vramGiB": 12,
+    "reasoningEffort": "none"
+  },
+  "qwen38-27b-coldfusion": {
+    "name": "Qwen 3.8 27B Cold Fusion V1.1 IQ4_XS",
+    "repo": "DavidAU/Qwen3.8-27B-Cold-Fusion-GAIN-V1.1-NM-DAU-NEO-MAX-MTP-GGUF",
+    "revision": "daae89d760c9efb9fa521ed6397205f81a459977",
+    "page": "https://huggingface.co/DavidAU/Qwen3.8-27B-Cold-Fusion-GAIN-V1.1-NM-DAU-NEO-MAX-MTP-GGUF",
+    "license": "apache-2.0",
+    "files": [
+      {
+        "name": "Qwen3.8-27B-Cold-Fusion-GAIN-V1.1-NM-DAU-NEO-MAX-NEO-IQ4_XS.gguf",
+        "size": 16582359616,
+        "sha256": "d1a8f3595955e132b3f60da5fb4e138d0f1ba11b1d04729f4ba74e8b4eb2852e"
+      }
+    ],
+    "ramGiB": 24,
+    "vramGiB": 21,
+    "reasoningEffort": "none"
+  },
+  "darkidol-voice-coldfusion": {
+    "name": "DarkIdol Voice on Qwen3.8 Cold Fusion 27B",
+    "repo": "Wiself/DarkIdol-Qwen3.8-27B-v1.1-Voice",
+    "revision": "127cb79e92573666dfab038daeee99f329412cd1",
+    "page": "https://huggingface.co/Wiself/DarkIdol-Qwen3.8-27B-v1.1-Voice",
+    "license": "Apache-2.0; see source model terms",
+    "files": [
+      {
+        "name": "voice.safetensors",
+        "size": 2542796903,
+        "sha256": "2de251b3078b84fa6b7ce23b3719d9df314d47423cf4fac0f8074dcc67874e5c"
+      }
+    ],
+    "ramGiB": 24,
+    "vramGiB": 21,
+    "baseModel": "qwen38-27b-coldfusion",
+    "generatedFile": "darkidol-coldfusion.gguf",
+    "recipe": "lm-head-q8-v1",
+    "notes": "Writing style tensor applied to a separate copy of Cold Fusion 27B. Not speech synthesis. Base weights are preserved.",
+    "reasoningEffort": "none"
+  },
+  "qwen25-vl-7b": {
+    "name": "Qwen2.5-VL 7B Instruct (vision)",
+    "repo": "ggml-org/Qwen2.5-VL-7B-Instruct-GGUF",
+    "revision": "508edd0afaa66bb9e9f40587acc2184f02daf1f6",
+    "page": "https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct",
+    "license": "apache-2.0",
+    "files": [
+      {
+        "name": "Qwen2.5-VL-7B-Instruct-Q4_K_M.gguf",
+        "size": 4683072032,
+        "sha256": "9258bf05b12686d097ff3b6b18d968ab393649780aa2b3cd67fec43d50554392"
+      },
+      {
+        "name": "mmproj-Qwen2.5-VL-7B-Instruct-f16.gguf",
+        "size": 1354162912,
+        "sha256": "c24a7f5fcfc68286f0a217023b6738e73bea4f11787a43e8238d4bb1b8604cde"
+      }
+    ],
+    "ramGiB": 12,
+    "vramGiB": 9,
+    "reasoningEffort": "none",
+    "vision": true,
+    "mmproj": "mmproj-Qwen2.5-VL-7B-Instruct-f16.gguf",
+    "notes": "Reads a photograph and writes the appearance branch of a sheet. Converted by the llama.cpp team, so the projector matches the engine."
+  },
+  "internvl3-8b": {
+    "name": "InternVL3 8B Instruct (vision)",
+    "repo": "ggml-org/InternVL3-8B-Instruct-GGUF",
+    "revision": "ae7cfcf61cffd2772448a1b5742c6318084e7d90",
+    "page": "https://huggingface.co/OpenGVLab/InternVL3-8B-Instruct",
+    "license": "apache-2.0",
+    "files": [
+      {
+        "name": "InternVL3-8B-Instruct-Q4_K_M.gguf",
+        "size": 4681132224,
+        "sha256": "645b5db5754711f90adcc85dd99217a66d1306c97c2a2d3ae69071e3dea7a42e"
+      },
+      {
+        "name": "mmproj-InternVL3-8B-Instruct-f16.gguf",
+        "size": 666002720,
+        "sha256": "7ad5f0c3e49de0f63a50ebf22c0bb16961175154ca32604d3fb083602d9d5d51"
+      }
+    ],
+    "ramGiB": 12,
+    "vramGiB": 9,
+    "reasoningEffort": "none",
+    "vision": true,
+    "mmproj": "mmproj-InternVL3-8B-Instruct-f16.gguf",
+    "notes": "Alternative vision model, similar size and a lighter projector."
+  }
+}

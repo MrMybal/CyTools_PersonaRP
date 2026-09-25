@@ -1,0 +1,7 @@
+# Lot d'essai : trois personnages de Valdrenn, un inconnu, une voix stable seule.
+Maëlis: [ton: bas] Le col est fermé depuis trois jours.
+Brannoc: Alors on passera par la rivière.
+  Elle est gelée, ça porte.
+Vasric: Personne ne passe sans mon accord.
+Inconnu: Qui êtes-vous ?
+Ysolde: [pause: 400ms] Quelqu'un qui se souvient de vous.
