@@ -5,8 +5,10 @@
 # which are downloaded from the interface (Models tab, Voice tab), never shipped.
 /data/
 
-# The private Python environment, the engines, staged updates, downloads and build output.
-/runtime/
+# The private Python environment, the engines, staged updates, downloads and build output —
+# except the launch script the Windows launcher runs, which belongs to the application.
+/runtime/*
+!/runtime/bootstrap.py
 
 # Built binaries: the launcher is built by app/build_launcher.cmd and attached to a release.
 *.exe
