@@ -643,7 +643,8 @@ def create_runtime(data_dir, **options):
             return voice_catalog.install_engine(context, parameters)
 
     def release_voice(context, parameters):
-        return voice_runner.release()
+        with exclusive(context):                # after the voice being spoken, not during
+            return voice_runner.release()
 
     def chat(context, parameters):
         with exclusive(context):
@@ -1661,9 +1662,12 @@ def create_runtime(data_dir, **options):
 
     def maintenance_handler(handler):
         def wrapped(context, parameters):
-            resident.stop()
-            with exclusive(context, name='resident'):
-                return handler(context, parameters)
+            # Its turn first: stopping the resident model under a scene being written would
+            # break that scene. The handler takes the same lock again, which a holder may.
+            with exclusive(context):
+                resident.stop()
+                with exclusive(context, name='resident'):
+                    return handler(context, parameters)
         return wrapped
 
     def install_llm(context, parameters):
@@ -1679,7 +1683,8 @@ def create_runtime(data_dir, **options):
             return models.install_cuda(context, parameters)
 
     def unload_model(context, parameters):
-        resident.stop()
+        with exclusive(context):                # after the generation using it, not during
+            resident.stop()
         return {'loaded': False}
 
     def diagnose_backend(context, parameters):

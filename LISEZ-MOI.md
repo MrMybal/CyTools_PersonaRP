@@ -1,4 +1,4 @@
-# CyTools PersonaRP — 0.1.0
+# CyTools PersonaRP — 0.1.1
 
 Lancer **CyTools_PersonaRP.exe**. La fenêtre s'ouvre directement : pas de terminal, pas de
 JSON à écrire.

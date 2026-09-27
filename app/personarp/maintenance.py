@@ -133,10 +133,26 @@ def check_update(kind, repo=''):
         assets = release['assets']
         installed = read_json(APP / 'release.json').get('version', '0.1.0')
     return {'kind': kind, 'repository': repo, 'version': release['tag_name'],
-            'installed': installed,
-            # A tag is usually written v0.2.0 and a version 0.2.0: the same release.
-            'updateAvailable': release['tag_name'].lstrip('v') != str(installed).lstrip('v'),
+            'installed': installed, 'updateAvailable': newer(release['tag_name'], installed),
             'assets': assets}
+
+
+def _numbers(version):
+    found = re.findall(r'\d+', str(version))
+    return tuple(int(number) for number in found) if found else None
+
+
+def newer(published, installed):
+    """Whether the published release is more recent than what is installed.
+
+    Tags are usually written v0.2.0 and versions 0.2.0, engine builds b11057: compared as
+    numbers, so 0.1.10 follows 0.1.9 and an older release is never offered as an update.
+    Without numbers on either side, any difference counts (nothing installed, for instance).
+    """
+    mine, theirs = _numbers(installed), _numbers(published)
+    if mine is None or theirs is None:
+        return str(published).lstrip('v') != str(installed).lstrip('v')
+    return theirs > mine
 
 
 def stage_update(context, state):

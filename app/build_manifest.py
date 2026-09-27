@@ -12,7 +12,7 @@ from personarp.schemas import (LANGUAGES, PERSONA_SCHEMA, RELATION_SCHEMA, SCENE
 from personarp.authoring import PERSONA_TARGETS, WORLD_TARGETS
 
 APP = Path(__file__).resolve().parent
-VERSION = '0.1.0'
+VERSION = '0.1.1'
 
 STR = {'type': 'string'}
 BOOL = {'type': 'boolean'}
@@ -880,7 +880,9 @@ MANIFEST = {
     ],
     'interfaces': ['Native', 'CLI', 'JSONL', 'HTTP', 'MCP', 'ImGui'],
     'runtimeRequirements': [],
-    'concurrency': {'policy': 'Sequential', 'maxWorkers': 1},
+    # Concurrent: a list, a sheet or a session is answered while a generation runs. The jobs
+    # that use the GPU or stop an engine take turns on the execution lock (personarp/locks.py).
+    'concurrency': {'policy': 'Concurrent', 'maxWorkers': 16},
     'backends': [{'id': 'llamacpp', 'name': 'llama.cpp', 'kind': 'Local',
                   'description': 'Local GGUF inference on CPU or NVIDIA CUDA.'}],
     'operations': OPERATIONS,

@@ -3,7 +3,7 @@
   "protocolVersion": "1.0",
   "id": "cy.tool.personarp",
   "name": "CyTools_PersonaRP",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Persistent characters: complete sheets, shared world lore, relationships, evolving dialogue, delivery annotations, and machine-readable scene descriptions for image and video tools. Runs locally.",
   "vendor": "Cyberalien",
   "author": "Cyberalien",
@@ -68,8 +68,8 @@
   ],
   "runtimeRequirements": [],
   "concurrency": {
-    "policy": "Sequential",
-    "maxWorkers": 1
+    "policy": "Concurrent",
+    "maxWorkers": 16
   },
   "backends": [
     {

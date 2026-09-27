@@ -100,6 +100,21 @@ The workers import `personarp.voice.annotations` and nothing else of ours, which
 mark vocabulary sits in `personarp/marks.py` on the standard library alone — the SDK is not
 installed in the engine.
 
+### Jobs and the execution lock
+
+The manifest declares `Concurrent` (16 workers): the window waits for the answer of a list, a
+sheet or a session (`AppState.call`), and under `Sequential` those requests queued behind a voice
+being spoken — the window stopped drawing, Windows declared it hung, and closing it lost the voice
+already generated. Every job that uses the GPU or stops an engine (`chat`, `speak*`, `translate`,
+`describe_image`, installations, `update`, `unload_model`, `release_voice`) goes through
+`personarp.locks.exclusive`: inside one process those jobs take turns, first come first served,
+reporting *Waiting for the task in progress* and cancellable while they wait; a job already
+holding the lock may take it again (the maintenance wrapper, then its handler); another process
+is still refused at once with `Busy`. `tests/test_concurrency.py` holds a job on the lock and
+checks that a list is answered at once, that a second job waits instead of failing, that a
+waiting job can be cancelled, that unloading the model waits for the generation, and that
+another process gets `Busy`.
+
 ### The binary release
 
 `app/build_release.py` builds the release from the commit HEAD (`git archive`; uncommitted
