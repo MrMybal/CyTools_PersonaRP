@@ -191,3 +191,5 @@ def test_another_process_is_still_refused_with_busy(tmp_path, monkeypatch):
         holder.stdin.write('\n')
         holder.stdin.flush()
         holder.wait(10)
+        holder.stdin.close()
+        holder.stdout.close()

@@ -84,6 +84,7 @@ def source(tmp_path, monkeypatch):
     monkeypatch.setattr(tool.ResidentModel, 'stop', lambda self: None)
     yield tmp_path / 'models' / 'test-model'
     server.shutdown()
+    server.server_close()
 
 
 def test_a_cancelled_download_resumes_and_is_verified_whole(source):
