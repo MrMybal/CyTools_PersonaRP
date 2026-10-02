@@ -3,9 +3,9 @@
 The window asks the runtime for lists, sheets and sessions and waits for the answer. Under a
 sequential runtime those requests queued behind a voice being spoken; the window stopped
 drawing, Windows declared it hung, and the voice already generated was lost with the process.
-The runtime now runs jobs concurrently, and the jobs that need the execution lock take turns
-on it inside the process (first come, first served, cancellable while waiting), while another
-process is still refused with Busy.
+The runtime now runs jobs concurrently, and the jobs that need the execution lock share the
+SDK's `gpu` exclusion group (SDK 0.10): the runtime keeps them Queued, in order, cancellable,
+while another process is still refused with Busy by the file lock.
 
 No model here: the job holding the lock is release_voice with the voice runner held on an event.
 """
@@ -26,7 +26,7 @@ from cytools_core import CyToolError                                        # no
 from cytools_core.runtime import CancellationToken                           # noqa: E402
 
 import tool                                                                 # noqa: E402
-from personarp import batches, locks                                        # noqa: E402
+from personarp import batches, exclusion, locks                             # noqa: E402
 
 
 @pytest.fixture()
@@ -67,6 +67,27 @@ def test_the_manifest_lets_light_operations_through():
     assert manifest['concurrency']['maxWorkers'] >= 8
 
 
+def test_every_operation_taking_the_lock_is_in_the_gpu_group_and_no_other():
+    """Read from the code: an operation that starts locking without its group would get Busy."""
+    manifest = json.loads((APP / 'CyTool.json').read_text(encoding='utf-8'))
+    grouped = sorted(op['id'] for op in manifest['operations'] if op.get('exclusiveGroups'))
+    assert grouped == exclusion.locked_operations()
+    assert {'chat', 'speak_turn', 'speak_batch', 'transcribe', 'unload_model', 'update',
+            'choose_take'} <= set(grouped)
+    assert not {'list_batches', 'get_session', 'save_persona', 'preview_prompt'} & set(grouped)
+    assert all(op['exclusiveGroups'] == ['gpu'] for op in manifest['operations']
+               if op.get('exclusiveGroups'))
+
+
+def test_the_installed_sdk_enforces_the_groups():
+    """An SDK before 0.10 would keep the field and ignore it."""
+    import cytools_core
+    assert tuple(int(part) for part in cytools_core.__version__.split('.')[:2]) >= (0, 10)
+    with tempfile.TemporaryDirectory() as root, tool.create_runtime(root) as runtime:
+        assert runtime._operation_groups['speak_turn'] == frozenset({'gpu'})
+        assert runtime._operation_groups['list_batches'] == frozenset()
+
+
 def test_a_list_is_answered_while_a_voice_holds_the_lock(held):
     with tempfile.TemporaryDirectory() as root, tool.create_runtime(root) as runtime:
         actor, session = _client(runtime)
@@ -88,9 +109,9 @@ def test_a_second_job_needing_the_lock_waits_its_turn(held):
         first = runtime.submit(actor, session, 'release_voice', {})
         assert held['started'].wait(10)
         second = runtime.submit(actor, session, 'release_voice', {})
-        waiting = _state_soon(runtime, actor, second['jobId'],
-                              lambda job: job['progress'].get('currentStep') == locks.WAITING)
-        assert waiting['state'] == 'Running' and held['calls'] == 1   # neither Busy nor started
+        time.sleep(0.5)
+        waiting = runtime.get_job(actor, second['jobId'])
+        assert waiting['state'] == 'Queued' and held['calls'] == 1     # neither Busy nor started
         held['go'].set()
         assert runtime.wait(actor, first['jobId'], timeout=10)['state'] == 'Completed'
         assert runtime.wait(actor, second['jobId'], timeout=10)['state'] == 'Completed'
@@ -104,14 +125,13 @@ def test_a_job_waiting_for_the_lock_can_be_cancelled(held):
         assert held['started'].wait(10)
         # chat takes the lock on its first line; it is cancelled before it could go further.
         second = runtime.submit(actor, session, 'chat', {'text': 'Bonjour.'})
-        _state_soon(runtime, actor, second['jobId'],
-                    lambda job: job['progress'].get('currentStep') == locks.WAITING)
+        assert _state_soon(runtime, actor, second['jobId'],
+                           lambda job: job['state'] == 'Queued')['state'] == 'Queued'
         runtime.cancel(actor, second['jobId'])
         assert runtime.wait(actor, second['jobId'], timeout=10)['state'] == 'Cancelled'
         held['go'].set()
         assert runtime.wait(actor, first['jobId'], timeout=10)['state'] == 'Completed'
         assert held['calls'] == 1
-        assert not locks._TURNS['execution'].queue                  # nobody left in line
 
 
 def test_unloading_the_model_waits_for_the_generation(held, monkeypatch):
@@ -145,7 +165,7 @@ def test_a_holder_may_take_the_lock_again(tmp_path, monkeypatch):
     with locks.exclusive(context):
         with locks.exclusive(context):                               # a wrapper, then its handler
             pass
-    assert not locks._TURNS['execution'].queue and locks._TURNS['execution'].owner is None
+    assert not locks._held()                                          # released on the way out
 
 
 def test_another_process_is_still_refused_with_busy(tmp_path, monkeypatch):
@@ -166,7 +186,7 @@ def test_another_process_is_still_refused_with_busy(tmp_path, monkeypatch):
             with locks.exclusive(_Context()):
                 pass
         assert refused.value.code == 'Busy'
-        assert not locks._TURNS['execution'].queue                   # the refused job left the line
+        assert not locks._held()
     finally:
         holder.stdin.write('\n')
         holder.stdin.flush()

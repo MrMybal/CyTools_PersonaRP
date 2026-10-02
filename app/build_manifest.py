@@ -10,9 +10,10 @@ from pathlib import Path
 from personarp.schemas import (LANGUAGES, PERSONA_SCHEMA, RELATION_SCHEMA, SCENE_SCHEMA,
                                STABLE_VOICE_SCHEMA, VOICE_SCHEMA, WORLD_SCHEMA)
 from personarp.authoring import PERSONA_TARGETS, WORLD_TARGETS
+from personarp import exclusion
 
 APP = Path(__file__).resolve().parent
-VERSION = '0.1.1'
+VERSION = '0.1.2'
 
 STR = {'type': 'string'}
 BOOL = {'type': 'boolean'}
@@ -874,6 +875,13 @@ OPERATIONS = [
 ]
 
 
+# The operations that take the execution lock share one exclusion group: the SDK runs them
+# one after the other and keeps the next ones Queued; everything else is answered at once.
+LOCKED = set(exclusion.locked_operations())
+for _operation in OPERATIONS:
+    if _operation['id'] in LOCKED:
+        _operation['exclusiveGroups'] = [exclusion.GROUP]
+
 MANIFEST = {
     'schemaVersion': 1,
     'protocolVersion': '1.0',
@@ -904,7 +912,8 @@ MANIFEST = {
     'interfaces': ['Native', 'CLI', 'JSONL', 'HTTP', 'MCP', 'ImGui'],
     'runtimeRequirements': [],
     # Concurrent: a list, a sheet or a session is answered while a generation runs. The jobs
-    # that use the GPU or stop an engine take turns on the execution lock (personarp/locks.py).
+    # that use the GPU or stop an engine share the 'gpu' exclusion group (SDK 0.10): the
+    # runtime queues them in order; personarp/locks.py keeps other processes out.
     'concurrency': {'policy': 'Concurrent', 'maxWorkers': 16},
     'backends': [{'id': 'llamacpp', 'name': 'llama.cpp', 'kind': 'Local',
                   'description': 'Local GGUF inference on CPU or NVIDIA CUDA.'}],

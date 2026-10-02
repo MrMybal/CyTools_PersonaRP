@@ -6,8 +6,8 @@ et range tout sur Drive. Il ne contient **aucun modèle** : l'outil les téléch
 ligne de commande sur Colab, puis ils sont recopiés sur Drive, où l'outil les relit aux
 sessions suivantes.
 
-Le SDK CyToolsCore est public (https://github.com/MrMybal/CyToolsCore, GPL-3.0) : l'étape
-**Installer** le prend sur GitHub, au commit que l'outil fixe dans `app/requirements.txt`.
+Le SDK CyToolsCore 0.10.1 est public (https://github.com/MrMybal/CyToolsCore, licence MIT) :
+l'étape **Installer** le prend sur GitHub, au commit que l'outil fixe dans `app/requirements.txt`.
 
 ## Mise en place (une fois)
 
@@ -111,5 +111,6 @@ première session est donc aussi un test ; chaque étape dit clairement ce qui n
 
 ## Licence
 
-GNU GPL version 3 (GPL-3.0-only), comme CyTools PersonaRP et CyToolsCore : voir `LICENSE`.
-Les modèles gardent leur propre licence.
+CyTools PersonaRP: GNU General Public License v3.0 only (`LICENSE`). CyToolsCore 0.10.1, which
+the Install step takes from GitHub: MIT (`LICENCES/CyToolsCore-MIT.txt`). Sources of every
+component: `LICENCES/SOURCES.txt`. Models keep their own licences and are downloaded separately.

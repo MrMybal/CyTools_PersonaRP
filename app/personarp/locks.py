@@ -4,14 +4,14 @@ Two Tool processes (the desktop window and an MCP client, say) must not load two
 the same weights or rewrite the application while a scene is being generated: across
 processes, a second holder is refused at once with Busy.
 
-Within one process the runtime runs jobs concurrently, so that reading a list or saving a
-sheet never waits behind a generation (the window waits for those answers; queued behind a
-voice, it stopped drawing and Windows declared it hung). Jobs that need the execution lock
-therefore take turns inside the process instead of failing: first come, first served,
-cancellable while they wait. A job that already holds the lock may take it again (a
-maintenance wrapper around an operation that locks by itself).
+Within one process the runtime orders these jobs itself: every operation that takes the
+execution lock is declared in the SDK's `gpu` exclusion group (SDK 0.10, read from the code by
+personarp/exclusion.py), so the runtime keeps the next ones Queued and answers everything
+else — lists, sheets, sessions — at once. No queue of our own is kept for that.
+
+A job that already holds a lock may take it again: a maintenance wrapper takes it, then the
+operation it wraps does too, in the same thread.
 """
-import collections
 import contextlib
 import os
 import threading
@@ -20,46 +20,14 @@ from cytools_core import CyToolError
 
 from .paths import SETTINGS
 
-WAITING = 'Waiting for the task in progress'
+_HELD = threading.local()
 
 
-class _Turns:
-    """The jobs of this process that want one lock, in the order they asked for it."""
-
-    def __init__(self):
-        self.condition = threading.Condition()
-        self.queue = collections.deque()
-        self.owner = None                       # the thread holding the turn
-
-    def wait(self, context):
-        ticket = object()
-        with self.condition:
-            self.queue.append(ticket)
-        told = False
-        try:
-            while True:
-                with self.condition:
-                    if self.queue[0] is ticket:
-                        self.owner = threading.get_ident()
-                        return ticket
-                if not told:
-                    context.progress(0, currentStep=WAITING)
-                    told = True
-                context.cancellation.sleep(0.1)          # raises Cancelled when asked to stop
-        except BaseException:
-            self.leave(ticket)
-            raise
-
-    def leave(self, ticket):
-        with self.condition:
-            if ticket in self.queue:
-                if self.queue[0] is ticket:
-                    self.owner = None
-                self.queue.remove(ticket)
-            self.condition.notify_all()
-
-
-_TURNS = {'execution': _Turns()}
+def _held():
+    names = getattr(_HELD, 'names', None)
+    if names is None:
+        names = _HELD.names = set()
+    return names
 
 
 @contextlib.contextmanager
@@ -93,23 +61,20 @@ def _file_lock(name):
 
 @contextlib.contextmanager
 def exclusive(context=None, name='execution'):
-    turns = _TURNS.get(name)
-    # Only a job (it has a context to report and cancel through) queues; the resident
-    # model's long lease and the launch-time update swap keep the plain lock.
-    if turns is None or context is None:
-        with _file_lock(name):
+    # The resident model's lease is entered in one job and left in another: never re-entrant.
+    reentrant = name == 'execution'
+    if reentrant and name in _held():
+        if context:
+            context.cancellation.check()
+        yield
+        return
+    with _file_lock(name):
+        if reentrant:
+            _held().add(name)
+        try:
             if context:
                 context.cancellation.check()
             yield
-        return
-    if turns.owner == threading.get_ident():
-        context.cancellation.check()
-        yield
-        return
-    ticket = turns.wait(context)
-    try:
-        with _file_lock(name):
-            context.cancellation.check()
-            yield
-    finally:
-        turns.leave(ticket)
+        finally:
+            if reentrant:
+                _held().discard(name)

@@ -4,14 +4,14 @@
     "name": "CyTools_PersonaRP",
     "license": "GPL-3.0-only",
     "url": "https://github.com/MrMybal/CyTools_PersonaRP",
-    "notes": "Code, interface, ComfyUI nodes, Colab project and examples. See LICENSE. Built on the CyToolsCore SDK (GPL-3.0-only). Models keep their own licences and are downloaded separately."
+    "notes": "Code, interface, ComfyUI nodes, Colab project and examples. See LICENSE. Built on the CyToolsCore SDK (MIT, see LICENCES). Models keep their own licences and are downloaded separately."
   },
   {
     "kind": "SDK",
-    "name": "CyToolsCore 0.9.0",
-    "license": "GPL-3.0-only",
+    "name": "CyToolsCore 0.10.1",
+    "license": "MIT",
     "url": "https://github.com/MrMybal/CyToolsCore",
-    "notes": "Public. Installed from the repository at commit 442f53740fc6 (app/requirements.txt)."
+    "notes": "The SDK the Tool is built on, installed from commit a8d200f (app/requirements.txt). MIT, Copyright (c) 2026 Cyberalien: full text in LICENCES/CyToolsCore-MIT.txt and app/LICENSE-CyToolsCore.txt. Versions 0.1.0 and 0.1.1 of the Tool used CyToolsCore 0.9.0 under GPL-3.0-only."
   },
   {
     "kind": "Engine",

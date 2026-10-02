@@ -27,7 +27,7 @@ from .models import sha
 from .paths import APP, DATA, ROOT, RUNTIME, SETTINGS, TOOL_ID, read_json, write_json
 
 ENGINE_REPO = 'ggml-org/llama.cpp'
-RUNTIME_ABI = 'python311-cytools09-imgui192-personarp01'
+RUNTIME_ABI = 'python311-cytools010-imgui192-personarp01'
 MAX_ARCHIVE_BYTES = 1024 ** 3
 MAX_ASSET_BYTES = 512 * 1024 ** 2
 

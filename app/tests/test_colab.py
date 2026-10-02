@@ -205,3 +205,11 @@ def test_each_command_leaves_a_journal_and_the_report_gathers_it(project, tmp_pa
     document = json.loads(report.read_text(encoding='utf-8'))
     assert document['journal'][-1]['command'] == 'essai' and 'modelsOnDrive' in document
     assert 'token' not in report.read_text(encoding='utf-8').lower()
+
+
+def test_the_project_carries_the_licences(project):
+    root = APP.parent
+    assert (project / 'LICENSE').read_bytes() == (root / 'LICENSE').read_bytes()
+    for name in ('CyToolsCore-MIT.txt', 'SOURCES.txt'):
+        assert (project / 'LICENCES' / name).read_bytes() == (root / 'LICENCES' / name).read_bytes()
+    assert (project / 'outil' / 'app' / 'LICENSE-CyToolsCore.txt').is_file()

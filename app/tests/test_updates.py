@@ -70,3 +70,68 @@ def test_only_a_more_recent_release_is_an_update():
     assert not maintenance.newer('v0.1.1', '0.1.1')
     assert maintenance.newer('b11060', 'b11057') and not maintenance.newer('b11057', 'b11057')
     assert maintenance.newer('b11057', '')                       # no engine installed yet
+
+
+# --------------------------------------------- an application built for another runtime
+
+class _Context:
+    def __init__(self):
+        from cytools_core.runtime import CancellationToken
+        self.cancellation = CancellationToken()
+
+    def progress(self, *args, **kwargs):
+        pass
+
+
+def _staging(tmp_path, monkeypatch, installed_abi):
+    """An installation whose runtime has `installed_abi`, offered this application's archive."""
+    import hashlib
+    import zipfile
+    built = tmp_path / 'cytools-app.zip'
+    with zipfile.ZipFile(built, 'w') as archive:
+        for name in ('CyTool.json', 'release.json', 'desktop.py', 'tool.py'):
+            archive.write(APP / name, 'app/' + name)
+    installed = tmp_path / 'installed' / 'app'
+    installed.mkdir(parents=True)
+    (installed / 'release.json').write_text(json.dumps({'runtime_abi': installed_abi}),
+                                            encoding='utf-8')
+
+    class LocalRelease:
+        def __init__(self, root, **options):
+            self.root = Path(root)
+
+        def download(self, name, url, **options):
+            target = self.root / name
+            target.write_bytes(built.read_bytes())
+            return {'path': str(target)}
+
+    monkeypatch.setattr(maintenance, 'DownloadManager', LocalRelease)
+    monkeypatch.setattr(maintenance, 'APP', installed)
+    monkeypatch.setattr(maintenance, 'ROOT', tmp_path)
+    monkeypatch.setattr(maintenance, 'RUNTIME', tmp_path / 'runtime')
+    monkeypatch.setattr(maintenance, 'SETTINGS', tmp_path / 'settings')
+    digest = hashlib.sha256(built.read_bytes()).hexdigest()
+    url = 'https://github.com/MrMybal/CyTools_PersonaRP/releases/download/v%s/cytools-app.zip'
+    return {'kind': 'app', 'repository': 'MrMybal/CyTools_PersonaRP', 'version': 'v' + INSTALLED,
+            'assets': [{'name': 'cytools-app.zip', 'browser_download_url': url % INSTALLED,
+                        'digest': 'sha256:' + digest, 'size': built.stat().st_size}]}
+
+
+def test_an_application_for_the_sdk_010_runtime_is_refused_by_an_older_installation(
+        tmp_path, monkeypatch):
+    """0.1.2 declares SDK 0.10 exclusion groups an SDK 0.9 runtime would silently ignore."""
+    release = json.loads((APP / 'release.json').read_text(encoding='utf-8'))
+    assert 'cytools010' in release['runtime_abi'] and release['runtime_abi'] == maintenance.RUNTIME_ABI
+    state = _staging(tmp_path, monkeypatch, 'python311-cytools09-imgui192-personarp01')
+    with pytest.raises(CyToolError) as refused:
+        maintenance.stage_update(_Context(), state)
+    assert refused.value.code == 'IncompatibleRuntime'
+    assert not (tmp_path / 'settings' / 'app-pending.json').exists()
+
+
+def test_the_same_runtime_stages_the_application(tmp_path, monkeypatch):
+    state = _staging(tmp_path, monkeypatch, maintenance.RUNTIME_ABI)
+    staged = maintenance.stage_update(_Context(), state)
+    pending = json.loads((tmp_path / 'settings' / 'app-pending.json').read_text(encoding='utf-8'))
+    assert staged['version'] == 'v' + INSTALLED and pending['version'] == INSTALLED
+    assert set(pending['files']) == {'CyTool.json', 'release.json', 'desktop.py', 'tool.py'}

@@ -3,7 +3,7 @@
   "protocolVersion": "1.0",
   "id": "cy.tool.personarp",
   "name": "CyTools_PersonaRP",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Persistent characters: complete sheets, shared world lore, relationships, evolving dialogue, delivery annotations, and machine-readable scene descriptions for image and video tools. Runs locally.",
   "vendor": "Cyberalien",
   "author": "Cyberalien",
@@ -1607,7 +1607,10 @@
         "ramBytes": 1073741824,
         "cpuThreads": 4,
         "diskBytes": 268435456
-      }
+      },
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "preview_prompt",
@@ -2962,7 +2965,10 @@
       "resourceRequirements": {
         "ramBytes": 1073741824,
         "cpuThreads": 4
-      }
+      },
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "apply_proposal",
@@ -17235,7 +17241,10 @@
       "resourceRequirements": {
         "ramBytes": 1073741824,
         "cpuThreads": 4
-      }
+      },
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "speak_turn",
@@ -17409,7 +17418,10 @@
         "vramBytes": {
           "auto": 6442450944
         }
-      }
+      },
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "choose_take",
@@ -17494,7 +17506,10 @@
       "permissions": [],
       "canRunAsync": true,
       "canCancel": false,
-      "supportsProgress": false
+      "supportsProgress": false,
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "remove_take",
@@ -17585,7 +17600,10 @@
       "permissions": [],
       "canRunAsync": true,
       "canCancel": false,
-      "supportsProgress": false
+      "supportsProgress": false,
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "speak_batch",
@@ -17914,7 +17932,10 @@
         "vramBytes": {
           "auto": 6442450944
         }
-      }
+      },
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "speak_batch_file",
@@ -18264,7 +18285,10 @@
         "vramBytes": {
           "auto": 6442450944
         }
-      }
+      },
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "comfyui_nodes_status",
@@ -19024,7 +19048,10 @@
       "resourceRequirements": {
         "ramBytes": 1073741824,
         "cpuThreads": 8
-      }
+      },
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "list_assistant_threads",
@@ -22843,7 +22870,10 @@
       "resourceRequirements": {
         "ramBytes": 1073741824,
         "cpuThreads": 4
-      }
+      },
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "speak",
@@ -23200,7 +23230,10 @@
         "vramBytes": {
           "auto": 6442450944
         }
-      }
+      },
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "capture_voice_take",
@@ -23335,7 +23368,10 @@
         "vramBytes": {
           "auto": 6442450944
         }
-      }
+      },
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "create_stable_voice",
@@ -23578,7 +23614,10 @@
       ],
       "canRunAsync": true,
       "canCancel": true,
-      "supportsProgress": true
+      "supportsProgress": true,
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "list_voices",
@@ -23767,7 +23806,10 @@
         "vramBytes": {
           "auto": 4294967296
         }
-      }
+      },
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "list_voice_models",
@@ -23853,7 +23895,10 @@
       ],
       "canRunAsync": true,
       "canCancel": true,
-      "supportsProgress": true
+      "supportsProgress": true,
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "install_voice_engine",
@@ -23895,7 +23940,10 @@
       "supportsProgress": true,
       "resourceRequirements": {
         "diskBytes": 9663676416
-      }
+      },
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "release_voice",
@@ -23920,7 +23968,10 @@
       "permissions": [],
       "canRunAsync": true,
       "canCancel": false,
-      "supportsProgress": false
+      "supportsProgress": false,
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "list_models",
@@ -24004,7 +24055,10 @@
       ],
       "canRunAsync": true,
       "canCancel": true,
-      "supportsProgress": true
+      "supportsProgress": true,
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "install_cuda",
@@ -24037,7 +24091,10 @@
       ],
       "canRunAsync": true,
       "canCancel": true,
-      "supportsProgress": true
+      "supportsProgress": true,
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "unload_model",
@@ -24062,7 +24119,10 @@
       "permissions": [],
       "canRunAsync": true,
       "canCancel": false,
-      "supportsProgress": false
+      "supportsProgress": false,
+      "exclusiveGroups": [
+        "gpu"
+      ]
     },
     {
       "id": "diagnose_backend",
@@ -24172,7 +24232,10 @@
       ],
       "canRunAsync": true,
       "canCancel": true,
-      "supportsProgress": true
+      "supportsProgress": true,
+      "exclusiveGroups": [
+        "gpu"
+      ]
     }
   ],
   "distributionStatus": "In development: see VALIDATION.md for what has actually been executed."

@@ -1,0 +1,40 @@
+CyTools PersonaRP - licences and sources of what it is made of
+
+This folder travels with CyTools PersonaRP: in the repository, in the Windows release and in
+the Colab project. Links do not replace the licence texts; the full texts are in this folder
+or beside the component they cover.
+
+
+CyTools PersonaRP (the Tool's own code, interface, ComfyUI nodes, Colab project, examples)
+  Source:  https://github.com/MrMybal/CyTools_PersonaRP
+  Licence: GNU General Public License v3.0 only - LICENSE at the root of the Tool.
+
+
+CyToolsCore 0.10.1 - the SDK the Tool is built on (runtime, jobs, sessions, CLI, MCP)
+  Source:  https://github.com/MrMybal/CyToolsCore
+  Commit:  a8d200f2d0baaade1633e0683663b4506c595f74 (installed from app/requirements.txt)
+  Licence: MIT, Copyright (c) 2026 Cyberalien - full text in CyToolsCore-MIT.txt, and in
+           app/LICENSE-CyToolsCore.txt, the notice every CyTool keeps beside its code.
+  Guides:  https://github.com/MrMybal/CyToolsCore/blob/main/Docs/CreatingYourFirstCyTool.md
+           https://github.com/MrMybal/CyToolsCore/blob/main/Docs/AgentGuide.md
+           https://github.com/MrMybal/CyToolsCore/blob/main/Docs/Licensing.md
+           https://github.com/MrMybal/CyToolsCore/blob/main/Docs/UpdateExistingProducts.md
+  CyTools PersonaRP 0.1.0 and 0.1.1 were built on CyToolsCore 0.9.0, distributed under
+  GPL-3.0-only; copies received under that licence keep it.
+
+
+Windows release only - the private Python runtime (runtime/python)
+  CPython 3.11: https://www.python.org/downloads/source/
+                PSF License Version 2 - runtime/python/LICENSE.txt
+  Python packages: each one with its version and licence in Python-Runtime-Notices.txt
+                (written into this folder by the release build) and runtime/python/THIRD-PARTY.md;
+                the full licence text of each package is in its
+                runtime/python/Lib/site-packages/<package>.dist-info folder.
+                Sources: https://pypi.org/project/<package>/
+
+
+Not part of the Tool - downloaded separately, each under its own licence
+  Conversation and vision models (app/llm-catalog.json), speech and transcription models
+  (app/tts-catalog.json), the llama.cpp engine (https://github.com/ggml-org/llama.cpp, MIT) and
+  the speech engine's packages (app/engines.json). The application shows each licence and asks
+  for acceptance before downloading; app/licenses.json lists them.

@@ -165,6 +165,9 @@ def build(target=DEFAULT_TARGET):
     shutil.copy2(APP / 'colab' / 'personarp_colab.py', target / 'personarp_colab.py')
     shutil.copy2(APP / 'colab' / 'LISEZ-MOI.md', target / 'LISEZ-MOI.md')
     shutil.copy2(ROOT / 'LICENSE', target / 'LICENSE')
+    if (target / 'LICENCES').exists():                    # notices are replaced, never merged
+        shutil.rmtree(target / 'LICENCES')
+    shutil.copytree(ROOT / 'LICENCES', target / 'LICENCES')
     (target / 'PersonaRP_Colab.ipynb').write_text(
         json.dumps(notebook(), ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
 

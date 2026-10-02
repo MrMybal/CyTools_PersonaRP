@@ -112,6 +112,7 @@ interface has them.
 ```
 CyTools_PersonaRP.exe   Windows launcher (built locally, not in git)
 CyTools_PersonaRP.sh    Linux launcher (never executed by the author)
+LICENCES/               licence texts and sources: CyToolsCore (MIT), SOURCES.txt
 LISEZ-MOI.md            user guide (French)
 app/                    code, manifest (CyTool.json), interface, workers, tests, docs,
                         example worlds, ComfyUI nodes, Colab project sources
@@ -126,8 +127,12 @@ summarised at the end of [LISEZ-MOI.md](LISEZ-MOI.md).
 
 ## Licence
 
-Free software under the **GNU General Public License v3.0 only** ([LICENSE](LICENSE)), like the
-CyToolsCore SDK it is built on. This covers the code, the interface, the ComfyUI nodes, the Colab
-project and the example worlds. Engines and model weights keep their own licences, listed in
-[app/licenses.json](app/licenses.json), in the model catalogues and in the Options tab; the
-Models tab asks for acceptance before downloading.
+Free software under the **GNU General Public License v3.0 only** ([LICENSE](LICENSE)). This covers
+the code, the interface, the ComfyUI nodes, the Colab project and the example worlds. The Tool is
+built on the [CyToolsCore](https://github.com/MrMybal/CyToolsCore) 0.10.1 SDK, licensed under
+**MIT** (Copyright (c) 2026 Cyberalien): full text in
+[LICENCES/CyToolsCore-MIT.txt](LICENCES/CyToolsCore-MIT.txt), sources of every component in
+[LICENCES/SOURCES.txt](LICENCES/SOURCES.txt). Engines and model weights keep their own licences,
+listed in [app/licenses.json](app/licenses.json), in the model catalogues and in the Options tab;
+the Models tab asks for acceptance before downloading. Releases 0.1.0 and 0.1.1 were built on
+CyToolsCore 0.9.0 under GPL-3.0-only; copies received under that licence keep it.

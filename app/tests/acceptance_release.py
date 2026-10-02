@@ -40,7 +40,17 @@ import psutil
 APP = Path(__file__).resolve().parents[1]
 ROOT = APP.parent
 NAME = 'CyTools_PersonaRP'
-EXPECTED_ROOT = {NAME + '.exe', 'LICENSE', 'LISEZ-MOI.md', 'README.md', 'app', 'data', 'runtime'}
+EXPECTED_ROOT = {NAME + '.exe', 'LICENSE', 'LICENCES', 'LISEZ-MOI.md', 'README.md', 'app', 'data',
+                 'runtime'}
+NOTICES = {'CyToolsCore-MIT.txt', 'SOURCES.txt', 'Python-Runtime-Notices.txt'}
+SDK_PROBE = ('import json, importlib.metadata as m\n'
+             'found = [d for d in m.distributions()\n'
+             '         if (d.metadata["Name"] or "").lower().replace("_", "-") == "cytools-core"]\n'
+             'text = (found[0].read_text("licenses/LICENSE") or "") if found else ""\n'
+             'print(json.dumps({"copies": len(found),\n'
+             '                  "version": found[0].version if found else "",\n'
+             '                  "expression": found[0].metadata.get("License-Expression") if found else "",\n'
+             '                  "mit": text.startswith("MIT License"), "gpl": "GNU GENERAL" in text}))\n')
 PROBE = ('import sys, site, json, importlib\n'
          'names = ["cytools_core", "imgui_bundle", "numpy", "PIL", "soundfile", "sounddevice",\n'
          '         "gguf", "win32api", "mcp", "psutil", "venv", "ensurepip", "ssl", "sqlite3"]\n'
@@ -76,9 +86,27 @@ def inside(path, root):
 def check_layout(root):
     present = set(os.listdir(root))
     runtime = set(os.listdir(root / 'runtime'))
+    notices = set(os.listdir(root / 'LICENCES')) if (root / 'LICENCES').is_dir() else set()
+    core = root / 'LICENCES' / 'CyToolsCore-MIT.txt'
+    core_text = core.read_text(encoding='utf-8') if core.is_file() else ''
+    scaffold = root / 'app' / 'LICENSE-CyToolsCore.txt'
     ok = present == EXPECTED_ROOT and {'bootstrap.py', 'python', 'build-info.json'} <= runtime \
-        and not any((root / 'data').iterdir())
-    return ok, {'root': sorted(present), 'runtime': sorted(runtime)}
+        and not any((root / 'data').iterdir()) and NOTICES <= notices \
+        and core_text.startswith('MIT License') and 'Copyright (c) 2026 Cyberalien' in core_text \
+        and scaffold.is_file() and scaffold.read_text(encoding='utf-8') == core_text
+    return ok, {'root': sorted(present), 'runtime': sorted(runtime), 'licences': sorted(notices)}
+
+
+def check_sdk(root, python, elsewhere):
+    """The SDK really shipped: one copy, 0.10.1 or later, MIT, no GPL copy left behind."""
+    code, out, err = run([python, '-c', SDK_PROBE], elsewhere)
+    if code:
+        return False, {'error': err[-800:]}
+    seen = json.loads(out)
+    version = tuple(int(part) for part in seen['version'].split('.')[:3]) if seen['version'] else ()
+    ok = seen['copies'] == 1 and version >= (0, 10, 1) and seen['expression'] == 'MIT' \
+        and seen['mit'] and not seen['gpl']
+    return ok, seen
 
 
 def shadowed(python, folder):
@@ -165,10 +193,35 @@ async def _mcp(root, python, elsewhere):
             personas = (await call(session, 'op_list_personas', {}))['personas']
             preview = await call(session, 'op_preview_prompt',
                                  {'persona_id': personas[0]['id'], 'text': 'Bonjour.'})
+            # The runtime status (fixed in SDK 0.10), then an AI task of its own: a result
+            # written in its workspace, exported, and the task cleaned up afterwards.
+            status = json.loads((await session.call_tool('cy_status', {})).content[0].text)
+            task = json.loads((await session.call_tool('cy_begin_task', {})).content[0].text)
+            task_id = task.get('sessionId') or task.get('result', {}).get('sessionId')
+            built = await session.call_tool('op_scene_prompts', {
+                'parameters': {'scene': {}, 'persona_id': personas[0]['id']}, 'sessionId': task_id})
+            job = json.loads(built.content[0].text)
+            while job.get('state') not in ('Completed', 'Failed', 'Cancelled'):
+                await asyncio.sleep(0.2)
+                job = json.loads((await session.call_tool('cy_get_job', {'jobId': job['jobId']}))
+                                 .content[0].text)
+            destination = elsewhere / 'exported'
+            exported = await session.call_tool('cy_export_job', {'jobId': job['jobId'],
+                                                                'destination': str(destination)})
+            finished = await session.call_tool('cy_finish_task', {'sessionId': task_id})
+            workspace = Path(job.get('workspace', ''))
+            deadline = time.monotonic() + 10
+            while workspace.exists() and time.monotonic() < deadline:
+                await asyncio.sleep(0.2)
     return {'tools': len(tools), 'operations': sum(name.startswith('op_') for name in tools),
             'imported': first['world'], 'importOutputs': sorted(imported),
             'personas': [persona['id'] for persona in personas],
-            'promptCharacters': preview['context']['promptCharacters']}
+            'promptCharacters': preview['context']['promptCharacters'],
+            'runtimeStatus': {key: status.get(key, status.get('result', {}).get(key))
+                              for key in ('toolId', 'runningJobs', 'runningWorkers')},
+            'taskJob': job.get('state'), 'exportError': exported.isError,
+            'exportedFiles': sorted(path.name for path in destination.rglob('*') if path.is_file()),
+            'finishError': finished.isError, 'workspaceRemoved': not workspace.exists()}
 
 
 def _leaves(error):
@@ -183,7 +236,12 @@ def check_mcp(root, python, elsewhere):
     except Exception as error:                                   # reported, never hidden
         return False, {'error': ['%s: %s' % (type(leaf).__name__, str(leaf)[:600])
                                  for leaf in _leaves(error)]}
-    return seen['operations'] >= 60 and len(seen['personas']) >= 3 and seen['promptCharacters'] > 0, seen
+    ok = seen['operations'] >= 60 and len(seen['personas']) >= 3 and seen['promptCharacters'] > 0 \
+        and seen['runtimeStatus'].get('toolId') == 'cy.tool.personarp' \
+        and seen['taskJob'] == 'Completed' and not seen['exportError'] \
+        and 'scene.json' in seen['exportedFiles'] and not seen['finishError'] \
+        and seen['workspaceRemoved']
+    return ok, seen
 
 
 def check_window(root, elsewhere, tabs=('Scene', 'Models')):
@@ -256,6 +314,8 @@ def main():
     parser.add_argument('--tests', action='store_true', help='also run the test suite in the copy')
     parser.add_argument('--keep', action='store_true', help='keep the extracted copy')
     parser.add_argument('--only', default='', help='comma-separated checks to run, e.g. mcp,cli')
+    parser.add_argument('--report', default=str(ROOT / 'data/reports/release-acceptance.json'),
+                        help='where the JSON report is written (it may live outside the Tool)')
     options = parser.parse_args()
     only = {name for name in options.only.split(',') if name}
     package = Path(options.zip)
@@ -273,7 +333,8 @@ def main():
                             ('cli', lambda: check_cli(root, python, elsewhere)),
                             ('mcp', lambda: check_mcp(root, python, elsewhere)),
                             ('window', lambda: check_window(root, elsewhere)),
-                            ('venv', lambda: check_venv(root, python, elsewhere))) + \
+                            ('venv', lambda: check_venv(root, python, elsewhere)),
+                            ('sdk', lambda: check_sdk(root, python, elsewhere))) + \
                 (((('tests', lambda: check_tests(root, python)),) if options.tests else ())):
             if only and name not in only:
                 continue
@@ -289,7 +350,7 @@ def main():
               'bytes': package.stat().st_size, 'extractedTo': 'a new temporary folder with a space in its name',
               'environment': 'PATH reduced to Windows, no PYTHON* variable, working directory outside the package',
               'checks': checks, 'kept': str(folder) if options.keep else ''}
-    output = ROOT / 'data/reports/release-acceptance.json'
+    output = Path(options.report)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
     failed = [name for name, check in checks.items() if not check['ok']]

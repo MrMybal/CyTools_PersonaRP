@@ -1,4 +1,4 @@
-# CyTools PersonaRP — 0.1.1
+# CyTools PersonaRP — 0.1.2
 
 Lancer **CyTools_PersonaRP.exe**. La fenêtre s'ouvre directement : pas de terminal, pas de
 JSON à écrire.
@@ -398,11 +398,15 @@ modèles de parole ont leur propre liste dans l'onglet **Voix**.
 
 ## Licence
 
-CyTools PersonaRP est un logiciel libre sous **GNU GPL version 3** (GPL-3.0-only), comme le SDK
-CyToolsCore sur lequel il repose : le texte complet est dans `LICENSE`. Cela couvre tout
-l'outil — le code, l'interface, les nodes ComfyUI, le projet Colab et les mondes d'exemple.
-Les modèles (Qwen3, Qwen3-TTS, Whisper…) ne font pas partie de l'outil : ils se téléchargent à
-part et gardent chacun leur licence, affichée dans l'onglet Modèles et dans **Options**.
+CyTools PersonaRP is free software under the **GNU General Public License v3.0 only**
+(`LICENSE`). It is built on the **CyToolsCore 0.10.1** SDK, which is under the **MIT** licence
+(Copyright (c) 2026 Cyberalien): its full text is in `LICENCES/CyToolsCore-MIT.txt` and in
+`app/LICENSE-CyToolsCore.txt`. `LICENCES/SOURCES.txt` lists where every component comes from;
+the Windows release adds `LICENCES/Python-Runtime-Notices.txt` for its private Python. Models
+and engines are not part of the Tool: they are downloaded separately, each under its own
+licence, shown in the Models tab and in **Options** before anything is downloaded. Versions
+0.1.0 and 0.1.1 were built on CyToolsCore 0.9.0 under GPL-3.0-only; copies received under that
+licence keep it.
 
 ## Mises à jour
 

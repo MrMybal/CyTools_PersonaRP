@@ -189,6 +189,18 @@ def third_party(python, target, python_version):
              '| CPython | %s | PSF-2.0 (`LICENSE.txt`) |' % python_version]
     lines += ['| %s | %s | %s |' % tuple(cell.replace('|', '/') for cell in row) for row in rows]
     (target / 'THIRD-PARTY.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')
+    # The same list beside the other notices, where LICENCES/SOURCES.txt says it is.
+    notices = ['Python runtime of the CyTools PersonaRP Windows release (runtime/python)', '',
+               'Each component keeps its own licence. The full texts are in the release:',
+               '  CPython          runtime/python/LICENSE.txt',
+               '  each package     runtime/python/Lib/site-packages/<package>.dist-info/',
+               'Sources: https://www.python.org/downloads/source/ and '
+               'https://pypi.org/project/<package>/',
+               '', '%-28s %-14s %s' % ('Component', 'Version', 'Licence'),
+               '%-28s %-14s %s' % ('CPython', python_version, 'PSF-2.0')]
+    notices += ['%-28s %-14s %s' % tuple(row) for row in rows]
+    (target.parent.parent / 'LICENCES' / 'Python-Runtime-Notices.txt').write_text(
+        '\n'.join(notices) + '\n', encoding='utf-8')
     return rows
 
 

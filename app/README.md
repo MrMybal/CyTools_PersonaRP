@@ -1,14 +1,18 @@
 # CyTools_PersonaRP — developer documentation
 
-`cy.tool.personarp`, built on CyToolsCore 0.9.0. Local roleplay with persistent characters,
+`cy.tool.personarp`, built on CyToolsCore 0.10.1. Local roleplay with persistent characters,
 a shared world, relationships, and machine-readable scene descriptions for image and video
 tools. No model is part of the repository: engines and weights are downloaded from the
 interface (Models tab, Voice tab), each at a pinned revision and verified by SHA-256.
 
-License: GPL-3.0-only (`../LICENSE`), like the CyToolsCore SDK it is built on. It covers the
-code, the window, the ComfyUI node pack (which carries its own copy of the licence), the Colab
-project and the example worlds; model weights are downloaded separately under their own
-licences (`licenses.json`, `llm-catalog.json`, `tts-catalog.json`).
+License: GPL-3.0-only (`../LICENSE`). It covers the code, the window, the ComfyUI node pack
+(which carries its own copy of the licence), the Colab project and the example worlds. The SDK,
+CyToolsCore 0.10.1, is MIT: `../LICENCES/CyToolsCore-MIT.txt` and `LICENSE-CyToolsCore.txt`
+(the notice the 0.10.1 scaffold puts beside a Tool's code) hold its full text, and
+`../LICENCES/SOURCES.txt` lists the sources of every component. `LICENCES/` is in git, in the
+release zip (with `Python-Runtime-Notices.txt` written by `build_release.py`) and in the Colab
+project. Model weights are downloaded separately under their own licences (`licenses.json`,
+`llm-catalog.json`, `tts-catalog.json`).
 
 ## Install, build, run
 
@@ -17,10 +21,12 @@ py -3.11 -m venv runtime/python
 cd app && ../runtime/python/Scripts/python.exe -m pip install -r requirements.txt
 ```
 
-The requirement file installs CyToolsCore 0.9.0 (GPL-3.0-only) from its public repository,
-https://github.com/MrMybal/CyToolsCore, pinned to commit `442f53740fc6` — the code this Tool was
-verified against (the published files match the wheel it was developed with, line endings and
-one trailing blank line aside). **git must be on the PATH**: pip clones that commit.
+The requirement file installs CyToolsCore 0.10.1 (MIT) from its public repository,
+https://github.com/MrMybal/CyToolsCore, pinned to commit `a8d200f2d0ba` — the code this Tool was
+migrated to and verified against. **git must be on the PATH**: pip clones that commit. Going
+back to 0.1.1 means its commit and its requirement (CyToolsCore 0.9.0 at `442f53740fc6`);
+`release.json` carries `runtime_abi` `python311-cytools010-…`, so the Updates tab refuses to put
+this application on a runtime that still has the 0.9 SDK, which would ignore the exclusion groups.
 
 | Task | Command |
 | --- | --- |
@@ -144,14 +150,18 @@ The manifest declares `Concurrent` (16 workers): the window waits for the answer
 sheet or a session (`AppState.call`), and under `Sequential` those requests queued behind a voice
 being spoken — the window stopped drawing, Windows declared it hung, and closing it lost the voice
 already generated. Every job that uses the GPU or stops an engine (`chat`, `speak*`, `translate`,
-`describe_image`, installations, `update`, `unload_model`, `release_voice`) goes through
-`personarp.locks.exclusive`: inside one process those jobs take turns, first come first served,
-reporting *Waiting for the task in progress* and cancellable while they wait; a job already
-holding the lock may take it again (the maintenance wrapper, then its handler); another process
-is still refused at once with `Busy`. `tests/test_concurrency.py` holds a job on the lock and
-checks that a list is answered at once, that a second job waits instead of failing, that a
-waiting job can be cancelled, that unloading the model waits for the generation, and that
-another process gets `Busy`.
+`describe_image`, installations, `update`, `unload_model`, `release_voice`, the take operations
+— 21 in all) takes `personarp.locks.exclusive` and is declared in the SDK's `gpu` exclusion
+group (CyToolsCore 0.10, `operations[].exclusiveGroups`): the runtime itself keeps the next ones
+Queued, in order, cancellable, without a worker slot. `personarp/exclusion.py` reads that list
+from `tool.py` (handlers and wrappers that take the lock) and `build_manifest.py` writes it, so
+the two cannot drift. The lock no longer queues anything: it keeps other processes out (the
+window and an MCP server have separate runtimes, which the groups do not coordinate) and lets a
+job that holds it take it again (the maintenance wrapper, then its handler).
+`tests/test_concurrency.py` checks that the grouped list equals what the code locks, that the
+installed SDK enforces groups, that a list is answered at once while a job holds the lock, that
+a second job stays Queued then runs, that a queued job can be cancelled, that unloading the
+model waits for the generation, and that another process gets `Busy`.
 
 ### The binary release
 
@@ -348,13 +358,13 @@ bar; ComfyUI's interruption cancels them. GPU nodes can `unload_all_models()` fi
 `unload_model` / `release_voice` after. AUDIO is `{'waveform': [1, C, T], 'sample_rate'}`;
 takes are copied into ComfyUI's `output/personarp`.
 
-`GetRuntimeStatus` answers `InternalError` in CyToolsCore 0.9.0 — an SDK defect, worked around.
+`GetRuntimeStatus` answered `InternalError` in CyToolsCore 0.9.0; 0.10.0 fixed it (the release acceptance reads it over MCP). The nodes still probe the server with `GetCapabilities`.
 
 ### Colab
 
 `app/build_colab.py` builds `CyTools_PersonaRP_Colab` beside the Tool: `outil/app` (the Tool
 without `gui/`, `desktop.py`, the UI helpers, `tests/`, `Docs/`, `locales/`),
-`outil/packages` (the CyToolsCore wheel), the runner `app/colab/personarp_colab.py`, a notebook
+`LICENCES/`, the runner `app/colab/personarp_colab.py`, a notebook
 generated by the build script (one source), `app/colab/LISEZ-MOI.md` and an example task. It
 refuses to build if a weight file slipped in, and rebuilding leaves `taches/`, `modeles/` and
 `resultats/` alone.
