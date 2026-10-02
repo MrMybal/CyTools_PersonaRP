@@ -53,7 +53,9 @@ qu'une caméra verrait.
   est relue et modifiable ; elle n'est appliquée que si vous le demandez.
 - **Voix stable** — une prise de 12 à 24 secondes capturée une fois, puis clonée pour toutes
   les répliques suivantes, avec des annotations de jeu écrites par le personnage lui-même.
-- **Import / export** — un personnage s'exporte avec son monde et sa fiche de voix, en un
+- **Import / export** — un personnage s'exporte avec son monde et sa fiche de voix — et, si
+  vous cochez *Inclure leurs scènes*, les scènes jouées avec lui (les répliques, pas les
+  prises) —, en un
   seul fichier transportable.
 
 ## Mondes d'exemple
@@ -135,8 +137,10 @@ C'est le cœur du dispositif, en trois gestes.
 1. **Capturer une prise** de 12 à 24 secondes. Soit vous **décrivez** la voix en une phrase
    (« femme, fin de vingtaine, grave et posée, débit lent, chaleur contenue ») et elle est
    inventée ; soit vous choisissez une **voix prédéfinie** ; soit vous fournissez votre
-   **propre enregistrement**. La prise est transcrite automatiquement, parce qu'un clonage a
-   besoin des mots réellement prononcés, pas de ceux que vous vouliez.
+   **propre enregistrement** — un fichier, ou **Enregistrer au micro** dans *Utiliser votre
+   propre enregistrement* (choix du micro, niveau affiché, arrêt automatique à 30 s ; le WAV
+   est rangé dans `data/inputs`). La prise est transcrite automatiquement, parce qu'un clonage
+   a besoin des mots réellement prononcés, pas de ceux que vous vouliez.
 2. **Écouter.** La durée est affichée et l'outil dit si elle est dans la bonne fenêtre.
 3. **Garder.** La prise devient une voix stable : verrouillée, empreinte enregistrée,
    rattachée au personnage. **Toutes ses répliques suivantes sont clonées depuis cette
@@ -165,6 +169,17 @@ Une limite à connaître : **une voix clonée ne lit aucune consigne écrite**. 
 clonage de Qwen3-TTS reproduit sa prise et n'a pas d'entrée pour une direction ; les
 indications `[ton: …]`, `[émotion: …]` et la direction permanente ne guident donc que les voix
 inventées et les voix prédéfinies. Les **pauses**, elles, s'appliquent à toutes les voix.
+
+**Vitesse et hauteur** (fiche, onglet Voix) se règlent pour chaque personnage : ×0,5 à ×2 et
+±12 demi-tons. Elles sont appliquées après le modèle, par traitement du signal (la vitesse ne
+change pas la hauteur), à chaque réplique dite — scènes, traductions, lots — et jamais à la
+prise dont une voix stable est tirée, pour que le clonage reste fidèle. Quelques demi-tons
+changent la hauteur d'une voix ; une octave en fait une autre voix.
+
+**Chaque réplique garde toutes ses prises.** Redire une réplique ajoute une prise au lieu de
+remplacer la précédente : *Prise 2 sur 3*, les flèches pour passer de l'une à l'autre (la
+réplique joue celle que vous choisissez), et *Mettre cette prise à la corbeille* pour
+l'écarter — elle part dans `audio/<scène>/.trash`, rien n'est supprimé.
 
 ### Traduire une scène et l'entendre dans une autre langue
 
@@ -355,14 +370,20 @@ ses propres poids : le clonage demande une variante **Base**, une voix prédéfi
 **CustomVoice**, une voix inventée demande **VoiceDesign**. L'outil choisit tout seul et vous
 prévient s'il doit remplacer.
 
-La transcription sert aussi à dicter : `transcribe` sur un WAV rend le texte. La capture
-depuis un micro physique n'est pas dans cette version.
+**Dicter** (sous le champ du message, onglet Scène) enregistre le micro jusqu'à ce que vous
+l'arrêtiez (2 minutes au plus), puis Whisper le transcrit : les mots sont ajoutés au message,
+que vous relisez avant de l'envoyer. Le micro utilisé est celui choisi dans l'onglet Voix (par
+défaut, celui du système). Depuis la CLI ou MCP, `transcribe` prend un fichier WAV : aucune
+opération n'ouvre le micro, qui n'est enregistré que par un bouton de la fenêtre.
 
 ## Langue de l'interface
 
 L'interface est en anglais par défaut et entièrement en français si vous le choisissez dans
-**Options**. Seuls les messages renvoyés par une opération elle-même — une erreur du moteur
-par exemple — restent en anglais, parce qu'ils sont partagés avec la CLI et MCP.
+**Options**. Les messages renvoyés par une opération — une erreur, une note sur la voix
+utilisée, l'état d'une mise à jour — sont écrits une fois en anglais, parce que la CLI et MCP
+les partagent ; la fenêtre les affiche traduits, valeurs comprises (« Cette réplique n'a pas
+encore de traduction en allemand »). Le code de l'erreur reste affiché entre crochets, pour une
+recherche ou un signalement.
 
 ## Modèles
 
@@ -433,10 +454,15 @@ leurs voix (dont une vraie voix anglaise créée pour l'occasion), importés dan
 bibliothèque vide, 16 répliques en français et en anglais nommées par leur ID — 15,7 s en lots
 automatiques contre 74,7 s une par une —, la voix inventée et la voix prédéfinie, la reprise, et
 Whisper a confirmé que chaque prise vérifiée dit sa propre réplique. Détails :
-`data/reports/VALIDATION.md`. N'ont **pas** été testés : les tâches sur une autre carte (A100)
-ou sous Linux, les lots sur processeur, Linux, une vraie release GitHub, un installeur redistribuable, le
-téléchargement depuis zéro des modèles de conversation et de parole (seul le modèle de vision
-l'a été), la reprise d'un téléchargement interrompu, la capture micro et le mode CPU pour la
-parole.
+`data/reports/VALIDATION.md`. Ont aussi tourné : la version binaire (le zip de la release,
+extrait dans un dossier neuf et lancé sans Python sur la machine), la **parole sur processeur**
+(une réplique en 56 s avec 6 threads, que Whisper sur processeur a retranscrite mot pour mot),
+la **reprise d'un téléchargement interrompu** (sur un serveur local, puis sur Hugging Face :
+la relance repart d'où elle s'était arrêtée), la vitesse et la hauteur mesurées sur une vraie
+voix, les prises multiples et l'enregistreur (avec un micro simulé). N'ont **pas** été testés :
+un enregistrement depuis un vrai micro, Colab lui-même (le notebook écrit maintenant un
+rapport à renvoyer), les tâches sur une autre carte (A100) ou sous Linux, les lots sur
+processeur, Linux, une mise à jour d'une release publiée à la suivante, et le téléchargement
+complet depuis zéro des modèles de conversation et de parole.
 
 Documentation technique : `app/README.md`.

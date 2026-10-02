@@ -237,11 +237,27 @@ def _voice_documents(persona):
     return documents
 
 
-def build_bundle(persona_ids, include_world=True, include_voice=True):
-    """A self-contained document: the sheets, their world, and their voice descriptors."""
+def portable_scene(document):
+    """A scene as it travels in a bundle: its words, not the takes recorded on this machine."""
+    scene = copy.deepcopy(document)
+    for turn in scene.get('turns', []):
+        turn.pop('audio', None)
+        for translated in (turn.get('translations') or {}).values():
+            translated.pop('audio', None)
+    return {key: scene[key] for key in ('id', 'persona_id', 'title', 'created', 'turns')
+            if key in scene}
+
+
+def build_bundle(persona_ids, include_world=True, include_voice=True, include_sessions=False):
+    """A self-contained document: the sheets, their world, their voice descriptors and, when
+    asked, their scenes."""
     sheets = [personas.get(identifier) for identifier in persona_ids]
     bundle = {'format': FORMAT_BUNDLE, 'schemaVersion': SCHEMA_VERSION, 'exported': now(),
               'personas': sheets, 'worlds': [], 'voices': []}
+    if include_sessions:
+        from . import sessions as scenes
+        bundle['sessions'] = [portable_scene(scenes.get(sheet['id'], item['id']))
+                              for sheet in sheets for item in scenes.listing(sheet['id'])]
     if include_world:
         seen = []
         for sheet in sheets:
@@ -258,13 +274,13 @@ def build_bundle(persona_ids, include_world=True, include_voice=True):
 
 
 def export_bundle(persona_ids, destination='', include_world=True, include_voice=True,
-                  include_audio=False, include_images=True):
+                  include_audio=False, include_images=True, include_sessions=False):
     """Write the bundle.
 
     Reference takes and photographs are real files, so as soon as either is included the
     result is a .zip rather than a bare JSON document.
     """
-    bundle = build_bundle(persona_ids, include_world, include_voice)
+    bundle = build_bundle(persona_ids, include_world, include_voice, include_sessions)
     EXPORTS.mkdir(parents=True, exist_ok=True)
     stem = slug(bundle['personas'][0].get('name'), 'personas') if len(bundle['personas']) == 1 else 'personas'
     stem += '-' + time.strftime('%Y%m%d-%H%M%S')
@@ -299,7 +315,7 @@ def export_bundle(persona_ids, destination='', include_world=True, include_voice
     return {'file': str(target), 'personas': [p['id'] for p in bundle['personas']],
             'worlds': [w['id'] for w in bundle['worlds']],
             'voices': [v['id'] for v in bundle['voices']], 'bundledAudio': len(audio),
-            'bundledImages': len(pictures)}
+            'bundledImages': len(pictures), 'sessions': len(bundle.get('sessions', []))}
 
 
 def _read_bundle(path):
@@ -448,6 +464,20 @@ def import_bundle(path, rename=True):
             if changed:
                 sheet['voice'] = voice
                 write_json(personas.path(identifier), sheet)
+
+    # Scenes follow their characters, under new identifiers: an import never replaces a
+    # scene already played, and importing twice gives two copies to play from.
+    from . import sessions as scenes
+    imported['sessions'] = []
+    for document in document.get('sessions', []):
+        owner = persona_map.get(document.get('persona_id', ''))
+        if not owner or not document.get('turns'):
+            continue
+        scene = scenes.create(owner, document.get('title', ''))
+        scene['turns'] = portable_scene(document)['turns']
+        scene['importedFrom'] = document.get('id', '')
+        scenes.save(scene)
+        imported['sessions'].append({'persona_id': owner, 'session_id': scene['id']})
     return imported
 
 

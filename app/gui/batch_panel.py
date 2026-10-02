@@ -12,7 +12,7 @@ from personarp.paths import DATA, EXPORTS
 from personarp.voice import batching
 
 from . import widgets
-from .state import open_path
+from .state import open_path, shown
 from .voice_panel import language_combo
 
 DEVICES = ['cuda', 'cpu']
@@ -199,7 +199,7 @@ def _preview(state):
         raw().text_wrapped(tr('Characters of the task: ') + ', '.join(
             item['name'] for item in preview['personas']))
     for problem in preview.get('problems', []):
-        imgui.text_colored(imgui.ImVec4(1.0, 0.75, 0.35, 1.0), tr(problem))
+        imgui.text_colored(imgui.ImVec4(1.0, 0.75, 0.35, 1.0), shown(problem))
     for group in preview.get('groups', []):
         raw().bullet_text('%s — %s: %d' % (tr(MODE_CAPTIONS.get(group['mode'], group['mode'])),
                                            group['model'], group['lines']))
@@ -226,14 +226,14 @@ def _preview(state):
             if line.get('status') == 'error':
                 imgui.text_colored(imgui.ImVec4(1.0, 0.55, 0.45, 1.0), tr('Cannot be spoken'))
                 if raw().is_item_hovered():
-                    raw().set_tooltip(tr(line.get('error', '')))
+                    raw().set_tooltip(shown(line.get('error', '')))
                 raw().same_line()
-                raw().text_disabled(tr(line.get('error', ''))[:80])
+                raw().text_disabled(shown(line.get('error', ''))[:80])
             else:
                 raw().text_unformatted(tr(STATUS_CAPTIONS.get(line.get('status'), '')))
                 if line.get('note'):
                     raw().same_line()
-                    raw().text_disabled(tr(line['note'])[:80])
+                    raw().text_disabled(shown(line['note'])[:80])
         raw().end_table()
 
 
@@ -255,10 +255,10 @@ def _last(state):
             group.get('generationSeconds') or 0.0,
             (tr(', VRAM peak %.1f GB') % (peak / 1024 ** 3)) if peak else ''))
     for problem in last.get('problems', []):
-        imgui.text_colored(imgui.ImVec4(1.0, 0.75, 0.35, 1.0), tr(problem))
+        imgui.text_colored(imgui.ImVec4(1.0, 0.75, 0.35, 1.0), shown(problem))
     for error in last.get('errors', [])[:8]:
         raw().text_disabled(tr('Line %s: %s') % (error.get('id') or error['index'],
-                                                  tr(error['error'])))
+                                                  shown(error['error'])))
     if widgets.button('Open the folder##last-batch'):
         open_path(last.get('folder', ''))
 

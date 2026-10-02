@@ -17,9 +17,10 @@ from cytools_core import CyToolError, Runtime, load_manifest
 from cytools_core.transports.cli import run_cli
 
 from personarp import (assistant, authoring, batches, comfyui, examples, imaging, library,
-                       maintenance, models, scene, sessions, translation)
+                       maintenance, models, scene, sessions, takes, translation)
 from personarp.voice import catalog as voice_catalog, delivery as voice_delivery
 from personarp.voice import runner as voice_runner, stable as voice_stable
+from personarp.voice import prosody as voice_prosody
 from personarp.locks import exclusive
 from personarp.paths import (APP, DATA, EXPORTS, LLM_MODELS, ROOT, RUNTIME, SETTINGS,
                              ensure_data_layout, read_json, write_json)
@@ -410,6 +411,10 @@ def create_runtime(data_dir, **options):
         payload['workspace'] = str(context.workspace)
         payload['output_dir'] = 'outputs/voice'
         result = voice_runner.speak(context, payload, offset=offset, scale=scale)
+        speed, pitch = voice_prosody.settings(persona.get('voice'))
+        if not voice_prosody.neutral(speed, pitch):
+            context.progress(96 * scale + offset, currentStep='Applying speed and pitch')
+            result = voice_prosody.apply_to_take(result, speed, pitch)
         result['note'] = note
         result['voicePlan'] = plan
         result['language'] = payload.get('language', 'Auto')
@@ -508,6 +513,9 @@ def create_runtime(data_dir, **options):
             voice['voice_id'] = ''
             voice['languages'] = []
             voice['annotations'] = False
+            # Speed and pitch shape the lines delivered, never the take a voice is cloned
+            # from: every clone would carry the change a second time.
+            voice['speed'], voice['pitch'] = voice_prosody.NEUTRAL_SPEED, voice_prosody.NEUTRAL_PITCH
             persona = {**persona, 'voice': voice}
             language = voice.get('language') or 'Auto'
             text = (parameters.get('text') or '').strip() or \
@@ -526,9 +534,9 @@ def create_runtime(data_dir, **options):
                 transcript = heard['text'] or text
             # A job workspace is private and short-lived; a take you may want to register
             # tomorrow has to outlive it, so keep a copy beside the voice library.
-            takes = voice_stable.VOICES / 'takes'        # beside the voices, wherever they live
-            takes.mkdir(parents=True, exist_ok=True)
-            kept = takes / ('take-' + library.now().replace(':', '') + '.wav')
+            take_folder = voice_stable.VOICES / 'takes'  # beside the voices, wherever they live
+            take_folder.mkdir(parents=True, exist_ok=True)
+            kept = take_folder / ('take-' + library.now().replace(':', '') + '.wav')
             shutil.copyfile(result['file'], kept)
 
             seconds = float(result.get('durationSeconds', 0.0))
@@ -992,7 +1000,8 @@ def create_runtime(data_dir, **options):
                                      parameters.get('include_world', True),
                                      parameters.get('include_voice', True),
                                      parameters.get('include_audio', False),
-                                     parameters.get('include_images', True))
+                                     parameters.get('include_images', True),
+                                     parameters.get('include_sessions', False))
 
     def list_examples(context, parameters):
         return {'examples': examples.listing(), 'folder': str(examples.EXAMPLES)}
@@ -1257,7 +1266,9 @@ def create_runtime(data_dir, **options):
                     turn = session['turns'][item['turn']]
                     stored = dict((turn.get('translations') or {}).get(target) or {})
                     if stored.get('text') != item['text']:
-                        stored.pop('audio', None)       # a take of the old words no longer fits
+                        # Takes of the old words no longer fit: to the trash, not deleted.
+                        takes.retire(stored, sessions.folder(session['persona_id']) / 'audio'
+                                     / session['id'] / '.trash')
                     stored.update(text=item['text'], model=settings['llm_model'], at=stamp,
                                   marksLost=item['marksLost'], termsMissed=item['termsMissed'])
                     turn.setdefault('translations', {})[target] = stored
@@ -1443,6 +1454,7 @@ def create_runtime(data_dir, **options):
         context.progress(1, currentStep='Reading the batch')
         # What is left to do, grouped by the weights that will speak it.
         results, groups, skipped = [], {}, 0
+        shaping = {}                    # each line's speed and pitch, from its speaker's sheet
         for position, line in enumerate(lines):
             earlier = previous.get(line['index']) or {}
             if earlier.get('status') == 'ok' and earlier.get('file') \
@@ -1480,6 +1492,7 @@ def create_runtime(data_dir, **options):
             entry.update(status='pending', note=note, mode=payload['mode'],
                          model=payload['model'], languageUsed=payload['language'],
                          voiceUsed=plan.get('voice_id') or plan.get('speaker') or '')
+            shaping[position] = voice_prosody.settings(voice)
             groups.setdefault((payload['mode'], payload['model'], payload['model_path']),
                               []).append((position, {
                                   'id': str(position), 'file': line['file'],
@@ -1538,8 +1551,12 @@ def create_runtime(data_dir, **options):
                     continue
                 target = folder / 'voix' / (item['file'] + '.wav')
                 shutil.move(produced['file'], target)
-                results[position].update(status='ok',
-                                         durationSeconds=round(produced['durationSeconds'], 2))
+                seconds = produced['durationSeconds']
+                speed, pitch = shaping.get(position, (1.0, 0.0))
+                if not voice_prosody.neutral(speed, pitch):
+                    count, rate = voice_prosody.apply_to_file(target, speed, pitch)
+                    seconds = count / rate
+                results[position].update(status='ok', durationSeconds=round(seconds, 2))
             batches.write_results(folder, results)       # progress survives an interruption
             statistics.append({key: outcome.get(key) for key in (
                 'mode', 'model', 'batchSize', 'firstBatchSize', 'calls', 'memoryRetries',
@@ -1618,21 +1635,52 @@ def create_runtime(data_dir, **options):
                                    overrides={**parameters, 'language': language})
             kept = result['file']
             if parameters.get('keep', True):
+                # A new take beside the earlier ones, never over them; it becomes the one
+                # the line plays, and the others can be chosen again (choose_take).
                 folder = sessions.folder(persona['id']) / 'audio' / session['id']
                 folder.mkdir(parents=True, exist_ok=True)
-                target = folder / ('turn-%03d-%s.wav' % (index, (language or 'original').lower()))
+                target = takes.file_for(folder, index, language)
                 shutil.copyfile(result['file'], target)
                 kept = str(target)
-                record = {'file': kept, 'durationSeconds': result.get('durationSeconds', 0.0),
-                          'voice': result.get('voicePlan', {}), 'at': library.now()}
-                if language:
-                    turn['translations'][language]['audio'] = record
-                else:
-                    turn['audio'] = record
+                speed, pitch = voice_prosody.settings(voice)
+                takes.add(takes.holder(turn, language), {
+                    'file': kept, 'durationSeconds': result.get('durationSeconds', 0.0),
+                    'voice': result.get('voicePlan', {}), 'at': library.now(),
+                    'speed': speed, 'pitch': pitch})
                 sessions.save(session)
             context.progress(100, currentStep='Take ready')
             return {**result, 'file': kept, 'workspaceFile': result['file'], 'turn': index,
                     'text': spoken}
+
+    def _take_place(parameters):
+        persona = library.personas.get(parameters['persona_id'])
+        session = sessions.get(persona['id'], parameters['session_id'])
+        turns = session.get('turns', [])
+        index = int(parameters['turn'])
+        if not 0 <= index < len(turns):
+            raise CyToolError('InvalidParameters', 'This scene has no line %d.' % index)
+        language = (parameters.get('language') or '').strip()
+        return session, takes.holder(turns[index], language)
+
+    def _takes_out(place):
+        return {'audio': place.get('audio'), 'takes': takes.listing(place),
+                'chosen': takes.chosen(place)}
+
+    def choose_take(context, parameters):
+        # Under the lock: a generation rewriting this scene must not undo the choice.
+        with exclusive(context):
+            session, place = _take_place(parameters)
+            takes.choose(place, int(parameters['take']))
+            sessions.save(session)
+            return _takes_out(place)
+
+    def remove_take(context, parameters):
+        with exclusive(context):
+            session, place = _take_place(parameters)
+            trash = sessions.folder(session['persona_id']) / 'audio' / session['id'] / '.trash'
+            moved = takes.remove(place, int(parameters['take']), trash)
+            sessions.save(session)
+            return {**_takes_out(place), **moved}
 
     # -------------------------------------------------------------------- scene
 
@@ -1750,6 +1798,8 @@ def create_runtime(data_dir, **options):
     runtime.register('speak_turn', speak_turn, estimate=lambda p, b, m: {
         'ramBytes': 8 * 1024 ** 3, 'cpuThreads': 4,
         'vramBytes': {'auto': 6 * 1024 ** 3} if p.get('device', 'cuda') == 'cuda' else {}})
+    runtime.register('choose_take', choose_take)
+    runtime.register('remove_take', remove_take)
     def batch_estimate(p, b, m):
         # The worker fills whatever VRAM is free; this is only what it needs to start.
         if p.get('dry_run'):

@@ -37,6 +37,8 @@ def listing():
             'summary': world.get('summary', ''),
             'imported': bool(world.get('id')) and library.worlds.exists(world['id']),
             'voices': len(bundle.get('voices') or []),
+            'scenes': [{'title': scene.get('title', ''), 'lines': len(scene.get('turns') or [])}
+                       for scene in bundle.get('sessions') or []],
             'characters': [{'id': sheet.get('id', ''), 'name': sheet.get('name', ''),
                             'summary': sheet.get('summary', '')}
                            for sheet in bundle.get('personas', [])],

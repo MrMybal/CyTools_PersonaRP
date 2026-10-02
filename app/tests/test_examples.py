@@ -111,3 +111,38 @@ def test_every_example_character_arrives_with_its_stable_voice(store, path):
         assert document['locked'] and document['reference_text']
         low, high = stable.ACCEPTED_SECONDS
         assert low <= document['reference_seconds'] <= high
+
+
+def test_valdrenn_arrives_with_its_english_names(store):
+    """Its lexicon keeps the world's names the same in every English translation."""
+    library.import_bundle(next(path for path in BUNDLES if 'valdrenn' in path.name))
+    lexicon = library.worlds.get('valdrenn')['term_translations']['English']
+    assert len(lexicon) == 20
+    assert lexicon['Roi-Cendre']['text'] == 'the Ash King' and lexicon['Éclat']['text'] == 'Shard'
+    assert all(entry['source'] == 'person' for entry in lexicon.values())
+
+
+def test_scenes_travel_with_their_characters_without_their_takes(store, tmp_path, monkeypatch):
+    from personarp import sessions
+    monkeypatch.setattr(sessions, 'SESSIONS', tmp_path / 'sessions')
+    sheet = library.personas.create({'name': 'Wren'})
+    scene = sessions.create(sheet['id'], 'Les rayonnages')
+    sessions.append_turn(scene, 'user', 'Salut.')
+    sessions.append_turn(scene, 'assistant', 'Ouais bon.')
+    scene['turns'][1]['audio'] = {'file': str(tmp_path / 'take.wav'), 'takes': []}
+    sessions.save(scene)
+    alone = library.export_bundle([sheet['id']], destination=str(tmp_path / 'a.json'))
+    assert alone['sessions'] == 0                                   # scenes only when asked
+    exported = library.export_bundle([sheet['id']], destination=str(tmp_path / 'b.json'),
+                                     include_sessions=True)
+    assert exported['sessions'] == 1
+    carried = json.loads((tmp_path / 'b.json').read_text(encoding='utf-8'))['sessions'][0]
+    assert 'audio' not in carried['turns'][1]                        # this machine's files stay
+    imported = library.import_bundle(tmp_path / 'b.json')            # Wren exists: a copy
+    new_owner = imported['personas'][0]
+    assert new_owner != sheet['id']
+    [placed] = imported['sessions']
+    assert placed['persona_id'] == new_owner
+    copy = sessions.get(new_owner, placed['session_id'])
+    assert [turn['content'] for turn in copy['turns']] == ['Salut.', 'Ouais bon.']
+    assert copy['title'] == 'Les rayonnages' and copy['importedFrom'] == scene['id']

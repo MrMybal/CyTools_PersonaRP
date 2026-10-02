@@ -19,7 +19,7 @@ from tool import create_runtime
 from gui import panels, widgets
 from gui.batch_panel import batch_tab, form as batch_form
 from gui.voice_panel import voice_tab
-from gui.state import App
+from gui.state import App, shown
 
 WINDOW_TITLE = 'CyTools PersonaRP — Persistent characters'
 
@@ -138,7 +138,7 @@ def main():
                 progress = app.job.get('progress') or {}
                 imgui.progress_bar(progress.get('percent', 0) / 100, (-1, 0),
                                    tr(app.job['state']) + ' — '
-                                   + tr(progress.get('currentStep', 'waiting')))
+                                   + shown(progress.get('currentStep', 'waiting')))
             elif app.job:
                 raw().text_disabled(tr('Last operation: ') + app.purpose + ' — '
                                     + tr(app.job['state']))
@@ -150,12 +150,15 @@ def main():
                                        'released.'))
             if app.error:
                 imgui.text_colored(imgui.ImVec4(1, 0.5, 0.5, 1), tr('Error'))
-                raw().text_wrapped(tr(app.error))
+                raw().text_wrapped(shown(app.error))
+                if getattr(app, 'error_code', ''):
+                    raw().text_disabled('[%s]' % app.error_code)
                 imgui.same_line()
                 if widgets.button('Dismiss##error'):
                     app.error = ''
+                    app.error_code = ''
             if app.notice:
-                raw().text_wrapped(tr(app.notice))
+                raw().text_wrapped(shown(app.notice))
 
             def tab(caption):
                 flags = raw().TabItemFlags_.set_selected if smoke_tab == caption and frames < 4 else 0

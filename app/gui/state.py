@@ -12,13 +12,25 @@ import subprocess
 import time
 
 from cytools_core import CyToolError
-from ui_common import tr
+from ui_common import preferences, tr
+
+from personarp import messages
 
 from personarp.paths import APP, DATA, SETTINGS, read_json, write_json
 from personarp.schemas import normalize_persona, normalize_world
 
 STATE_FILE = SETTINGS / 'desktop.json'
 BUSY = ('Queued', 'Running', 'Pending', 'Starting')
+
+
+def shown(text):
+    """A message that came from an operation, in the window's language.
+
+    Operations answer in English for every interface; locales/messages.json knows their
+    wording with its variable parts. What the window writes itself goes through tr().
+    """
+    translated = messages.translate(text, preferences.values.get('language', 'en'))
+    return tr(translated) if translated == text else translated
 
 
 def open_path(path):
@@ -40,6 +52,7 @@ class App:
         self.purpose = ''
         self.consumed = ''
         self.error = ''
+        self.error_code = ''
         self.notice = ''
         self.pending = []
         self.result = {}
@@ -142,9 +155,10 @@ class App:
                 if self.job['state'] == 'Completed':
                     self._completed(self.purpose, self.job.get('outputs') or {})
                 else:
-                    self.error = json.dumps(self.job.get('error')
-                                            or {'message': 'Operation cancelled.'},
-                                            ensure_ascii=False)
+                    # The message, shown translated; the code stays for a report or a search.
+                    error = self.job.get('error') or {'message': 'Operation cancelled.'}
+                    self.error = error.get('message') or 'Operation failed.'
+                    self.error_code = error.get('code', '')
         if self.pending and not self.busy:
             operation, parameters, purpose = self.pending.pop(0)
             self.submit(operation, parameters, purpose)
@@ -250,6 +264,21 @@ class App:
             self.reload_conversation()
             self.notice = self._take_notice(outputs)
             self.play_file(outputs.get('file', ''))
+        elif purpose == 'dictation':
+            heard = (outputs.get('text') or '').strip()
+            if heard:
+                self.draft = (self.draft.rstrip() + ' ' + heard).strip()
+                self.notice = tr('Dictated %.1f s — check the words, then send.') % (
+                    outputs.get('durationSeconds') or 0.0)
+            else:
+                self.notice = tr('Nothing was understood in the recording.')
+        elif purpose == 'choose_take':
+            self.reload_conversation()
+            self.play_file((outputs.get('audio') or {}).get('file', ''))   # hear what was chosen
+        elif purpose == 'remove_take':
+            self.reload_conversation()
+            self.notice = (tr('Take moved to the trash: %s') % outputs['trash']
+                           if outputs.get('trash') else tr('Take removed from the line.'))
         elif purpose == 'list_models':
             self.models = outputs.get('models', [])
             self.engine = outputs.get('engine', {})
@@ -284,7 +313,7 @@ class App:
             text += ' — %s, %s' % (tr(plan['language']), described or plan.get('mode', ''))
         text += '.'
         if outputs.get('note'):
-            text += ' ' + outputs['note']
+            text += ' ' + shown(outputs['note'])
         return text
 
     # --------------------------------------------------------------- library

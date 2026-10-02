@@ -30,6 +30,7 @@ Les cellules du notebook appellent toutes `personarp_colab.py` en ligne de comma
 | Tâches | vérifie chaque tâche sans rien générer : qui dit quoi, avec quelle voix, quel modèle manque | quelques secondes |
 | Lancer | exécute les tâches | selon la liste |
 | État | ce qui est installé, sur Drive, et fait | — |
+| Rapport | écrit `resultats/rapport-colab-<date>.json` : la carte, le moteur (PyTorch, CUDA), les modèles sur Drive, et le journal de chaque commande de la session (durée, succès, dernières lignes affichées). Sans jeton, sans modèle, sans voix : c'est le fichier à renvoyer pour faire le point | quelques secondes |
 
 **Licences** : les modèles ne sont téléchargés que si vous avez coché
 `J_ACCEPTE_LES_LICENCES` après avoir lu la licence affichée (Qwen3-TTS : Apache-2.0, page du

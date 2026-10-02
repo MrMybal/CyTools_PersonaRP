@@ -11,12 +11,13 @@ from cytools_core import CyToolError
 from ui_common import imgui, raw, tr
 
 from personarp import scene as scene_module
+from personarp import takes
 from personarp import translation as translation_module
 from personarp.paths import DATA, EXPORTS, read_json
 from personarp.schemas import (LANGUAGES, normalize_language_voice, normalize_persona,
                                normalize_world)
 
-from . import widgets
+from . import recorder, widgets
 from .comfyui_panel import comfyui_tab
 from .discussion_panel import discussion
 from .gallery import library_gallery, viewer as picture_viewer
@@ -185,6 +186,16 @@ def conversation(app):
     if widgets.button('Open the scene folder'):
         open_path(DATA / 'sessions' / app.persona_id)
     imgui.end_disabled()
+    # Dictation: the microphone is recorded here, then transcribed by Whisper like any file;
+    # the words are added to the message, which is sent only when you send it.
+    imgui.same_line()
+    imgui.begin_disabled(app.busy)
+    dictated = recorder.controls(app, 'dictation', 120.0, tr('Dictate'))
+    imgui.end_disabled()
+    if dictated:
+        app.submit('transcribe', {
+            'audio': dictated, 'timestamps': False,
+            'device': 'cpu' if (app.voice_engine or {}).get('cpuOnly') else 'cuda'}, 'dictation')
 
     if send and app.draft.strip() and not app.busy:
         try:
@@ -292,8 +303,8 @@ def _turn_voice(app, index, turn, language, translated):
         imgui.same_line()
         if widgets.small_button('Play the take'):
             app.play_file(kept)
+    _takes_row(app, index, turn, '')
     if translated.get('text'):
-        imgui.same_line()
         if widgets.small_button(tr('Speak %s') % tr(IN_LANGUAGE[language]), 'primary'):
             app.submit('speak_turn', {'persona_id': app.persona_id,
                                       'session_id': app.session_id, 'turn': index,
@@ -303,7 +314,35 @@ def _turn_voice(app, index, turn, language, translated):
             imgui.same_line()
             if widgets.small_button(tr('Play the take %s') % tr(IN_LANGUAGE[language])):
                 app.play_file(kept)
+        _takes_row(app, index, translated, language)
     imgui.end_disabled()
+
+
+def _takes_row(app, index, place, language):
+    """Earlier takes of this line stay: step through them, keep one, or put one in the trash."""
+    everything = takes.listing(place)
+    if not everything:
+        return
+    chosen = max(0, takes.chosen(place))
+    target = {'persona_id': app.persona_id, 'session_id': app.session_id, 'turn': index,
+              'language': language}
+    suffix = '##takes-%d-%s' % (index, language or 'original')
+    imgui.same_line()
+    raw().text_disabled(tr('Take %d of %d') % (chosen + 1, len(everything)))
+    if len(everything) > 1:
+        imgui.same_line()
+        imgui.begin_disabled(chosen == 0)
+        if widgets.small_button('<' + suffix + '-previous'):
+            app.submit('choose_take', {**target, 'take': chosen - 1}, 'choose_take')
+        imgui.end_disabled()
+        imgui.same_line()
+        imgui.begin_disabled(chosen >= len(everything) - 1)
+        if widgets.small_button('>' + suffix + '-next'):
+            app.submit('choose_take', {**target, 'take': chosen + 1}, 'choose_take')
+        imgui.end_disabled()
+    imgui.same_line()
+    if widgets.small_button(tr('Trash this take') + suffix + '-trash', 'danger'):
+        app.submit('remove_take', {**target, 'take': chosen}, 'remove_take')
 
 
 # -------------------------------------------------------------------- characters
@@ -519,6 +558,18 @@ def _voice(app, persona):
                               'Portuguese', 'Russian', 'Chinese', 'Japanese', 'Korean'])
     changed |= widgets.combo(branch, 'delivery', tr('Playback'), ['paragraphs', 'complete'],
                              ['Paragraph by paragraph', 'Whole take at once'])
+    imgui.separator_text(tr('Speed and pitch'))
+    changed |= widgets.slider_float(branch, 'speed', tr('Speed'), 0.5, 2.0, '%.2fx')
+    changed |= widgets.slider_float(branch, 'pitch', tr('Pitch (semitones)'), -12.0, 12.0, '%+.1f')
+    if widgets.small_button(tr('Natural speed and pitch') + '##voice-neutral'):
+        branch['speed'], branch['pitch'] = 1.0, 0.0
+        changed = True
+    raw().push_text_wrap_pos(0.0)                  # a long hint wraps at the window's edge
+    raw().text_disabled(tr('Applied to every spoken line after the model, in scenes, batches '
+                           'and translations; never to the take a stable voice is captured '
+                           'from. A few semitones change the height of the voice, an octave '
+                           'turns it into another voice.'))
+    raw().pop_text_wrap_pos()
     changed |= widgets.multiline(branch, 'instruction', tr('Standing voice direction'), 50)
     if not branch.get('voice_id'):
         imgui.separator_text(tr('Without a stable voice'))
@@ -1088,6 +1139,9 @@ def _examples(app):
         if item.get('voices'):
             raw().text_disabled(tr('%d stable voices included — they come in with the import.')
                                 % item['voices'])
+        if item.get('scenes'):
+            raw().text_disabled(tr('Scenes to play from: ') + ', '.join(
+                '%s (%d)' % (scene['title'], scene['lines']) for scene in item['scenes']))
         if item.get('imported'):
             imgui.text_colored(imgui.ImVec4(0.45, 0.85, 0.5, 1.0),
                                tr('Already in your library — importing it again makes copies.'))
@@ -1113,12 +1167,15 @@ def _exchange(app):
         selection[entry['id']] = checked
     _, app.export_audio = imgui.checkbox(tr('Include the reference recordings (produces a .zip)'),
                                          getattr(app, 'export_audio', False))
+    _, app.export_scenes = imgui.checkbox(tr('Include their scenes (the words, not the takes)'),
+                                          getattr(app, 'export_scenes', False))
     imgui.begin_disabled(app.busy)
     if widgets.button('Export the selection'):
         chosen = [identifier for identifier, on in selection.items() if on]
         if chosen:
             app.submit('export_personas', {'persona_ids': chosen,
-                                           'include_audio': app.export_audio}, 'export')
+                                           'include_audio': app.export_audio,
+                                           'include_sessions': app.export_scenes}, 'export')
         else:
             app.error = 'Select at least one character.'
     imgui.same_line()

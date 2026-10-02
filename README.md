@@ -22,8 +22,11 @@ French user guide: [LISEZ-MOI.md](LISEZ-MOI.md). Developer guide: [app/README.md
   you accept it. It can start from a **photograph** read by a local vision model
   (Qwen2.5-VL) under constrained decoding.
 - **Voice**: Qwen3-TTS (Base, VoiceDesign, CustomVoice), a **stable voice** captured once from a
-  12–24 s take and cloned for every later line, acting annotations written by the character,
-  Whisper large-v3 turbo transcription.
+  12–24 s take (a file, or recorded from the microphone) and cloned for every later line,
+  acting annotations written by the character, a per-character **speed and pitch**, every
+  **take of a line kept** (step through them, choose one, send one to the trash), Whisper
+  large-v3 turbo transcription and **dictation** from the microphone. Runs on an NVIDIA GPU
+  or, more slowly, on the CPU.
 - **Translation** of a scene with its context (world, character, earlier lines) and a per-world,
   per-language **lexicon** so names of places, factions and things stay the same across
   translations; each language can have its own voice.
@@ -40,7 +43,9 @@ French user guide: [LISEZ-MOI.md](LISEZ-MOI.md). Developer guide: [app/README.md
   revision, SHA-256 check, cancel and resume) and **GitHub updates** for the application, the
   engine and the model catalogue, staged, verified and reversible.
 
-The interface is in English by default and fully in French from **Options**.
+The interface is in English by default and fully in French from **Options**, including the
+messages operations send back (errors, notes, update states), which the CLI and MCP keep in
+English.
 
 ## Requirements
 

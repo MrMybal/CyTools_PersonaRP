@@ -1,0 +1,632 @@
+{
+ "\"{0}\" cannot read an image. Installed vision models: {1}": {
+  "fr": "« {0} » ne sait pas lire une image. Modèles de vision installés : {1}"
+ },
+ "A JSON batch is a list of lines, or {{\"lines\": [...]}}.": {
+  "fr": "Un lot JSON est une liste de répliques, ou {{\"lines\": [...]}}."
+ },
+ "A batch holds at most {0} lines.": {
+  "fr": "Un lot contient au plus {0} répliques."
+ },
+ "A character cannot hold a relationship to itself.": {
+  "fr": "Un personnage ne peut pas avoir de relation avec lui-même."
+ },
+ "A cloned voice needs the exact words of its reference. Transcribe the take first, or type what is said in it.": {
+  "fr": "Une voix clonée a besoin des mots exacts de sa référence. Transcrivez d'abord la prise, ou tapez ce qui y est dit."
+ },
+ "A discussion needs an identifier.": {
+  "fr": "Une discussion a besoin d'un identifiant."
+ },
+ "A reference of {0} s cannot be used; keep it between {1} and {2} seconds ({3} to {4} works best).": {
+  "fr": "Une référence de {0} s n'est pas utilisable ; gardez-la entre {1} et {2} secondes ({3} à {4} donne le meilleur résultat)."
+ },
+ "A session belongs to a stored character; give persona_id.": {
+  "fr": "Une scène appartient à un personnage enregistré ; donnez persona_id."
+ },
+ "A session needs a persona and an identifier.": {
+  "fr": "Une scène a besoin d'un personnage et d'un identifiant."
+ },
+ "A sheet holds at most {0} photographs.": {
+  "fr": "Une fiche contient au plus {0} photos."
+ },
+ "Accept the model licence personally before downloading.": {
+  "fr": "Acceptez personnellement la licence du modèle avant de le télécharger."
+ },
+ "Ambiguous name \"{0}\": it could be {1}.": {
+  "fr": "Nom ambigu « {0} » : il peut s'agir de {1}."
+ },
+ "Another generation or maintenance task is using this Tool.": {
+  "fr": "Une autre génération ou tâche de maintenance utilise cet outil."
+ },
+ "Applying speed and pitch": {
+  "fr": "Application de la vitesse et de la hauteur"
+ },
+ "Archive does not contain persona-bundle.json.": {
+  "fr": "L'archive ne contient pas persona-bundle.json."
+ },
+ "Archive entry escapes the destination: {0}": {
+  "fr": "Une entrée de l'archive sort de la destination : {0}"
+ },
+ "Archive is too large.": {
+  "fr": "L'archive est trop volumineuse."
+ },
+ "Asset does not come from the configured repository.": {
+  "fr": "Ce fichier ne vient pas du dépôt configuré."
+ },
+ "Batch file not found: {0}": {
+  "fr": "Fichier de lot introuvable : {0}"
+ },
+ "CUDA is not available in the voice engine; choose the CPU device.": {
+  "fr": "CUDA n'est pas disponible dans le moteur de voix ; choisissez le périphérique CPU."
+ },
+ "CUDA server executable missing from the package.": {
+  "fr": "L'exécutable du serveur CUDA est absent du paquet."
+ },
+ "Cancelled": {
+  "fr": "Annulé"
+ },
+ "Cancelled in queue": {
+  "fr": "Annulée avant son démarrage."
+ },
+ "Cancelled: worker stopped": {
+  "fr": "Annulé : worker arrêté"
+ },
+ "Cannot start worker {0}: {1}": {
+  "fr": "Impossible de démarrer le worker {0} : {1}"
+ },
+ "Character already exists: {0}": {
+  "fr": "Ce personnage existe déjà : {0}"
+ },
+ "Chinese": {
+  "fr": "chinois"
+ },
+ "Client lacks operation permissions": {
+  "fr": "Ce client n'a pas la permission de lancer cette opération."
+ },
+ "Close and relaunch the Tool to activate the application.": {
+  "fr": "Fermez et relancez l'outil pour activer l'application."
+ },
+ "Close the other windows and services of this Tool first.": {
+  "fr": "Fermez d'abord les autres fenêtres et services de cet outil."
+ },
+ "DarkIdol head does not match the base model output tensor.": {
+  "fr": "La tête DarkIdol ne correspond pas au tenseur de sortie du modèle de base."
+ },
+ "Duplicate entry in archive.": {
+  "fr": "Entrée en double dans l'archive."
+ },
+ "Each line of a batch must be an object.": {
+  "fr": "Chaque réplique d'un lot doit être un objet."
+ },
+ "Engine activated.": {
+  "fr": "Moteur activé."
+ },
+ "Engine executable missing or ambiguous.": {
+  "fr": "Exécutable du moteur absent ou ambigu."
+ },
+ "Engine path escapes runtime/.": {
+  "fr": "Le chemin du moteur sort de runtime/."
+ },
+ "English": {
+  "fr": "anglais"
+ },
+ "Expected a GitHub repository as owner/name.": {
+  "fr": "Un dépôt GitHub de la forme propriétaire/nom était attendu."
+ },
+ "Expected a JSON array.": {
+  "fr": "Une liste JSON était attendue."
+ },
+ "Expected a JSON object.": {
+  "fr": "Un objet JSON était attendu."
+ },
+ "Forbidden path in archive: {0}": {
+  "fr": "Chemin interdit dans l'archive : {0}"
+ },
+ "French": {
+  "fr": "français"
+ },
+ "German": {
+  "fr": "allemand"
+ },
+ "GitHub answered HTTP {0}.": {
+  "fr": "GitHub a répondu HTTP {0}."
+ },
+ "GitHub cannot be reached: {0}": {
+  "fr": "GitHub est injoignable : {0}"
+ },
+ "GitHub did not publish a SHA-256 for this asset. A published checksum is not an independent signature, but without one nothing can be verified.": {
+  "fr": "GitHub n'a pas publié de SHA-256 pour ce fichier. Une empreinte publiée n'est pas une signature indépendante, mais sans elle rien ne peut être vérifié."
+ },
+ "Give a batch: a file, a script text or items.": {
+  "fr": "Donnez un lot : un fichier, un script ou des répliques."
+ },
+ "Give a session (with its character) or a text to translate.": {
+  "fr": "Donnez une scène (avec son personnage) ou un texte à traduire."
+ },
+ "Give an image, or add a photograph to the sheet first.": {
+  "fr": "Donnez une image, ou ajoutez d'abord une photo à la fiche."
+ },
+ "Give persona_id, or an inline persona. {0}": {
+  "fr": "Donnez persona_id, ou un personnage complet. {0}"
+ },
+ "Give the full path of the ComfyUI folder.": {
+  "fr": "Donnez le chemin complet du dossier ComfyUI."
+ },
+ "Handler ignored cancellation; reservations retained until it exits": {
+  "fr": "La tâche n'a pas encore répondu à l'annulation ; ses ressources restent réservées jusqu'à ce qu'elle se termine."
+ },
+ "Id already used by another line: {0} (line {1})": {
+  "fr": "Identifiant déjà utilisé par une autre réplique : {0} (réplique {1})"
+ },
+ "Ignored malformed request line": {
+  "fr": "Ligne de demande mal formée ignorée"
+ },
+ "Image is {0} MB; keep reference photographs under {1} MB.": {
+  "fr": "L'image fait {0} Mo ; gardez les photos de référence sous {1} Mo."
+ },
+ "Image not found: {0}": {
+  "fr": "Image introuvable : {0}"
+ },
+ "Incomplete proposal. Generate another one.": {
+  "fr": "Proposition incomplète. Générez-en une autre."
+ },
+ "Install or repair the selected model in Models.": {
+  "fr": "Installez ou réparez le modèle choisi dans Modèles."
+ },
+ "Install the CUDA engine in Models.": {
+  "fr": "Installez le moteur CUDA dans Modèles."
+ },
+ "Install the selected model in Models.": {
+  "fr": "Installez le modèle choisi dans Modèles."
+ },
+ "Invalid adapter strength": {
+  "fr": "Force d'adaptateur invalide"
+ },
+ "Invalid application source.": {
+  "fr": "Source d'application invalide."
+ },
+ "Invalid identifier: {0}": {
+  "fr": "Identifiant invalide : {0}"
+ },
+ "Invalid safetensors header.": {
+  "fr": "En-tête safetensors invalide."
+ },
+ "Italian": {
+  "fr": "italien"
+ },
+ "Japanese": {
+  "fr": "japonais"
+ },
+ "Korean": {
+  "fr": "coréen"
+ },
+ "Latest published version: {0}": {
+  "fr": "Dernière version publiée : {0}"
+ },
+ "Line \"{0}\" has an identifier but no speaker: \"ID | Name: text\".": {
+  "fr": "La réplique « {0} » a un identifiant mais pas de personnage : « ID | Nom : texte »."
+ },
+ "Line {0} is longer than {1} characters.": {
+  "fr": "La réplique {0} dépasse {1} caractères."
+ },
+ "Links and devices are not allowed.": {
+  "fr": "Les liens et les périphériques ne sont pas autorisés."
+ },
+ "Links are not allowed in archives.": {
+  "fr": "Les liens ne sont pas autorisés dans les archives."
+ },
+ "LoRA is incompatible with this operation": {
+  "fr": "Le LoRA est incompatible avec cette opération"
+ },
+ "Loading the model timed out.": {
+  "fr": "Le chargement du modèle a pris trop de temps."
+ },
+ "Model checksum verification failed.": {
+  "fr": "La vérification de l'empreinte du modèle a échoué."
+ },
+ "Model directory escapes data/models.": {
+  "fr": "Le dossier du modèle sort de data/models."
+ },
+ "Model profile is incompatible with this operation": {
+  "fr": "Le profil du modèle est incompatible avec cette opération"
+ },
+ "Name at least one character to export.": {
+  "fr": "Nommez au moins un personnage à exporter."
+ },
+ "No NVIDIA CUDA GPU found.": {
+  "fr": "Aucun GPU NVIDIA CUDA trouvé."
+ },
+ "No character called \"{0}\".": {
+  "fr": "Aucun personnage ne s'appelle « {0} »."
+ },
+ "No compatible CPU engine release found.": {
+  "fr": "Aucune release compatible du moteur CPU trouvée."
+ },
+ "No compatible CUDA device detected.": {
+  "fr": "Aucun périphérique CUDA compatible détecté."
+ },
+ "No engine has been staged.": {
+  "fr": "Aucun moteur n'a été préparé."
+ },
+ "No installed speech model can {0} a voice. Install {1} in the Voice tab.": {
+  "fr": "Aucun modèle de parole installé ne peut faire ce type de voix ({0}). Installez {1} dans l'onglet Voix."
+ },
+ "No previous application to restore.": {
+  "fr": "Aucune application précédente à restaurer."
+ },
+ "No previous engine to restore.": {
+  "fr": "Aucun moteur précédent à restaurer."
+ },
+ "No stable voice called \"{0}\".": {
+  "fr": "Aucune voix stable ne s'appelle « {0} »."
+ },
+ "No such file: {0}": {
+  "fr": "Fichier introuvable : {0}"
+ },
+ "No update can be read from GitHub — the repository is private, or no release has been published yet; updates are read without credentials, so the repository has to be public with a published release: {0}": {
+  "fr": "Aucune mise à jour lisible sur GitHub : le dépôt est privé, ou aucune release n'a encore été publiée ; les mises à jour sont lues sans identifiant, le dépôt doit donc être public avec une release publiée : {0}"
+ },
+ "No vision model is installed. Install one in Models — they are the entries marked as reading images.": {
+  "fr": "Aucun modèle de vision n'est installé. Installez-en un dans Modèles : ce sont les entrées marquées comme lisant les images."
+ },
+ "No voice description is written for {0}; the character's own voice was used.": {
+  "fr": "Aucune description de voix n'est écrite pour {0} ; la voix du personnage a été utilisée."
+ },
+ "Non-JSON worker output: {0}": {
+  "fr": "Sortie du worker qui n'est pas du JSON : {0}"
+ },
+ "Not a ComfyUI folder (no custom_nodes inside): {0}": {
+  "fr": "Ce n'est pas un dossier ComfyUI (pas de custom_nodes dedans) : {0}"
+ },
+ "Not a PersonaRP document: {0}": {
+  "fr": "Ce n'est pas un document PersonaRP : {0}"
+ },
+ "Not enough free space: {0} GB needed, {1} GB available.": {
+  "fr": "Espace libre insuffisant : {0} Go nécessaires, {1} Go disponibles."
+ },
+ "Nothing to say once the stage directions are left out.": {
+  "fr": "Rien à dire une fois les didascalies retirées."
+ },
+ "Only the character's lines are spoken with its voice.": {
+  "fr": "Seules les répliques du personnage sont dites avec sa voix."
+ },
+ "Operation cancelled.": {
+  "fr": "Opération annulée."
+ },
+ "Operation cannot cancel": {
+  "fr": "Cette opération ne peut pas être annulée."
+ },
+ "Operation failed.": {
+  "fr": "L'opération a échoué."
+ },
+ "Output path escapes the job workspace": {
+  "fr": "Le chemin de sortie sort de l'espace de travail du job"
+ },
+ "Portuguese": {
+  "fr": "portugais"
+ },
+ "Queue deadline exceeded": {
+  "fr": "Délai d'attente dépassé dans la file."
+ },
+ "Recording not found: {0}": {
+  "fr": "Enregistrement introuvable : {0}"
+ },
+ "Reference recording not found.": {
+  "fr": "Enregistrement de référence introuvable."
+ },
+ "Reference recording not found: {0}": {
+  "fr": "Enregistrement de référence introuvable : {0}"
+ },
+ "Release asset is too large.": {
+  "fr": "Le fichier de la release est trop volumineux."
+ },
+ "Rollback prepared (the application restores on restart).": {
+  "fr": "Retour arrière préparé (l'application est restaurée au redémarrage)."
+ },
+ "Runtime or platform mismatch: a full installation is required.": {
+  "fr": "Runtime ou plateforme différents : une installation complète est nécessaire."
+ },
+ "Runtime stopped before job completion": {
+  "fr": "L'outil s'est arrêté avant la fin de la tâche."
+ },
+ "Runtime stopping": {
+  "fr": "Arrêt de l'outil en cours"
+ },
+ "Russian": {
+  "fr": "russe"
+ },
+ "Scene description unavailable: {0}": {
+  "fr": "Description de scène indisponible : {0}"
+ },
+ "Scene description was not valid JSON: {0}": {
+  "fr": "La description de scène n'était pas du JSON valide : {0}"
+ },
+ "Select the matching base model": {
+  "fr": "Choisissez le modèle de base correspondant"
+ },
+ "Several characters are called \"{0}\".": {
+  "fr": "Plusieurs personnages s'appellent « {0} »."
+ },
+ "Spanish": {
+  "fr": "espagnol"
+ },
+ "The CUDA engine is missing.": {
+  "fr": "Le moteur CUDA est absent."
+ },
+ "The ComfyUI nodes are missing from {0}": {
+  "fr": "Les nodes ComfyUI sont absents de {0}"
+ },
+ "The batch has no line to speak.": {
+  "fr": "Le lot n'a aucune réplique à dire."
+ },
+ "The batch is not valid JSON: {0}": {
+  "fr": "Le lot n'est pas du JSON valide : {0}"
+ },
+ "The candidate has no interface.": {
+  "fr": "La version candidate n'a pas d'interface."
+ },
+ "The character sheet, world and current message exceed the model context. Lower the context budget on the sheet, shorten the world, or reduce the reply length.": {
+  "fr": "La fiche du personnage, le monde et le message actuel dépassent le contexte du modèle. Baissez le budget de contexte sur la fiche, raccourcissez le monde ou réduisez la longueur de la réponse."
+ },
+ "The description model \"{0}\" is not installed; install it in Models or clear it on the sheet.": {
+  "fr": "Le modèle de description « {0} » n'est pas installé ; installez-le dans Modèles ou retirez-le de la fiche."
+ },
+ "The first line of a script must name its speaker: \"Name: text\".": {
+  "fr": "La première ligne d'un script doit nommer qui parle : « Nom : texte »."
+ },
+ "The message is empty.": {
+  "fr": "Le message est vide."
+ },
+ "The model returned no text.": {
+  "fr": "Le modèle n'a renvoyé aucun texte."
+ },
+ "The previous engine is no longer valid.": {
+  "fr": "Le moteur précédent n'est plus valide."
+ },
+ "The proposal contained no usable field.": {
+  "fr": "La proposition ne contenait aucun champ utilisable."
+ },
+ "The proposal is not valid JSON: {0}": {
+  "fr": "La proposition n'est pas du JSON valide : {0}"
+ },
+ "The proposal was cut off at {0} tokens. Ask for fewer sections, or raise the reply length in Advanced.": {
+  "fr": "La proposition a été coupée à {0} tokens. Demandez moins de sections, ou augmentez la longueur de réponse dans Avancé."
+ },
+ "The recording is too short to transcribe.": {
+  "fr": "L'enregistrement est trop court pour être transcrit."
+ },
+ "The reference recording changed since this voice was created; the voice would no longer sound the same.": {
+  "fr": "L'enregistrement de référence a changé depuis la création de cette voix ; elle ne sonnerait plus pareil."
+ },
+ "The reference recording is missing.": {
+  "fr": "L'enregistrement de référence est manquant."
+ },
+ "The staged application changed after verification.": {
+  "fr": "L'application préparée a changé après sa vérification."
+ },
+ "The staged engine changed after verification.": {
+  "fr": "Le moteur préparé a changé après sa vérification."
+ },
+ "The terms were not valid JSON: {0}": {
+  "fr": "Les termes n'étaient pas du JSON valide : {0}"
+ },
+ "The text is already in {0}. Choose another language.": {
+  "fr": "Le texte est déjà en {0}. Choisissez une autre langue."
+ },
+ "The translation left out: {0}": {
+  "fr": "La traduction a omis : {0}"
+ },
+ "The translation model \"{0}\" is not installed; install it in Models or choose another one.": {
+  "fr": "Le modèle de traduction « {0} » n'est pas installé ; installez-le dans Modèles ou choisissez-en un autre."
+ },
+ "The translation must be a JSON object.": {
+  "fr": "La traduction doit être un objet JSON."
+ },
+ "The translation was cut off before its end. Translate fewer lines at a time, or use a model with a longer context.": {
+  "fr": "La traduction a été coupée avant la fin. Traduisez moins de répliques à la fois, ou utilisez un modèle au contexte plus long."
+ },
+ "The translation was not valid JSON: {0}": {
+  "fr": "La traduction n'était pas du JSON valide : {0}"
+ },
+ "The vision model did not return JSON: {0}": {
+  "fr": "Le modèle de vision n'a pas renvoyé de JSON : {0}"
+ },
+ "The vision model saw nothing to describe.": {
+  "fr": "Le modèle de vision n'a rien vu à décrire."
+ },
+ "The voice \"{0}\" is not in the library.": {
+  "fr": "La voix « {0} » n'est pas dans la bibliothèque."
+ },
+ "The voice engine could not be installed. See outputs/setup-engine.log.": {
+  "fr": "Le moteur de voix n'a pas pu être installé. Voir outputs/setup-engine.log."
+ },
+ "The voice engine is not installed. Install it from the Voice tab, or run app/setup_engine.py voice.": {
+  "fr": "Le moteur de voix n'est pas installé. Installez-le depuis l'onglet Voix, ou lancez app/setup_engine.py voice."
+ },
+ "There is nothing to speak.": {
+  "fr": "Il n'y a rien à dire."
+ },
+ "This CUDA package is built for Windows x64.": {
+  "fr": "Ce paquet CUDA est construit pour Windows x64."
+ },
+ "This engine build does not run on this machine.": {
+  "fr": "Cette version du moteur ne fonctionne pas sur cette machine."
+ },
+ "This file could not be read as audio ({0}). Supply a WAV or FLAC.": {
+  "fr": "Ce fichier n'a pas pu être lu comme de l'audio ({0}). Fournissez un WAV ou un FLAC."
+ },
+ "This line has no take {0}.": {
+  "fr": "Cette réplique n'a pas de prise {0}."
+ },
+ "This line has no {0} translation yet; translate the scene first.": {
+  "fr": "Cette réplique n'a pas encore de traduction en {0} ; traduisez d'abord la scène."
+ },
+ "This line has no {0} translation.": {
+  "fr": "Cette réplique n'a pas de traduction en {0}."
+ },
+ "This line has nothing to say aloud once the stage directions are left out.": {
+  "fr": "Cette réplique n'a rien à dire à voix haute une fois les didascalies retirées."
+ },
+ "This scene has no line {0}.": {
+  "fr": "Cette scène n'a pas de réplique {0}."
+ },
+ "This sheet does not carry: {0}": {
+  "fr": "Cette fiche ne contient pas : {0}"
+ },
+ "This voice is locked so that it keeps sounding the same. Unlock it first, or create a new voice from a new take.": {
+  "fr": "Cette voix est verrouillée pour qu'elle sonne toujours pareil. Déverrouillez-la d'abord, ou créez une nouvelle voix à partir d'une nouvelle prise."
+ },
+ "Tool identity or version does not match the release.": {
+  "fr": "L'identité ou la version de l'outil ne correspond pas à la release."
+ },
+ "Unexpected engine source.": {
+  "fr": "Source de moteur inattendue."
+ },
+ "Unknown authoring target: {0}": {
+  "fr": "Cible de rédaction inconnue : {0}"
+ },
+ "Unknown batch: {0}": {
+  "fr": "Lot inconnu : {0}"
+ },
+ "Unknown conversation model: {0}": {
+  "fr": "Modèle de conversation inconnu : {0}"
+ },
+ "Unknown discussion: {0}": {
+  "fr": "Discussion inconnue : {0}"
+ },
+ "Unknown release level": {
+  "fr": "Niveau de libération inconnu"
+ },
+ "Unknown revision {0} for {1}": {
+  "fr": "Révision {0} inconnue pour {1}"
+ },
+ "Unknown session: {0}": {
+  "fr": "Scène inconnue : {0}"
+ },
+ "Unknown target: {0}": {
+  "fr": "Cible inconnue : {0}"
+ },
+ "Unknown voice model: {0}": {
+  "fr": "Modèle de voix inconnu : {0}"
+ },
+ "Unknown voice: {0}": {
+  "fr": "Voix inconnue : {0}"
+ },
+ "Unknown worker operation: {0}": {
+  "fr": "Opération de worker inconnue : {0}"
+ },
+ "Unknown {0}: {1}": {
+  "fr": "{0} inconnu : {1}"
+ },
+ "Unload other models, pick a smaller one, or switch to CPU.": {
+  "fr": "Déchargez d'autres modèles, choisissez-en un plus petit, ou passez sur CPU."
+ },
+ "Unreadable image: {0}": {
+  "fr": "Image illisible : {0}"
+ },
+ "Unreadable recording: {0}": {
+  "fr": "Enregistrement illisible : {0}"
+ },
+ "Unsupported DarkIdol head geometry.": {
+  "fr": "Géométrie de tête DarkIdol non prise en charge."
+ },
+ "Unsupported image type \"{0}\". Use PNG, JPEG, WebP or BMP.": {
+  "fr": "Type d'image « {0} » non pris en charge. Utilisez PNG, JPEG, WebP ou BMP."
+ },
+ "Unsupported target language: {0}": {
+  "fr": "Langue cible non prise en charge : {0}"
+ },
+ "Update staged. Activate the engine, or restart to activate the application.": {
+  "fr": "Mise à jour préparée. Activez le moteur, ou relancez l'outil pour activer l'application."
+ },
+ "Voice left out, it came without its recording (export the character with its recordings): {0} ({1})": {
+  "fr": "Voix écartée, elle est arrivée sans son enregistrement (exportez le personnage avec ses enregistrements) : {0} ({1})"
+ },
+ "Voice left out, its recording changed since it was imported: {0}": {
+  "fr": "Voix écartée, son enregistrement a changé depuis son import : {0}"
+ },
+ "Voice left out, its recording does not match its fingerprint: {0} ({1})": {
+  "fr": "Voix écartée, son enregistrement ne correspond pas à son empreinte : {0} ({1})"
+ },
+ "Voice left out, its recording is missing: {0}": {
+  "fr": "Voix écartée, son enregistrement est manquant : {0}"
+ },
+ "Voice model verification failed after download.": {
+  "fr": "La vérification du modèle de voix a échoué après le téléchargement."
+ },
+ "Voice weights not found: {0}": {
+  "fr": "Poids de voix introuvables : {0}"
+ },
+ "Waiting deadline exceeded; job may still be active": {
+  "fr": "Délai d'attente dépassé ; la tâche est peut-être encore en cours."
+ },
+ "Waiting for the task in progress": {
+  "fr": "En attente de la tâche en cours"
+ },
+ "Whisper is not installed; install it in Voice, or type the exact words of the take yourself.": {
+  "fr": "Whisper n'est pas installé ; installez-le dans Voix, ou tapez vous-même les mots exacts de la prise."
+ },
+ "Whisper weights not found: {0}": {
+  "fr": "Poids de Whisper introuvables : {0}"
+ },
+ "Worker {0} closed during startup": {
+  "fr": "Le worker {0} s'est fermé pendant son démarrage"
+ },
+ "Worker {0} did not answer the handshake within {1}s": {
+  "fr": "Le worker {0} n'a pas répondu à la poignée de main en {1} s"
+ },
+ "Worker {0} exceeded {1}s": {
+  "fr": "Le worker {0} a dépassé {1} s"
+ },
+ "Worker {0} exited unexpectedly (code {1})": {
+  "fr": "Le worker {0} s'est arrêté de façon inattendue (code {1})"
+ },
+ "Worker {0} exited with code {1} during startup": {
+  "fr": "Le worker {0} s'est arrêté avec le code {1} pendant son démarrage"
+ },
+ "Worker {0} is already processing a request": {
+  "fr": "Le worker {0} traite déjà une demande"
+ },
+ "Worker {0} refused the request: {1}": {
+  "fr": "Le worker {0} a refusé la demande : {1}"
+ },
+ "World already exists: {0}": {
+  "fr": "Ce monde existe déjà : {0}"
+ },
+ "already translated": {
+  "fr": "déjà traduite"
+ },
+ "changed since it was added": {
+  "fr": "modifiée depuis son ajout"
+ },
+ "clone": {
+  "fr": "cloner"
+ },
+ "custom": {
+  "fr": "voix prédéfinie"
+ },
+ "cytools-app.zip is missing from the release.": {
+  "fr": "cytools-app.zip est absent de la release."
+ },
+ "design": {
+  "fr": "inventer"
+ },
+ "llama-server is missing.": {
+  "fr": "llama-server est absent."
+ },
+ "llama-server stopped. See outputs/llama-server.log in the job.": {
+  "fr": "llama-server s'est arrêté. Voir outputs/llama-server.log dans le job."
+ },
+ "nothing to translate": {
+  "fr": "rien à traduire"
+ },
+ "{0} The character falls back to a preset speaker.": {
+  "fr": "{0} Le personnage revient à une voix prédéfinie."
+ },
+ "{0} The character's own voice was used instead.": {
+  "fr": "{0} La voix du personnage a été utilisée à la place."
+ },
+ "{0} is not a PersonaRP character bundle.": {
+  "fr": "{0} n'est pas un paquet de personnages PersonaRP."
+ }
+}

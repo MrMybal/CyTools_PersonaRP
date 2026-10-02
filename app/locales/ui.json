@@ -11074,5 +11074,105 @@
   "No update can be read from GitHub — the repository is private, or no release has been published yet; updates are read without credentials, so the repository has to be public with a published release: ": {
     "en": "No update can be read from GitHub — the repository is private, or no release has been published yet; updates are read without credentials, so the repository has to be public with a published release: ",
     "fr": "Aucune mise à jour lisible sur GitHub — le dépôt est privé, ou aucune release n'est encore publiée ; les mises à jour sont lues sans identifiant, le dépôt doit donc être public et avoir une release publiée : "
+  },
+  "Dictate": {
+    "en": "Dictate",
+    "fr": "Dicter"
+  },
+  "Take %d of %d": {
+    "en": "Take %d of %d",
+    "fr": "Prise %d sur %d"
+  },
+  "Trash this take": {
+    "en": "Trash this take",
+    "fr": "Mettre cette prise à la corbeille"
+  },
+  "Speed and pitch": {
+    "en": "Speed and pitch",
+    "fr": "Vitesse et hauteur"
+  },
+  "Speed": {
+    "en": "Speed",
+    "fr": "Vitesse"
+  },
+  "Pitch (semitones)": {
+    "en": "Pitch (semitones)",
+    "fr": "Hauteur (demi-tons)"
+  },
+  "Natural speed and pitch": {
+    "en": "Natural speed and pitch",
+    "fr": "Vitesse et hauteur naturelles"
+  },
+  "Applied to every spoken line after the model, in scenes, batches and translations; never to the take a stable voice is captured from. A few semitones change the height of the voice, an octave turns it into another voice.": {
+    "en": "Applied to every spoken line after the model, in scenes, batches and translations; never to the take a stable voice is captured from. A few semitones change the height of the voice, an octave turns it into another voice.",
+    "fr": "Appliquées à chaque réplique dite, après le modèle, dans les scènes, les lots et les traductions ; jamais à la prise dont une voix stable est tirée. Quelques demi-tons changent la hauteur de la voix, une octave en fait une autre voix."
+  },
+  "Stop recording": {
+    "en": "Stop recording",
+    "fr": "Arrêter l'enregistrement"
+  },
+  "Nothing was recorded: the recording was too short.": {
+    "en": "Nothing was recorded: the recording was too short.",
+    "fr": "Rien n'a été enregistré : l'enregistrement était trop court."
+  },
+  "level": {
+    "en": "level",
+    "fr": "niveau"
+  },
+  "No microphone was found on this machine.": {
+    "en": "No microphone was found on this machine.",
+    "fr": "Aucun micro n'a été trouvé sur cette machine."
+  },
+  "Default microphone": {
+    "en": "Default microphone",
+    "fr": "Micro par défaut"
+  },
+  "Microphone": {
+    "en": "Microphone",
+    "fr": "Micro"
+  },
+  "Dictated %.1f s — check the words, then send.": {
+    "en": "Dictated %.1f s — check the words, then send.",
+    "fr": "Dicté %.1f s — vérifiez les mots, puis envoyez."
+  },
+  "Nothing was understood in the recording.": {
+    "en": "Nothing was understood in the recording.",
+    "fr": "Rien n'a été compris dans l'enregistrement."
+  },
+  "Take moved to the trash: %s": {
+    "en": "Take moved to the trash: %s",
+    "fr": "Prise mise à la corbeille : %s"
+  },
+  "Take removed from the line.": {
+    "en": "Take removed from the line.",
+    "fr": "Prise retirée de la réplique."
+  },
+  "Applying speed and pitch": {
+    "en": "Applying speed and pitch",
+    "fr": "Application de la vitesse et de la hauteur"
+  },
+  "Record from the microphone": {
+    "en": "Record from the microphone",
+    "fr": "Enregistrer au micro"
+  },
+  "Recorded %.1f s: %s": {
+    "en": "Recorded %.1f s: %s",
+    "fr": "Enregistré %.1f s : %s"
+  },
+  "Between 12 and 24 seconds gives the steadiest clone.": {
+    "en": "Between 12 and 24 seconds gives the steadiest clone.",
+    "fr": "Entre 12 et 24 secondes donne le clone le plus stable."
+  },
+  "The microphone could not be opened: ": {
+    "en": "The microphone could not be opened: ",
+    "fr": "Le micro n'a pas pu être ouvert : "
+  },
+  "Include their scenes (the words, not the takes)": {
+    "en": "Include their scenes (the words, not the takes)",
+    "fr": "Inclure leurs scènes (les répliques, pas les prises)"
+  },
+  "Scenes to play from: ": {
+    "en": "Scenes to play from: ",
+    "fr": "Scènes pour commencer : "
   }
 }

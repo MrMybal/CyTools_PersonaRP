@@ -35,6 +35,8 @@ one trailing blank line aside). **git must be on the PATH**: pip clones that com
 | Translation with and without the scene's context (about 1 min of GPU) | `runtime/python/Scripts/python.exe app/tests/acceptance_translation_context.py [llm-model ...]` |
 | Voice batches: sequential vs batched on the real model (about 3 min of GPU) | `runtime/python/Scripts/python.exe app/tests/acceptance_batch.py [--lines 8] [--check-only]` |
 | Build the Colab project (no model) | `runtime/python/Scripts/python.exe app/build_colab.py` |
+| Speech and Whisper on the CPU (about 70 s, threads limited) | `runtime/python/Scripts/python.exe app/tests/acceptance_cpu_voice.py [threads]` |
+| Resume a real Hugging Face download (about 30 MB, deleted after) | `runtime/python/Scripts/python.exe app/tests/acceptance_download_resume.py` |
 | Build the Windows release (portable zip, cytools-app.zip, SHA256SUMS.txt) | `runtime/python/Scripts/python.exe app/build_release.py` |
 | Run the release as a user would (extracted copy, bare environment) | `runtime/python/Scripts/python.exe app/tests/acceptance_release.py [zip] [--tests] [--keep]` |
 | Every tab of the window | `runtime/python/Scripts/python.exe app/tests/smoke_ui.py` |
@@ -99,6 +101,42 @@ the engine and talk over the JSON-lines protocol in `personarp/workerhost.py`.
 The workers import `personarp.voice.annotations` and nothing else of ours, which is why the
 mark vocabulary sits in `personarp/marks.py` on the standard library alone — the SDK is not
 installed in the engine.
+
+### Speed, pitch and takes
+
+`personarp/voice/prosody.py` applies the sheet's `voice.speed` (0.25–4) and `voice.pitch`
+(±12 semitones) after the model, in numpy: WSOLA time-stretching by pitch-ratio/speed, then an
+FFT resampling to the target length, one pass each. `_render_voice` shapes every segment of a
+take and rebuilds the whole line and its timeline; `_speak_batch` shapes each line with its own
+speaker's settings; `capture_voice_take` neutralises both, so a stable voice is never cloned
+from a shaped take. Measured on a real 18 s take: durations exact, fundamental within 1 %,
+0.05–0.2 s of processing.
+
+`personarp/takes.py`: a line's `audio` record (turn, or translation) keeps its old shape for
+the chosen take and lists every take under `takes`. `speak_turn` writes a new file
+(`turn-NNN-<lang>-<stamp>.wav`) and chooses it; `choose_take` and `remove_take` (to
+`audio/<session>/.trash`) take the execution lock, since a generation rewrites the whole scene
+when it saves. A record from before takes existed counts as one take. A retranslated line
+sends the takes of its old words to the trash.
+
+### Microphone and dictation
+
+`gui/recorder.py` records from the chosen input (the default input's audio API only, so a
+device is listed once) at 24 kHz, or at the card's own rate when it refuses, into
+`data/inputs/micro-<purpose>-<stamp>.wav`; nothing is opened before a button is pressed. The
+Voice tab records a take (stops at 30 s) for `create_stable_voice`; the Scene tab's *Dictate*
+records up to 2 minutes and submits `transcribe`, whose text is appended to the message. No
+operation opens the microphone: from the CLI or MCP, `transcribe` takes a file.
+
+### Messages in the window's language
+
+Operations answer in English for every interface. `locales/messages.json` holds each message
+as the code writes it, variable parts as `{0}`, `{1}`…; `personarp/messages.templates()`
+reads them from the code (raises, returned reasons, `reason +=`, problems, notes), and
+`tests/test_messages.py` fails when one has no French. `gui.state.shown()` translates what the
+window shows — errors (the code stays visible in brackets), notices, progress steps, batch
+problems and line errors — matching the whole message and translating variable parts that are
+messages themselves (a reason followed by its consequence, a language name).
 
 ### Jobs and the execution lock
 
@@ -464,11 +502,12 @@ before formatting it: `tr('Take of %.1f s ready.') % seconds`, never the formatt
 
 ## What this build does not do
 
-No microphone capture (dictation works on a WAV through `transcribe`), no Linux runtime, no
-CPU-only speech run, and no update against a published GitHub release.
+No Linux runtime. A physical microphone was not recorded by the tests (the recorder is tested
+with a simulated one), Colab itself has not run the notebook yet (its cells now leave a journal
+and a report to send back), and no update has gone from one published release to the next.
 The acceptance runs write their evidence to `data/reports/` (local, never committed);
 `VALIDATION.md` there is the authority on what has actually been executed; it also
-lists the five defects the acceptance runs found and the fixes they produced.
+lists the defects the acceptance runs found and the fixes they produced.
 
 ## Contracts followed
 

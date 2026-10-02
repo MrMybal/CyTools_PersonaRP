@@ -185,3 +185,23 @@ def test_building_again_keeps_tasks_models_and_results(project):
     assert (project / 'modeles' / 'garde.txt').is_file()
     assert (project / 'taches' / 'exemple-valdrenn' / 'liste.csv').read_text(
         encoding='utf-8') == 'modifiée'
+
+
+def test_each_command_leaves_a_journal_and_the_report_gathers_it(project, tmp_path):
+    """What a real session did is kept on Drive, and one file carries it back."""
+    runner = [PYTHON, str(project / 'personarp_colab.py'), '--projet', str(project),
+              '--local', str(tmp_path / 'local')]
+    first = subprocess.run(runner + ['etat'], capture_output=True, text=True, encoding='utf-8')
+    assert first.returncode == 0, first.stderr[-2000:]
+    failing = subprocess.run(runner + ['essai'], capture_output=True, text=True, encoding='utf-8')
+    assert failing.returncode != 0                    # no engine on this disk: recorded as such
+    journal = json.loads((project / 'resultats' / 'journal-colab.json').read_text(encoding='utf-8'))
+    assert [entry['command'] for entry in journal[-2:]] == ['etat', 'essai']
+    assert journal[-2]['ok'] and not journal[-1]['ok'] and journal[-1]['error']
+    assert any('GPU' in line for line in journal[-2]['lines'])
+    made = subprocess.run(runner + ['rapport'], capture_output=True, text=True, encoding='utf-8')
+    assert made.returncode == 0, made.stderr[-2000:]
+    [report] = sorted((project / 'resultats').glob('rapport-colab-*.json'))[-1:]
+    document = json.loads(report.read_text(encoding='utf-8'))
+    assert document['journal'][-1]['command'] == 'essai' and 'modelsOnDrive' in document
+    assert 'token' not in report.read_text(encoding='utf-8').lower()

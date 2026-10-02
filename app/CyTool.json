@@ -16573,7 +16573,7 @@
     {
       "id": "export_personas",
       "name": "Export characters",
-      "description": "Write a self-contained bundle: the sheets, their world, their voice descriptors, and optionally the reference recordings as a .zip.",
+      "description": "Write a self-contained bundle: the sheets, their world, their voice descriptors, and optionally the reference recordings as a .zip and the scenes played with them. An imported scene follows its character under a new identifier.",
       "inputSchema": {
         "type": "object",
         "additionalProperties": false,
@@ -16612,6 +16612,11 @@
             "type": "boolean",
             "default": true,
             "title": "Bundle the reference photographs (produces a .zip)"
+          },
+          "include_sessions": {
+            "type": "boolean",
+            "default": false,
+            "title": "Bundle the scenes played with them (words, not takes)"
           }
         },
         "required": [
@@ -16701,6 +16706,12 @@
                 },
                 "imported": {
                   "type": "boolean"
+                },
+                "scenes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
                 },
                 "characters": {
                   "type": "array",
@@ -17399,6 +17410,182 @@
           "auto": 6442450944
         }
       }
+    },
+    {
+      "id": "choose_take",
+      "name": "Choose the take a line plays",
+      "description": "Every take of a line is kept (audio.takes, oldest first); audio itself describes the one the line plays. This chooses another one — take is its position in audio.takes, from 0.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "persona_id": {
+            "type": "string",
+            "default": "",
+            "title": "Character",
+            "maxLength": 80,
+            "pattern": "^$|^[a-z0-9][a-z0-9-]{0,79}$"
+          },
+          "session_id": {
+            "type": "string",
+            "default": "",
+            "title": "Session",
+            "maxLength": 80
+          },
+          "turn": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Line number in the session"
+          },
+          "language": {
+            "type": "string",
+            "enum": [
+              "",
+              "French",
+              "English",
+              "Spanish",
+              "German",
+              "Italian",
+              "Portuguese",
+              "Russian",
+              "Chinese",
+              "Japanese",
+              "Korean"
+            ],
+            "default": "",
+            "title": "Language spoken",
+            "description": "Empty speaks in the character's own language. Another language uses the sheet's entry for it under voice.languages: the same voice with or without its accent, another stable voice, an invented voice or a preset speaker."
+          },
+          "take": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Take, from 0 (oldest)"
+          }
+        },
+        "required": [
+          "persona_id",
+          "session_id",
+          "turn",
+          "take"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "audio": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "takes": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "chosen": {
+            "type": "integer"
+          }
+        }
+      },
+      "supportedBackends": [],
+      "permissions": [],
+      "canRunAsync": true,
+      "canCancel": false,
+      "supportsProgress": false
+    },
+    {
+      "id": "remove_take",
+      "name": "Put a take in the trash",
+      "description": "Move one take of a line to the trash beside the scene's takes (data/sessions/<character>/audio/<session>/.trash); nothing is deleted. When it was the take the line plays, the latest take left is played instead.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "persona_id": {
+            "type": "string",
+            "default": "",
+            "title": "Character",
+            "maxLength": 80,
+            "pattern": "^$|^[a-z0-9][a-z0-9-]{0,79}$"
+          },
+          "session_id": {
+            "type": "string",
+            "default": "",
+            "title": "Session",
+            "maxLength": 80
+          },
+          "turn": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Line number in the session"
+          },
+          "language": {
+            "type": "string",
+            "enum": [
+              "",
+              "French",
+              "English",
+              "Spanish",
+              "German",
+              "Italian",
+              "Portuguese",
+              "Russian",
+              "Chinese",
+              "Japanese",
+              "Korean"
+            ],
+            "default": "",
+            "title": "Language spoken",
+            "description": "Empty speaks in the character's own language. Another language uses the sheet's entry for it under voice.languages: the same voice with or without its accent, another stable voice, an invented voice or a preset speaker."
+          },
+          "take": {
+            "type": "integer",
+            "minimum": 0,
+            "title": "Take, from 0 (oldest)"
+          }
+        },
+        "required": [
+          "persona_id",
+          "session_id",
+          "turn",
+          "take"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "audio": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "takes": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "chosen": {
+            "type": "integer"
+          },
+          "trash": {
+            "type": "string"
+          },
+          "left": {
+            "type": "integer"
+          }
+        }
+      },
+      "supportedBackends": [],
+      "permissions": [],
+      "canRunAsync": true,
+      "canCancel": false,
+      "supportsProgress": false
     },
     {
       "id": "speak_batch",

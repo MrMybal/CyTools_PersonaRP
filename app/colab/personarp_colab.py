@@ -34,6 +34,7 @@ import argparse
 import hashlib
 import json
 import os
+import platform
 import shutil
 import subprocess
 import sys
@@ -51,8 +52,72 @@ TOOL_PACKAGES = ['numpy', 'soundfile', 'Pillow', 'gguf']
 STATE = '_taches.json'
 
 
+SAID = []                     # what this command printed, for the journal
+
+
 def say(message=''):
     print(message, flush=True)
+    SAID.append(str(message))
+    del SAID[:-80]
+
+
+JOURNAL = 'journal-colab.json'
+
+
+def gpu_name():
+    try:
+        return subprocess.run(['nvidia-smi', '--query-gpu=name,memory.total,compute_cap',
+                               '--format=csv,noheader'], capture_output=True, text=True,
+                              timeout=20).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        return ''
+
+
+def record(places, command, arguments, began, code, error=''):
+    """One entry per command, on Drive: what ran on which card, how long, and how it ended."""
+    path = places.results / JOURNAL
+    try:
+        entries = json.loads(path.read_text(encoding='utf-8')) if path.is_file() else []
+    except ValueError:
+        entries = []
+    entries.append({'command': command, 'arguments': arguments,
+                    'started': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(began)),
+                    'seconds': round(time.time() - began, 1), 'exitCode': code, 'ok': code == 0,
+                    'error': error[-2000:], 'gpu': gpu_name(), 'lines': SAID[-40:]})
+    places.results.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(entries[-200:], ensure_ascii=False, indent=1), encoding='utf-8')
+
+
+def report(places):
+    """Everything a session left, in one file on Drive, to send back as it is."""
+    journal = places.results / JOURNAL
+    entries = json.loads(journal.read_text(encoding='utf-8')) if journal.is_file() else []
+    engine = {}
+    if places.engine_python().exists():
+        probe = subprocess.run([str(places.engine_python()), '-c',
+                                'import json, torch, platform; print(json.dumps({"torch": '
+                                'torch.__version__, "cuda": torch.cuda.is_available(), "python": '
+                                'platform.python_version()}))'],
+                               capture_output=True, text=True, timeout=300)
+        try:
+            engine = json.loads(probe.stdout.strip().splitlines()[-1])
+        except (ValueError, IndexError):
+            engine = {'error': (probe.stderr or '')[-500:]}
+    catalog = places.catalog()
+    models = {key: verify_model(places.models / info['directory'], info, hashes=False)[0]
+              for key, info in catalog.items()}
+    free = shutil.disk_usage(str(places.local if places.local.exists() else '/')).free
+    document = {'made': time.strftime('%Y-%m-%d %H:%M:%S'), 'platform': platform.platform(),
+                'python': platform.python_version(), 'gpu': gpu_name(), 'engine': engine,
+                'modelsOnDrive': models, 'precision': places.precision(),
+                'freeLocalBytes': free, 'journal': entries}
+    target = places.results / ('rapport-colab-%s.json' % time.strftime('%Y%m%d-%H%M%S'))
+    target.write_text(json.dumps(document, ensure_ascii=False, indent=1), encoding='utf-8')
+    failed = [entry['command'] for entry in entries if not entry.get('ok')]
+    say('Rapport écrit : %s' % target)
+    say('%d commande(s) au journal, %d en échec%s.' % (
+        len(entries), len(failed), (' : ' + ', '.join(failed)) if failed else ''))
+    say('Envoyez ce fichier tel quel : il ne contient ni jeton, ni modèle, ni voix.')
 
 
 # ------------------------------------------------------------------------- places
@@ -627,9 +692,29 @@ def main(argv=None):
     command = commands.add_parser('lancer')
     command.add_argument('--tache', action='append', default=[])
     commands.add_parser('etat')
+    commands.add_parser('rapport')
     arguments = parser.parse_args(argv)
     places = Places(arguments.projet, arguments.local)
+    if arguments.command == 'rapport':
+        report(places)
+        return 0
+    began, shown = time.time(), {key: value for key, value in vars(arguments).items()
+                                 if key not in ('projet', 'local', 'command')}
+    try:
+        code = dispatch(places, arguments)
+    except SystemExit as stop:
+        code = stop.code if isinstance(stop.code, int) else 1
+        record(places, arguments.command, shown, began, code, str(stop.code or ''))
+        raise
+    except BaseException as exc:
+        import traceback
+        record(places, arguments.command, shown, began, 1, traceback.format_exc())
+        raise
+    record(places, arguments.command, shown, began, code)
+    return code
 
+
+def dispatch(places, arguments):
     if arguments.command == 'installer':
         install(places, cpu_only=arguments.cpu, skip_engine=arguments.sans_moteur)
     elif arguments.command == 'modeles':

@@ -61,6 +61,13 @@ SPOKEN_LANGUAGE = {'type': 'string', 'enum': [''] + LANGUAGES, 'default': '',
 VOICE_PLAN = {'type': 'object', 'title': 'Voice really used',
               'properties': {'language': STR, 'native': STR, 'configured': BOOL, 'source': STR,
                              'accent': STR, 'voice_id': STR, 'speaker': STR, 'mode': STR}}
+TAKE_TARGET = {'persona_id': ident('Character'),
+               'session_id': text('Session', '', 80),
+               'turn': {'type': 'integer', 'minimum': 0, 'title': 'Line number in the session'},
+               'language': SPOKEN_LANGUAGE,
+               'take': {'type': 'integer', 'minimum': 0, 'title': 'Take, from 0 (oldest)'}}
+TAKE_OUT = {'audio': {'type': ['object', 'null']}, 'takes': {'type': 'array', 'items': ANY_OBJECT},
+            'chosen': INT}
 
 def optional(spec, **extra):
     """An object parameter that may be left out.
@@ -331,7 +338,8 @@ OPERATIONS = [
 
     op('export_personas', 'Export characters',
        'Write a self-contained bundle: the sheets, their world, their voice descriptors, and '
-       'optionally the reference recordings as a .zip.',
+       'optionally the reference recordings as a .zip and the scenes played with them. An '
+       'imported scene follows its character under a new identifier.',
        {'persona_ids': {'type': 'array', 'default': [], 'maxItems': 100,
                         'items': {'type': 'string', 'maxLength': 80}, 'title': 'Characters'},
         'destination': text('Destination file', '', 1000, 'File'),
@@ -340,7 +348,9 @@ OPERATIONS = [
         'include_audio': {'type': 'boolean', 'default': False,
                           'title': 'Bundle the reference recordings (produces a .zip)'},
         'include_images': {'type': 'boolean', 'default': True,
-                           'title': 'Bundle the reference photographs (produces a .zip)'}},
+                           'title': 'Bundle the reference photographs (produces a .zip)'},
+        'include_sessions': {'type': 'boolean', 'default': False,
+                             'title': 'Bundle the scenes played with them (words, not takes)'}},
        ['persona_ids'],
        {'file': STR, 'personas': {'type': 'array', 'items': STR},
         'worlds': {'type': 'array', 'items': STR}, 'voices': {'type': 'array', 'items': STR},
@@ -357,6 +367,7 @@ OPERATIONS = [
            'type': 'object', 'properties': {
                'id': STR, 'file': STR, 'world': STR, 'worldId': STR, 'genre': STR, 'tone': STR,
                'summary': STR, 'imported': BOOL,
+               'scenes': {'type': 'array', 'items': ANY_OBJECT},
                'characters': {'type': 'array', 'items': ANY_OBJECT}}}},
         'folder': STR}, cancel=False),
 
@@ -469,6 +480,18 @@ OPERATIONS = [
         'mode': STR, 'model': STR, 'note': STR, 'generationSeconds': NUM},
        progress=True,
        resources={'ramBytes': 8 * 1024 ** 3, 'vramBytes': {'auto': 6 * 1024 ** 3}}),
+
+    op('choose_take', 'Choose the take a line plays',
+       'Every take of a line is kept (audio.takes, oldest first); audio itself describes the one '
+       'the line plays. This chooses another one — take is its position in audio.takes, from 0.',
+       TAKE_TARGET, ['persona_id', 'session_id', 'turn', 'take'], TAKE_OUT, cancel=False),
+
+    op('remove_take', 'Put a take in the trash',
+       'Move one take of a line to the trash beside the scene\'s takes '
+       '(data/sessions/<character>/audio/<session>/.trash); nothing is deleted. When it was the '
+       'take the line plays, the latest take left is played instead.',
+       TAKE_TARGET, ['persona_id', 'session_id', 'turn', 'take'],
+       {**TAKE_OUT, 'trash': STR, 'left': INT}, cancel=False),
 
     op('speak_batch', 'Speak a batch of lines',
        'Speak a list of lines — who says what — into a new task folder of data/batches. The '

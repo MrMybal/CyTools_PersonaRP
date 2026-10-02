@@ -645,3 +645,22 @@ def test_characters_from_files_need_the_permission(cast, monkeypatch):
             _run(runtime, 'speak_batch_file', {'text': 'Maëlis: Oui.',
                                                'personas': [exported['file']]}, permissions=())
     assert refused.value.code == 'AccessDenied'
+
+
+def test_each_line_of_a_batch_takes_its_speaker_speed(cast, monkeypatch):
+    """Speed and pitch belong to the sheet: a batch shapes each line with its own speaker's."""
+    sheet = library.personas.get(cast['personas']['brannoc']['id'])
+    sheet['voice']['speed'] = 2.0
+    library.personas.save(sheet)
+    monkeypatch.setattr(tool.voice_runner, 'speak_batch', FakeWorker())
+    table = 'personnage;texte\nMaëlis;Je reste.\nBrannoc;Non.\n'
+    with tempfile.TemporaryDirectory() as root, tool.create_runtime(root) as runtime:
+        result = _run(runtime, 'speak_batch', {'text': table}, permissions=())
+    assert result['state'] == 'Completed', result.get('error')
+    folder = Path(result['outputs']['folder'])
+    lines = {line['speakerName']: line for line in
+             json.loads((folder / 'resultats.json').read_text(encoding='utf-8'))['lines']}
+    assert lines['Maëlis de Corvanne']['durationSeconds'] == 1.0        # the worker's second
+    assert lines['Brannoc']['durationSeconds'] == 0.5
+    with wave.open(str(folder / lines['Brannoc']['file'])) as take:
+        assert take.getnframes() == 12000

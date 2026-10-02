@@ -14,8 +14,14 @@ from personarp.paths import DATA
 from personarp.schemas import LANGUAGES
 from personarp.voice import delivery
 
-from . import widgets
+from . import recorder, widgets
 from .state import open_path
+
+
+def sf_seconds(path):
+    import soundfile
+    info = soundfile.info(str(path))
+    return info.frames / info.samplerate
 
 SPEAKERS = ['Ryan', 'Aiden', 'Vivian', 'Serena', 'Uncle_Fu', 'Dylan', 'Eric', 'Ono_Anna', 'Sohee']
 # Inside a sentence a language keeps its sentence form: "Dire en anglais", not "en Anglais".
@@ -363,6 +369,15 @@ def _import(app):
     imgui.same_line()
     if widgets.button('Open data/inputs##voice'):
         open_path(DATA / 'inputs')
+    # Or record it here: 12 to 24 seconds of one clear voice, the recording stops at 30 s.
+    recorder.microphone_picker(app)
+    recorded = recorder.controls(app, 'voice', 30.0, tr('Record from the microphone'))
+    if recorded:
+        state['audio'] = recorded
+        seconds = sf_seconds(recorded)
+        app.notice = tr('Recorded %.1f s: %s') % (seconds, recorded)
+        if not 12.0 <= seconds <= 24.0:
+            app.notice += ' ' + tr('Between 12 and 24 seconds gives the steadiest clone.')
     widgets.text_field(state, 'name', tr('Name of the voice'))
     widgets.multiline(state, 'transcript',
                       tr('Exact words (leave empty to transcribe automatically)'), 44)

@@ -127,6 +127,10 @@ _licences = '--accepter-licences' if J_ACCEPTE_LES_LICENCES else ''
 #@title 8. État
 """ + RUNNER + """ etat
 """, title='8. État'),
+        code("""
+#@title 9. Rapport : un fichier sur Drive (resultats/rapport-colab-….json) à renvoyer tel quel
+""" + RUNNER + """ rapport
+""", title='9. Rapport'),
         markdown("""
 ### Bon à savoir
 
