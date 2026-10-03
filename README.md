@@ -1,5 +1,9 @@
 # CyTools PersonaRP
 
+<p align="center">
+  <img src="app/assets/branding/logo.png" alt="CyTools PersonaRP logo" width="160">
+</p>
+
 Local roleplay with persistent characters, for Windows: a desktop application, a command line
 and an MCP server on one runtime, built on the [CyToolsCore](https://github.com/MrMybal/CyToolsCore)
 SDK. Characters live in a shared world, remember what you tell them to, speak with a stable

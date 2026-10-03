@@ -526,3 +526,8 @@ GitHub updates with rollback), `Docs/SharedInstallation.md` (private Python, no 
 model relocation — the migration here was an explicit, receipted, reversible action),
 `Docs/Localization.md` (English by default, French selectable, Options tab from the SDK),
 `Docs/GenerationConfigurations.md` (save/load the current configuration).
+
+
+## Application icon
+
+The logo source is assets/branding/logo.png. build_icon.ps1 derives the 16-256 px Windows ICO and assets/app_settings/icon.png for Hello ImGui. build_launcher.ps1 embeds the ICO in the launcher. branding.py selects assets independently of the working directory and assigns this Tool its own Windows taskbar identity.

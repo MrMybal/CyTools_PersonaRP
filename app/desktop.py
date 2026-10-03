@@ -59,6 +59,8 @@ def main():
         # A screenshot run in another language; your saved preference is not touched.
         from ui_common import preferences
         preferences.values['language'] = sys.argv[sys.argv.index('--smoke-language') + 1]
+    from branding import configure as configure_branding
+    configure_branding('Cyberalien.CyTools_PersonaRP')
     runner = hello_imgui.RunnerParams()
     runner.app_window_params.window_title = WINDOW_TITLE
     runner.app_window_params.window_geometry.size = (1240, 980)
