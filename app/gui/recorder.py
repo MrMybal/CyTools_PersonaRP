@@ -119,28 +119,33 @@ class Recorder:
 
 def controls(app, purpose, limit, label):
     """Record / Stop, the time and the level. Returns the WAV just written, else ''."""
+    import cyui
     from personarp.paths import DATA
     from ui_common import imgui, raw, tr
-    from . import widgets
 
     recorder = getattr(app, 'recorder', None)
     if recorder is None:
         recorder = app.recorder = Recorder(DATA / 'inputs')
     finished = ''
     if recorder.recording and recorder.purpose == purpose:
-        stop = widgets.button(tr('Stop recording') + '##record-' + purpose, 'danger')
+        stop = cyui.icon_text_button(cyui.icon.stop, tr('Stop recording') + '##record-' + purpose,
+                                     'danger')
         if stop or recorder.reached_limit():
             finished = recorder.stop()
             if not finished:
                 app.notice = tr('Nothing was recorded: the recording was too short.')
         else:
             imgui.same_line()
-            raw().text_disabled('%.1f / %.0f s' % (recorder.seconds, recorder.limit))
+            cyui.status_dot(cyui.palette().error, tr('Recording'))
             imgui.same_line()
-            imgui.progress_bar(min(1.0, recorder.level * 6.0), (140, 0), tr('level'))
+            raw().align_text_to_frame_padding()
+            cyui.text_dim('%.1f / %.0f s' % (recorder.seconds, recorder.limit))
+            imgui.same_line()
+            cyui.progress_bar(min(1.0, recorder.level * 6.0), (cyui.dp(140.0), 0.0), tr('level'),
+                              'success')
     else:
         imgui.begin_disabled(recorder.recording)          # one microphone, one recording
-        if widgets.button(label + '##record-' + purpose):
+        if cyui.icon_text_button(cyui.icon.microphone, label + '##record-' + purpose):
             if not input_devices():
                 app.error = tr('No microphone was found on this machine.')
             elif not recorder.start(purpose, limit, getattr(app, 'microphone', None)):
@@ -151,17 +156,18 @@ def controls(app, purpose, limit, label):
 
 def microphone_picker(app):
     """Which input records; the system's default unless another one is chosen."""
-    from ui_common import imgui, raw, tr
+    from ui_common import tr
+    from . import widgets
     devices = getattr(app, 'microphones', None)
     if devices is None:
         devices = app.microphones = input_devices()
     if not devices:
-        raw().text_disabled(tr('No microphone was found on this machine.'))
+        widgets.hint(tr('No microphone was found on this machine.'))
         return
     names = [tr('Default microphone')] + [name for _, name in devices]
     current = getattr(app, 'microphone', None)
     index = next((position + 1 for position, (number, _) in enumerate(devices)
                   if number == current), 0)
-    changed, index = imgui.combo(tr('Microphone'), index, names)
+    changed, index = widgets.choice('Microphone', index, names)
     if changed:
         app.microphone = None if index == 0 else devices[index - 1][0]

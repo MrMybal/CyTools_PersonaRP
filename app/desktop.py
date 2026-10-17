@@ -11,12 +11,14 @@ from pathlib import Path
 
 from imgui_bundle import hello_imgui
 
-from ui_common import imgui, raw, tr, run, configure_generation
+import cyui
+from ui_common import (imgui, raw, tr, run, configure_generation, system_pages, use_shell,
+                       label as raw_label)
 
 from personarp.paths import DATA, SETTINGS, ensure_data_layout, read_json, write_json
 from tool import create_runtime
 
-from gui import panels, widgets
+from gui import panels
 from gui.batch_panel import batch_tab, form as batch_form
 from gui.voice_panel import voice_tab
 from gui.state import App, shown
@@ -65,6 +67,10 @@ def main():
     runner.app_window_params.window_title = WINDOW_TITLE
     runner.app_window_params.window_geometry.size = (1240, 980)
     runner.ini_filename = str(SETTINGS / 'imgui.ini')
+    # CyUI shell: top bar, sidebar, status bar, and the page in the rest of the window.
+    runner.imgui_window_params.default_imgui_window_type = \
+        hello_imgui.DefaultImGuiWindowType.no_default_window
+    use_shell()
     frames = 0
     smoke_tab = sys.argv[sys.argv.index('--smoke-tab') + 1] if '--smoke-tab' in sys.argv else ''
 
@@ -99,114 +105,186 @@ def main():
                 app.pending.append(('update', {'kind': 'app', 'action': action,
                                                'repository': app.updates['repository']}, 'update'))
 
-        def gui():
-            nonlocal frames
-            frames += 1
-            app.poll()
+        # The pages, grouped as the sidebar shows them. The key is the English caption, which
+        # is also what --smoke-tab names.
+        pages = [
+            ('Roleplay', [('Scene', cyui.icon.people, panels.conversation,
+                       'Play a scene with the selected character')]),
+            ('Create', [('Characters', cyui.icon.contact, panels.characters,
+                         'Sheets: identity, appearance, voice, model'),
+                        ('Worlds', cyui.icon.globe, panels.worlds,
+                         'Shared lore, places, factions and terms'),
+                        ('Assistant', cyui.icon.lightbulb, panels.assistant,
+                         'Draft a sheet, a world or a section')]),
+            ('Voice', [('Voice', cyui.icon.microphone, voice_tab,
+                        'Stable voices, speech engine and speech models'),
+                       ('Batches', cyui.icon.list, batch_tab,
+                        'Speak lists of lines into task folders')]),
+            ('Library', [('Library', cyui.icon.library, panels.library_tab,
+                          'Examples, pictures, export and import, ComfyUI'),
+                         ('Models', cyui.icon.download, panels.models_tab,
+                          'Conversation and vision models')]),
+            ('System', [('Updates', cyui.icon.sync, panels.updates_tab,
+                         'Application, engine and model updates'),
+                        ('Diagnostics', cyui.icon.repair, panels.diagnostics,
+                         'Engine, GPU and models, as this machine sees them')]),
+        ]
+        known = [caption for _, items in pages for caption, *_ in items] + [
+            key for key, *_ in system_pages()]
+        view = {'page': smoke_tab if smoke_tab in known else 'Scene', 'notice': ''}
 
-            imgui.text_colored(imgui.ImVec4(0.60, 0.80, 1, 1), 'PersonaRP')
-            imgui.same_line()
-            raw().text_disabled(tr('Local characters, worlds and scenes'))
-            imgui.separator()
+        def top_bar():
+            if cyui.begin_top_bar('##personarp-top'):
+                cyui.heading('PersonaRP', 2)
+                imgui.same_line(0.0, cyui.dp(18.0))
+                imgui.begin_disabled(app.busy)
+                identifiers = [entry['id'] for entry in app.personas]
+                if identifiers:
+                    index = identifiers.index(app.persona_id) if app.persona_id in identifiers else 0
+                    captions = ['%s%s' % (entry['name'],
+                                          '  ·  ' + entry['world_id'] if entry.get('world_id') else '')
+                                for entry in app.personas]
+                    raw().align_text_to_frame_padding()
+                    cyui.text_dim(tr('Character'))
+                    imgui.same_line()
+                    raw().set_next_item_width(cyui.dp(300.0))
+                    changed, index = raw().combo('##character', index, captions)
+                    if changed:
+                        app.select_persona(identifiers[index])
+                else:
+                    raw().align_text_to_frame_padding()
+                    cyui.text_faint(tr('No character yet — create one in Characters.'))
+                imgui.end_disabled()
+                # Unsaved edits are visible from every page: they are written automatically
+                # before anything runs, and saying so avoids the doubt that made it necessary.
+                if app.dirty or app.world_dirty:
+                    imgui.same_line(0.0, cyui.dp(14.0))
+                    cyui.status_dot(cyui.palette().warning,
+                                    tr('Unsaved edits — they are written before the next action'))
+                    imgui.same_line()
+                    if cyui.button(raw_label('Save now'), 'outline'):
+                        app.flush()
+                        app.notice = 'Saved.'
+                if app.busy:
+                    progress = app.job.get('progress') or {}
+                    step = shown(progress.get('currentStep', 'waiting'))
+                    width = cyui.dp(340.0)
+                    imgui.same_line()
+                    cyui.align_right(width + imgui.get_frame_height() * 2 + cyui.dp(16.0))
+                    cyui.spinner('##busy', 8.0)
+                    imgui.same_line()
+                    cyui.progress_bar(progress.get('percent', 0) / 100.0, (width, 0.0),
+                                      '%s — %s' % (tr(app.job['state']), step))
+                    imgui.same_line()
+                    if cyui.icon_button(cyui.icon.stop, tr('Cancel — the worker must really stop '
+                                                          'before its resources are released')):
+                        app.cancel()
+            cyui.end_top_bar()
 
-            # Character selector, visible from every tab.
-            imgui.begin_disabled(app.busy)
-            identifiers = [entry['id'] for entry in app.personas]
-            if identifiers:
-                index = identifiers.index(app.persona_id) if app.persona_id in identifiers else 0
-                captions = ['%s%s' % (entry['name'],
-                                      '  ·  ' + entry['world_id'] if entry.get('world_id') else '')
-                            for entry in app.personas]
-                changed, index = imgui.combo(tr('Character'), index, captions)
-                if changed:
-                    app.select_persona(identifiers[index])
-            else:
-                raw().text_disabled(tr('No character yet — create one in Characters.'))
-            imgui.end_disabled()
+        def status_bar():
+            if cyui.begin_status_bar('##personarp-status'):
+                if app.job:
+                    tone = {'Failed': 'error', 'Cancelled': 'warning'}.get(app.job['state'], 'neutral')
+                    cyui.status_text(tone, tr('Last operation: ') + app.purpose + ' — '
+                                     + tr(app.job['state']))
+                    imgui.same_line(0.0, cyui.dp(16.0))
+                if app.notice:
+                    cyui.status_text('neutral', shown(app.notice).splitlines()[0][:160])
+            cyui.end_status_bar()
 
-            # Unsaved edits are visible from every tab, not buried in the sheet: they are
-            # written automatically before anything runs, and saying so avoids the doubt
-            # that made this necessary in the first place.
-            if app.dirty or app.world_dirty:
-                imgui.text_colored(imgui.ImVec4(1, 0.82, 0.4, 1),
-                                   tr('Unsaved edits — they are written before the next action'))
-                imgui.same_line()
-                if widgets.button('Save now'):
-                    app.flush()
-                    app.notice = 'Saved.'
-
-            # The bar belongs to work in progress; a finished job leaves a one-line status.
-            if app.busy:
-                progress = app.job.get('progress') or {}
-                imgui.progress_bar(progress.get('percent', 0) / 100, (-1, 0),
-                                   tr(app.job['state']) + ' — '
-                                   + shown(progress.get('currentStep', 'waiting')))
-            elif app.job:
-                raw().text_disabled(tr('Last operation: ') + app.purpose + ' — '
-                                    + tr(app.job['state']))
-            if app.busy:
-                if widgets.button('Cancel'):
-                    app.cancel()
-                imgui.same_line()
-                raw().text_disabled(tr('The worker must really stop before its resources are '
-                                       'released.'))
-            if app.error:
-                imgui.text_colored(imgui.ImVec4(1, 0.5, 0.5, 1), tr('Error'))
-                raw().text_wrapped(shown(app.error))
-                if getattr(app, 'error_code', ''):
-                    raw().text_disabled('[%s]' % app.error_code)
-                imgui.same_line()
-                if widgets.button('Dismiss##error'):
-                    app.error = ''
-                    app.error_code = ''
-            if app.notice:
-                raw().text_wrapped(shown(app.notice))
-
-            def tab(caption):
-                flags = raw().TabItemFlags_.set_selected if smoke_tab == caption and frames < 4 else 0
-                return imgui.begin_tab_item(caption, None, flags)
-
-            if imgui.begin_tab_bar('main'):
-                for caption, drawer in (('Scene', panels.conversation),
-                                        ('Characters', panels.characters),
-                                        ('Worlds', panels.worlds),
-                                        ('Assistant', panels.assistant),
-                                        ('Voice', voice_tab),
-                                        ('Batches', batch_tab),
-                                        ('Library', panels.library_tab),
-                                        ('Models', panels.models_tab),
-                                        ('Updates', panels.updates_tab),
-                                        ('Diagnostics', panels.diagnostics)):
-                    opened, _ = tab(caption)
-                    if opened:
-                        try:
-                            drawer(app)
-                        except Exception as exc:            # noqa: BLE001 - a panel must not kill the window
-                            app.error = '%s: %s' % (caption, exc)
-                            if '--strict-ui' in sys.argv:
-                                raise
-                        imgui.end_tab_item()
-                imgui.end_tab_bar()
-
+        def player_bar():
             player = app.player
-            if player is not None and player.loaded:
-                imgui.separator()
-                imgui.text(tr('Audio'))
-                imgui.same_line()
-                if widgets.button('Pause' if player.playing else 'Play'):
+            if player is None or not player.loaded:
+                return
+            if cyui.begin_bottom_bar('##personarp-player'):
+                if cyui.icon_button(cyui.icon.pause if player.playing else cyui.icon.play,
+                                    tr('Pause') if player.playing else tr('Play')):
                     player.pause() if player.playing else player.play()
                 imgui.same_line()
-                if widgets.button('Stop'):
+                if cyui.icon_button(cyui.icon.stop, tr('Stop')):
                     player.stop()
                 imgui.same_line()
-                changed, seconds = imgui.slider_float('##position', player.seconds, 0.0,
+                raw().set_next_item_width(cyui.dp(360.0))
+                changed, seconds = raw().slider_float('##position', player.seconds, 0.0,
                                                       max(0.1, player.duration), '%.1f s')
                 if changed:
                     player.seek(seconds)
                 imgui.same_line()
-                _, player.volume = imgui.slider_float('##volume', player.volume, 0.0, 1.0,
+                raw().set_next_item_width(cyui.dp(140.0))
+                _, player.volume = raw().slider_float('##volume', player.volume, 0.0, 1.0,
                                                       tr('volume %.2f'))
-                raw().text_disabled(Path(player.path).name)
+                imgui.same_line()
+                raw().align_text_to_frame_padding()
+                cyui.text_faint(Path(player.path).name)
+            cyui.end_bottom_bar()
+
+        def sidebar(system):
+            if cyui.begin_sidebar('##personarp-nav', 200.0):
+                cyui.sidebar_header('PERSONARP')
+                for group, items in pages:
+                    cyui.sidebar_group(tr(group).upper())
+                    for caption, glyph, _, _ in items:
+                        if cyui.sidebar_item(glyph, tr(caption), view['page'] == caption):
+                            view['page'] = caption
+                cyui.sidebar_group(tr('Tool').upper())
+                for key, caption, glyph, _ in system:
+                    if cyui.sidebar_item(glyph, tr(caption), view['page'] == key):
+                        view['page'] = key
+            cyui.end_sidebar()
+
+        def page(system):
+            viewport = raw().get_main_viewport()
+            raw().set_next_window_pos(viewport.work_pos)
+            raw().set_next_window_size(viewport.work_size)
+            flags = (raw().WindowFlags_.no_decoration | raw().WindowFlags_.no_saved_settings
+                     | raw().WindowFlags_.no_bring_to_front_on_focus)
+            with cyui.scoped_var(raw().StyleVar_.window_padding, cyui.dp2(18.0, 14.0)):
+                raw().begin('##personarp-page', None, flags)
+            if app.error:
+                cyui.callout('error', shown(app.error)
+                             + ('  [%s]' % app.error_code if getattr(app, 'error_code', '') else ''))
+                if cyui.button(raw_label('Dismiss##error'), 'ghost', small=True):
+                    app.error = ''
+                    app.error_code = ''
+                cyui.space(6.0)
+            drawn = False
+            for _, items in pages:
+                for caption, _, drawer, subtitle in items:
+                    if caption == view['page']:
+                        cyui.panel_header(tr(caption), tr(subtitle))
+                        cyui.divider(4.0)
+                        run_page(caption, lambda: drawer(app))
+                        drawn = True
+            for key, caption, _, drawer in system:
+                if key == view['page'] and not drawn:
+                    cyui.panel_header(tr(caption))
+                    cyui.divider(4.0)
+                    run_page(caption, drawer)
+            raw().end()
+
+        def run_page(caption, draw):
+            try:
+                draw()
+            except Exception as exc:            # noqa: BLE001 - a page must not kill the window
+                app.error = '%s: %s' % (caption, exc)
+                if '--strict-ui' in sys.argv:
+                    raise
+
+        def gui():
+            nonlocal frames
+            frames += 1
+            app.poll()
+            # A notice is an event: it is shown once as a toast, and stays in the status bar.
+            if app.notice and app.notice != view['notice']:
+                cyui.notify(shown(app.notice), 'neutral')
+            view['notice'] = app.notice
+            system = system_pages()
+            top_bar()
+            status_bar()
+            player_bar()
+            sidebar(system)
+            page(system)
+            cyui.render_notifications()
 
             waited = not smoke_batch or app.batch_form.get('preview') is not None \
                 or frames > 900

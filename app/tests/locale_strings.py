@@ -47,7 +47,11 @@ RAW_TEXTS = FACADE_TEXTS | {'text_colored'} | FACADE_LABELS
 # widgets.<name>: positions of the arguments that are shown, and of caption lists.
 WIDGET_LABELS = {'text_field': [2], 'multiline': [2], 'string_list': [2, 3],
                  'slider_float': [2], 'slider_int': [2], 'checkbox': [2], 'combo': [2],
-                 'picker': [0, 3], 'dictionary_list': [2], 'button': [0], 'small_button': [0]}
+                 'picker': [0, 3], 'dictionary_list': [2], 'button': [0], 'small_button': [0],
+                 'section': [0], 'empty': [0, 1], 'row': [0, 1], 'choice': [0], 'integer': [2],
+                 'icon_button': [1]}
+# widgets.<name>: position of a literal list whose every element is shown (sub-page tabs).
+WIDGET_SHOWN_LISTS = {'page_tabs': 1}
 # combo(branch, key, label, choices, captions): the choices are shown only without captions.
 WIDGET_LISTS = {'combo': 3}
 # Local helpers that put their argument on screen through the facade.
@@ -244,8 +248,8 @@ class Finder(ast.NodeVisitor):
             index = 1 if name == 'text_colored' else 0
             if len(arguments) > index:
                 self.shown(arguments[index], False)
-        elif owner == 'widgets' and name in WIDGET_LABELS:
-            for index in WIDGET_LABELS[name]:
+        elif owner == 'widgets' and (name in WIDGET_LABELS or name in WIDGET_SHOWN_LISTS):
+            for index in WIDGET_LABELS.get(name, []):
                 if index < len(arguments):
                     self.shown(arguments[index], True)
             index = WIDGET_LISTS.get(name)
@@ -257,6 +261,9 @@ class Finder(ast.NodeVisitor):
                 if isinstance(shown, (ast.List, ast.Tuple)):
                     for element in shown.elts:
                         self.keep(_constant(element), element)
+            if name in WIDGET_SHOWN_LISTS and len(arguments) > WIDGET_SHOWN_LISTS[name]                     and isinstance(arguments[WIDGET_SHOWN_LISTS[name]], (ast.List, ast.Tuple)):
+                for element in arguments[WIDGET_SHOWN_LISTS[name]].elts:
+                    self.keep(_constant(element), element)
             if name == 'dictionary_list' and len(arguments) > 3 \
                     and isinstance(arguments[3], (ast.List, ast.Tuple)):
                 for field in arguments[3].elts:

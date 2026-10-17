@@ -11174,5 +11174,761 @@
   "Scenes to play from: ": {
     "en": "Scenes to play from: ",
     "fr": "Scènes pour commencer : "
+  },
+  "(sans titre)": {
+    "en": "(untitled)",
+    "fr": "(sans titre)"
+  },
+  "(untitled)": {
+    "en": "(untitled)",
+    "fr": "(sans titre)"
+  },
+  "A few exchanges written as the character speaks: the model imitates their rhythm more than any description.": {
+    "en": "A few exchanges written as the character speaks: the model imitates their rhythm more than any description.",
+    "fr": "Quelques échanges écrits comme parle le personnage : le modèle imite leur rythme mieux que n’importe quelle description."
+  },
+  "Add a photograph": {
+    "en": "Add a photograph",
+    "fr": "Ajouter une photographie"
+  },
+  "Add one on a character, in Characters > Appearance.": {
+    "en": "Add one on a character, in Characters > Appearance.",
+    "fr": "Ajoutez-en une sur un personnage, dans Personnages > Apparence."
+  },
+  "Ajouter une photographie": {
+    "en": "Add a photograph",
+    "fr": "Ajouter une photographie"
+  },
+  "Ajoutez-en une sur un personnage, dans Personnages > Apparence.": {
+    "en": "Add one on a character, in Characters > Appearance.",
+    "fr": "Ajoutez-en une sur un personnage, dans Personnages > Apparence."
+  },
+  "Amber night (CyDAW)": {
+    "en": "Amber night (CyDAW)",
+    "fr": "Nuit ambrée (CyDAW)"
+  },
+  "Annuler — le processus doit vraiment s’arrêter avant que ses ressources soient libérées": {
+    "en": "Cancel — the worker must really stop before its resources are released",
+    "fr": "Annuler — le processus doit vraiment s’arrêter avant que ses ressources soient libérées"
+  },
+  "Aperçu du prompt que reçoit le modèle": {
+    "en": "Preview the prompt the model receives",
+    "fr": "Aperçu du prompt que reçoit le modèle"
+  },
+  "Application, engine and model updates": {
+    "en": "Application, engine and model updates",
+    "fr": "Mises à jour de l'application, du moteur et des modèles"
+  },
+  "Aucun diagnostic pour le moment": {
+    "en": "No diagnosis yet",
+    "fr": "Aucun diagnostic pour le moment"
+  },
+  "Aucun exemple trouvé": {
+    "en": "No example found",
+    "fr": "Aucun exemple trouvé"
+  },
+  "Aucun modèle de parole n’est installé : téléchargez au moins le modèle 1.7B Base dans Moteur et modèles pour entendre une voix stable.": {
+    "en": "No speech model is installed yet: download at least the 1.7B Base model in Engine and models to hear a stable voice.",
+    "fr": "Aucun modèle de parole n’est installé : téléchargez au moins le modèle 1.7B Base dans Moteur et modèles pour entendre une voix stable."
+  },
+  "Aucun monde sélectionné": {
+    "en": "No world selected",
+    "fr": "Aucun monde sélectionné"
+  },
+  "Aucun personnage pour le moment": {
+    "en": "No character yet",
+    "fr": "Aucun personnage pour le moment"
+  },
+  "Aucun personnage sélectionné": {
+    "en": "No character selected",
+    "fr": "Aucun personnage sélectionné"
+  },
+  "Aucune discussion pour le moment": {
+    "en": "No discussion yet",
+    "fr": "Aucune discussion pour le moment"
+  },
+  "Aucune photographie pour le moment": {
+    "en": "No photograph yet",
+    "fr": "Aucune photographie pour le moment"
+  },
+  "Aucune relation pour le moment.": {
+    "en": "No relationship yet.",
+    "fr": "Aucune relation pour le moment."
+  },
+  "Aucune réplique pour le moment": {
+    "en": "No line yet",
+    "fr": "Aucune réplique pour le moment"
+  },
+  "Aucune scène pour le moment.": {
+    "en": "No scene yet.",
+    "fr": "Aucune scène pour le moment."
+  },
+  "Aucune tâche pour le moment": {
+    "en": "No task yet",
+    "fr": "Aucune tâche pour le moment"
+  },
+  "Aucune voix stable pour le moment": {
+    "en": "No stable voice yet",
+    "fr": "Aucune voix stable pour le moment"
+  },
+  "Cancel — the worker must really stop before its resources are released": {
+    "en": "Cancel — the worker must really stop before its resources are released",
+    "fr": "Annuler — le processus doit vraiment s’arrêter avant que ses ressources soient libérées"
+  },
+  "Ce qui est dit": {
+    "en": "What is spoken",
+    "fr": "Ce qui est dit"
+  },
+  "Ce à quoi l’histoire se tient": {
+    "en": "What the story keeps to",
+    "fr": "Ce à quoi l’histoire se tient"
+  },
+  "Check that the voice is intact": {
+    "en": "Check that the voice is intact",
+    "fr": "Vérifier que la voix est intacte"
+  },
+  "Choisissez-en un dans la barre du haut, ou créez un nouveau personnage.": {
+    "en": "Pick one in the bar at the top, or create a new character.",
+    "fr": "Choisissez-en un dans la barre du haut, ou créez un nouveau personnage."
+  },
+  "Chronologie et glossaire": {
+    "en": "Timeline and glossary",
+    "fr": "Chronologie et glossaire"
+  },
+  "Close": {
+    "en": "Close",
+    "fr": "Fermer"
+  },
+  "Comfortable": {
+    "en": "Comfortable",
+    "fr": "Confortable"
+  },
+  "Comment elles sont dites": {
+    "en": "How they are spoken",
+    "fr": "Comment elles sont dites"
+  },
+  "Compact": {
+    "en": "Compact",
+    "fr": "Compacte"
+  },
+  "Compact fits more on the screen; comfortable is airier and easier to read.": {
+    "en": "Compact fits more on the screen; comfortable is airier and easier to read.",
+    "fr": "Compacte affiche davantage à l'écran ; confortable est plus aérée et plus facile à lire."
+  },
+  "Compacte": {
+    "en": "Compact",
+    "fr": "Compacte"
+  },
+  "Compacte affiche davantage à l'écran ; confortable est plus aérée et plus facile à lire.": {
+    "en": "Compact fits more on the screen; comfortable is airier and easier to read.",
+    "fr": "Compacte affiche davantage à l'écran ; confortable est plus aérée et plus facile à lire."
+  },
+  "Confortable": {
+    "en": "Comfortable",
+    "fr": "Confortable"
+  },
+  "Conversation and vision models": {
+    "en": "Conversation and vision models",
+    "fr": "Modèles de conversation et de vision"
+  },
+  "Copier le diagnostic": {
+    "en": "Copy the diagnosis",
+    "fr": "Copier le diagnostic"
+  },
+  "Copy the diagnosis": {
+    "en": "Copy the diagnosis",
+    "fr": "Copier le diagnostic"
+  },
+  "Create": {
+    "en": "Create",
+    "fr": "Créer"
+  },
+  "Create a voice": {
+    "en": "Create a voice",
+    "fr": "Créer une voix"
+  },
+  "Create one from a take or from your own recording.": {
+    "en": "Create one from a take or from your own recording.",
+    "fr": "Créez-en une à partir d’une prise ou de votre propre enregistrement."
+  },
+  "Create one in Characters, or import an example world from Library.": {
+    "en": "Create one in Characters, or import an example world from Library.",
+    "fr": "Créez-en un dans Personnages, ou importez un monde d’exemple depuis Bibliothèque."
+  },
+  "Created": {
+    "en": "Created",
+    "fr": "Créée"
+  },
+  "Créer": {
+    "en": "Create",
+    "fr": "Créer"
+  },
+  "Créer une voix": {
+    "en": "Create a voice",
+    "fr": "Créer une voix"
+  },
+  "Créez-en un dans Personnages, ou importez un monde d’exemple depuis Bibliothèque.": {
+    "en": "Create one in Characters, or import an example world from Library.",
+    "fr": "Créez-en un dans Personnages, ou importez un monde d’exemple depuis Bibliothèque."
+  },
+  "Créez-en une à partir d’une prise ou de votre propre enregistrement.": {
+    "en": "Create one from a take or from your own recording.",
+    "fr": "Créez-en une à partir d’une prise ou de votre propre enregistrement."
+  },
+  "Créée": {
+    "en": "Created",
+    "fr": "Créée"
+  },
+  "Density": {
+    "en": "Density",
+    "fr": "Densité"
+  },
+  "Densité": {
+    "en": "Density",
+    "fr": "Densité"
+  },
+  "Diagnosis copied.": {
+    "en": "Diagnosis copied.",
+    "fr": "Diagnostic copié."
+  },
+  "Diagnostic copié.": {
+    "en": "Diagnosis copied.",
+    "fr": "Diagnostic copié."
+  },
+  "Dire cette réplique": {
+    "en": "Speak this line",
+    "fr": "Dire cette réplique"
+  },
+  "Dire des listes de répliques dans des dossiers de tâche": {
+    "en": "Speak lists of lines into task folders",
+    "fr": "Dire des listes de répliques dans des dossiers de tâche"
+  },
+  "Draft a sheet, a world or a section": {
+    "en": "Draft a sheet, a world or a section",
+    "fr": "Rédiger une fiche, un monde ou une section"
+  },
+  "Duplicate this character": {
+    "en": "Duplicate this character",
+    "fr": "Dupliquer ce personnage"
+  },
+  "Dupliquer ce personnage": {
+    "en": "Duplicate this character",
+    "fr": "Dupliquer ce personnage"
+  },
+  "Engine and models": {
+    "en": "Engine and models",
+    "fr": "Moteur et modèles"
+  },
+  "Engine, GPU and models, as this machine sees them": {
+    "en": "Engine, GPU and models, as this machine sees them",
+    "fr": "Moteur, GPU et modèles, tels que cette machine les voit"
+  },
+  "Enregistrement en cours": {
+    "en": "Recording",
+    "fr": "Enregistrement en cours"
+  },
+  "Examples, pictures, export and import, ComfyUI": {
+    "en": "Examples, pictures, export and import, ComfyUI",
+    "fr": "Exemples, images, export et import, ComfyUI"
+  },
+  "Exemples, images, export et import, ComfyUI": {
+    "en": "Examples, pictures, export and import, ComfyUI",
+    "fr": "Exemples, images, export et import, ComfyUI"
+  },
+  "Fermer": {
+    "en": "Close",
+    "fr": "Fermer"
+  },
+  "Fiches : identité, apparence, voix, modèle": {
+    "en": "Sheets: identity, appearance, voice, model",
+    "fr": "Fiches : identité, apparence, voix, modèle"
+  },
+  "Fichier (chemin complet, ou fichier dans data/inputs)": {
+    "en": "File (full path, or a file in data/inputs)",
+    "fr": "Fichier (chemin complet, ou fichier dans data/inputs)"
+  },
+  "File (full path, or a file in data/inputs)": {
+    "en": "File (full path, or a file in data/inputs)",
+    "fr": "Fichier (chemin complet, ou fichier dans data/inputs)"
+  },
+  "For the image prompts": {
+    "en": "For the image prompts",
+    "fr": "Pour les prompts d’image"
+  },
+  "Gris clair (CyDAW)": {
+    "en": "Light grey (CyDAW)",
+    "fr": "Gris clair (CyDAW)"
+  },
+  "Gris moyen (CyDAW)": {
+    "en": "Mid grey (CyDAW)",
+    "fr": "Gris moyen (CyDAW)"
+  },
+  "How they are spoken": {
+    "en": "How they are spoken",
+    "fr": "Comment elles sont dites"
+  },
+  "Identifiant": {
+    "en": "Identifier",
+    "fr": "Identifiant"
+  },
+  "Identifier": {
+    "en": "Identifier",
+    "fr": "Identifiant"
+  },
+  "Instructions": {
+    "en": "Instructions",
+    "fr": "Instructions"
+  },
+  "Jouer une scène avec le personnage sélectionné": {
+    "en": "Play a scene with the selected character",
+    "fr": "Jouer une scène avec le personnage sélectionné"
+  },
+  "La liste des modèles n’a pas encore été lue.": {
+    "en": "The model list has not been read yet.",
+    "fr": "La liste des modèles n’a pas encore été lue."
+  },
+  "La scène en cours": {
+    "en": "The scene being played",
+    "fr": "La scène en cours"
+  },
+  "Le monde": {
+    "en": "The world",
+    "fr": "Le monde"
+  },
+  "Le moteur de parole n’est pas encore installé : installez-le dans Moteur et modèles, puis les modèles de parole nécessaires. Rien ne peut être dit avant.": {
+    "en": "The speech engine is not installed yet: install it in Engine and models, then the speech models you need. Nothing can be spoken before.",
+    "fr": "Le moteur de parole n’est pas encore installé : installez-le dans Moteur et modèles, puis les modèles de parole nécessaires. Rien ne peut être dit avant."
+  },
+  "Le texte ci-dessous peut être sélectionné et copié. Voir VALIDATION.md pour ce qui a réellement été exécuté sur cette machine.": {
+    "en": "The text below is selectable and copyable. See VALIDATION.md for what has actually been executed on this machine.",
+    "fr": "Le texte ci-dessous peut être sélectionné et copié. Voir VALIDATION.md pour ce qui a réellement été exécuté sur cette machine."
+  },
+  "Les exemples se trouvent dans app/examples.": {
+    "en": "The examples live in app/examples.",
+    "fr": "Les exemples se trouvent dans app/examples."
+  },
+  "Les répliques": {
+    "en": "The lines",
+    "fr": "Les répliques"
+  },
+  "Lieux, factions et lois": {
+    "en": "Places, factions and laws",
+    "fr": "Lieux, factions et lois"
+  },
+  "Light grey (CyDAW)": {
+    "en": "Light grey (CyDAW)",
+    "fr": "Gris clair (CyDAW)"
+  },
+  "Lines": {
+    "en": "Lines",
+    "fr": "Répliques"
+  },
+  "List the revisions": {
+    "en": "List the revisions",
+    "fr": "Lister les révisions"
+  },
+  "Lister les révisions": {
+    "en": "List the revisions",
+    "fr": "Lister les révisions"
+  },
+  "Marine (CyEngineHub)": {
+    "en": "Navy (CyEngineHub)",
+    "fr": "Marine (CyEngineHub)"
+  },
+  "Mettre à la corbeille (data/personas/.trash)": {
+    "en": "Move to trash (data/personas/.trash)",
+    "fr": "Mettre à la corbeille (data/personas/.trash)"
+  },
+  "Mid grey (CyDAW)": {
+    "en": "Mid grey (CyDAW)",
+    "fr": "Gris moyen (CyDAW)"
+  },
+  "Mises à jour de l'application, du moteur et des modèles": {
+    "en": "Application, engine and model updates",
+    "fr": "Mises à jour de l'application, du moteur et des modèles"
+  },
+  "Modèle de rédaction": {
+    "en": "Writing model",
+    "fr": "Modèle de rédaction"
+  },
+  "Modèles de conversation et de vision": {
+    "en": "Conversation and vision models",
+    "fr": "Modèles de conversation et de vision"
+  },
+  "Moteur et modèles": {
+    "en": "Engine and models",
+    "fr": "Moteur et modèles"
+  },
+  "Moteur, GPU et modèles, tels que cette machine les voit": {
+    "en": "Engine, GPU and models, as this machine sees them",
+    "fr": "Moteur, GPU et modèles, tels que cette machine les voit"
+  },
+  "Move to trash (data/personas/.trash)": {
+    "en": "Move to trash (data/personas/.trash)",
+    "fr": "Mettre à la corbeille (data/personas/.trash)"
+  },
+  "Navy (CyEngineHub)": {
+    "en": "Navy (CyEngineHub)",
+    "fr": "Marine (CyEngineHub)"
+  },
+  "Next take": {
+    "en": "Next take",
+    "fr": "Prise suivante"
+  },
+  "No character selected": {
+    "en": "No character selected",
+    "fr": "Aucun personnage sélectionné"
+  },
+  "No character yet": {
+    "en": "No character yet",
+    "fr": "Aucun personnage pour le moment"
+  },
+  "No diagnosis yet": {
+    "en": "No diagnosis yet",
+    "fr": "Aucun diagnostic pour le moment"
+  },
+  "No discussion yet": {
+    "en": "No discussion yet",
+    "fr": "Aucune discussion pour le moment"
+  },
+  "No example found": {
+    "en": "No example found",
+    "fr": "Aucun exemple trouvé"
+  },
+  "No line yet": {
+    "en": "No line yet",
+    "fr": "Aucune réplique pour le moment"
+  },
+  "No photograph yet": {
+    "en": "No photograph yet",
+    "fr": "Aucune photographie pour le moment"
+  },
+  "No relationship yet.": {
+    "en": "No relationship yet.",
+    "fr": "Aucune relation pour le moment."
+  },
+  "No scene yet.": {
+    "en": "No scene yet.",
+    "fr": "Aucune scène pour le moment."
+  },
+  "No speech model is installed yet: download at least the 1.7B Base model in Engine and models to hear a stable voice.": {
+    "en": "No speech model is installed yet: download at least the 1.7B Base model in Engine and models to hear a stable voice.",
+    "fr": "Aucun modèle de parole n’est installé : téléchargez au moins le modèle 1.7B Base dans Moteur et modèles pour entendre une voix stable."
+  },
+  "No stable voice yet": {
+    "en": "No stable voice yet",
+    "fr": "Aucune voix stable pour le moment"
+  },
+  "No task yet": {
+    "en": "No task yet",
+    "fr": "Aucune tâche pour le moment"
+  },
+  "No world selected": {
+    "en": "No world selected",
+    "fr": "Aucun monde sélectionné"
+  },
+  "Node": {
+    "en": "Node",
+    "fr": "Nœud"
+  },
+  "Nothing said yet": {
+    "en": "Nothing said yet",
+    "fr": "Rien n’a encore été dit"
+  },
+  "Nuit ambrée (CyDAW)": {
+    "en": "Amber night (CyDAW)",
+    "fr": "Nuit ambrée (CyDAW)"
+  },
+  "Nœud": {
+    "en": "Node",
+    "fr": "Nœud"
+  },
+  "Open one to talk an idea through.": {
+    "en": "Open one to talk an idea through.",
+    "fr": "Ouvrez-en une pour discuter d’une idée."
+  },
+  "Or record it": {
+    "en": "Or record it",
+    "fr": "Ou l’enregistrer"
+  },
+  "Ou l’enregistrer": {
+    "en": "Or record it",
+    "fr": "Ou l’enregistrer"
+  },
+  "Ouvrez-en une pour discuter d’une idée.": {
+    "en": "Open one to talk an idea through.",
+    "fr": "Ouvrez-en une pour discuter d’une idée."
+  },
+  "Pick one in the bar at the top, or create a new character.": {
+    "en": "Pick one in the bar at the top, or create a new character.",
+    "fr": "Choisissez-en un dans la barre du haut, ou créez un nouveau personnage."
+  },
+  "Places, factions and laws": {
+    "en": "Places, factions and laws",
+    "fr": "Lieux, factions et lois"
+  },
+  "Plan": {
+    "en": "Shot",
+    "fr": "Plan"
+  },
+  "Play a scene with the selected character": {
+    "en": "Play a scene with the selected character",
+    "fr": "Jouer une scène avec le personnage sélectionné"
+  },
+  "Pour les prompts d’image": {
+    "en": "For the image prompts",
+    "fr": "Pour les prompts d’image"
+  },
+  "Preferences": {
+    "en": "Preferences",
+    "fr": "Préférences"
+  },
+  "Prepare one in New task.": {
+    "en": "Prepare one in New task.",
+    "fr": "Préparez-en une dans Nouvelle tâche."
+  },
+  "Preview the prompt the model receives": {
+    "en": "Preview the prompt the model receives",
+    "fr": "Aperçu du prompt que reçoit le modèle"
+  },
+  "Previous take": {
+    "en": "Previous take",
+    "fr": "Prise précédente"
+  },
+  "Prise précédente": {
+    "en": "Previous take",
+    "fr": "Prise précédente"
+  },
+  "Prise suivante": {
+    "en": "Next take",
+    "fr": "Prise suivante"
+  },
+  "Préférences": {
+    "en": "Preferences",
+    "fr": "Préférences"
+  },
+  "Préparez-en une dans Nouvelle tâche.": {
+    "en": "Prepare one in New task.",
+    "fr": "Préparez-en une dans Nouvelle tâche."
+  },
+  "Quelques échanges écrits comme parle le personnage : le modèle imite leur rythme mieux que n’importe quelle description.": {
+    "en": "A few exchanges written as the character speaks: the model imitates their rhythm more than any description.",
+    "fr": "Quelques échanges écrits comme parle le personnage : le modèle imite leur rythme mieux que n’importe quelle description."
+  },
+  "Qui il ou elle est": {
+    "en": "Who they are",
+    "fr": "Qui il ou elle est"
+  },
+  "Qui parle": {
+    "en": "Who speaks",
+    "fr": "Qui parle"
+  },
+  "Quoi écrire": {
+    "en": "What to write",
+    "fr": "Quoi écrire"
+  },
+  "Recording": {
+    "en": "Recording",
+    "fr": "Enregistrement en cours"
+  },
+  "Refresh the list": {
+    "en": "Refresh the list",
+    "fr": "Actualiser la liste"
+  },
+  "Remove this entry": {
+    "en": "Remove this entry",
+    "fr": "Retirer cette entrée"
+  },
+  "Resources": {
+    "en": "Resources",
+    "fr": "Ressources"
+  },
+  "Ressources": {
+    "en": "Resources",
+    "fr": "Ressources"
+  },
+  "Restaurer cette révision (comme nouvelle révision)": {
+    "en": "Restore this revision (as a new revision)",
+    "fr": "Restaurer cette révision (comme nouvelle révision)"
+  },
+  "Restore this revision (as a new revision)": {
+    "en": "Restore this revision (as a new revision)",
+    "fr": "Restaurer cette révision (comme nouvelle révision)"
+  },
+  "Retirer cette entrée": {
+    "en": "Remove this entry",
+    "fr": "Retirer cette entrée"
+  },
+  "Revision": {
+    "en": "Revision",
+    "fr": "Révision"
+  },
+  "Rien n’a encore été dit": {
+    "en": "Nothing said yet",
+    "fr": "Rien n’a encore été dit"
+  },
+  "Rédiger une fiche, un monde ou une section": {
+    "en": "Draft a sheet, a world or a section",
+    "fr": "Rédiger une fiche, un monde ou une section"
+  },
+  "Répliques": {
+    "en": "Lines",
+    "fr": "Répliques"
+  },
+  "Révision": {
+    "en": "Revision",
+    "fr": "Révision"
+  },
+  "Sampling": {
+    "en": "Sampling",
+    "fr": "Échantillonnage"
+  },
+  "Shared lore, places, factions and terms": {
+    "en": "Shared lore, places, factions and terms",
+    "fr": "Univers partagé : lieux, factions et termes"
+  },
+  "Sheets: identity, appearance, voice, model": {
+    "en": "Sheets: identity, appearance, voice, model",
+    "fr": "Fiches : identité, apparence, voix, modèle"
+  },
+  "Shot": {
+    "en": "Shot",
+    "fr": "Plan"
+  },
+  "Speak lists of lines into task folders": {
+    "en": "Speak lists of lines into task folders",
+    "fr": "Dire des listes de répliques dans des dossiers de tâche"
+  },
+  "Speak this line": {
+    "en": "Speak this line",
+    "fr": "Dire cette réplique"
+  },
+  "Stable voices, speech engine and speech models": {
+    "en": "Stable voices, speech engine and speech models",
+    "fr": "Voix stables, moteur et modèles de parole"
+  },
+  "System": {
+    "en": "System",
+    "fr": "Système"
+  },
+  "Système": {
+    "en": "System",
+    "fr": "Système"
+  },
+  "The examples live in app/examples.": {
+    "en": "The examples live in app/examples.",
+    "fr": "Les exemples se trouvent dans app/examples."
+  },
+  "The lines": {
+    "en": "The lines",
+    "fr": "Les répliques"
+  },
+  "The model list has not been read yet.": {
+    "en": "The model list has not been read yet.",
+    "fr": "La liste des modèles n’a pas encore été lue."
+  },
+  "The scene being played": {
+    "en": "The scene being played",
+    "fr": "La scène en cours"
+  },
+  "The speech engine is not installed yet: install it in Engine and models, then the speech models you need. Nothing can be spoken before.": {
+    "en": "The speech engine is not installed yet: install it in Engine and models, then the speech models you need. Nothing can be spoken before.",
+    "fr": "Le moteur de parole n’est pas encore installé : installez-le dans Moteur et modèles, puis les modèles de parole nécessaires. Rien ne peut être dit avant."
+  },
+  "The text below is selectable and copyable. See VALIDATION.md for what has actually been executed on this machine.": {
+    "en": "The text below is selectable and copyable. See VALIDATION.md for what has actually been executed on this machine.",
+    "fr": "Le texte ci-dessous peut être sélectionné et copié. Voir VALIDATION.md pour ce qui a réellement été exécuté sur cette machine."
+  },
+  "The world": {
+    "en": "The world",
+    "fr": "Le monde"
+  },
+  "Timeline and glossary": {
+    "en": "Timeline and glossary",
+    "fr": "Chronologie et glossaire"
+  },
+  "Univers partagé : lieux, factions et termes": {
+    "en": "Shared lore, places, factions and terms",
+    "fr": "Univers partagé : lieux, factions et termes"
+  },
+  "Violet (Shaderixel)": {
+    "en": "Violet (Shaderixel)",
+    "fr": "Violet (Shaderixel)"
+  },
+  "Voix stables, moteur et modèles de parole": {
+    "en": "Stable voices, speech engine and speech models",
+    "fr": "Voix stables, moteur et modèles de parole"
+  },
+  "Vérifier que la voix est intacte": {
+    "en": "Check that the voice is intact",
+    "fr": "Vérifier que la voix est intacte"
+  },
+  "What is spoken": {
+    "en": "What is spoken",
+    "fr": "Ce qui est dit"
+  },
+  "What the story keeps to": {
+    "en": "What the story keeps to",
+    "fr": "Ce à quoi l’histoire se tient"
+  },
+  "What to write": {
+    "en": "What to write",
+    "fr": "Quoi écrire"
+  },
+  "Who speaks": {
+    "en": "Who speaks",
+    "fr": "Qui parle"
+  },
+  "Who they are": {
+    "en": "Who they are",
+    "fr": "Qui il ou elle est"
+  },
+  "Write a message below to start the scene.": {
+    "en": "Write a message below to start the scene.",
+    "fr": "Écrivez un message ci-dessous pour commencer la scène."
+  },
+  "Write below: an idea, a question, a draft to discuss.": {
+    "en": "Write below: an idea, a question, a draft to discuss.",
+    "fr": "Écrivez ci-dessous : une idée, une question, un brouillon à discuter."
+  },
+  "Writing model": {
+    "en": "Writing model",
+    "fr": "Modèle de rédaction"
+  },
+  "dans votre bibliothèque": {
+    "en": "in your library",
+    "fr": "dans votre bibliothèque"
+  },
+  "enregistrement manquant": {
+    "en": "recording missing",
+    "fr": "enregistrement manquant"
+  },
+  "in your library": {
+    "en": "in your library",
+    "fr": "dans votre bibliothèque"
+  },
+  "recording missing": {
+    "en": "recording missing",
+    "fr": "enregistrement manquant"
+  },
+  "Échantillonnage": {
+    "en": "Sampling",
+    "fr": "Échantillonnage"
+  },
+  "Écrivez ci-dessous : une idée, une question, un brouillon à discuter.": {
+    "en": "Write below: an idea, a question, a draft to discuss.",
+    "fr": "Écrivez ci-dessous : une idée, une question, un brouillon à discuter."
+  },
+  "Écrivez un message ci-dessous pour commencer la scène.": {
+    "en": "Write a message below to start the scene.",
+    "fr": "Écrivez un message ci-dessous pour commencer la scène."
+  },
+  "Roleplay": {
+    "en": "Roleplay",
+    "fr": "Jeu de rôle"
+  },
+  "Jeu de rôle": {
+    "en": "Roleplay",
+    "fr": "Jeu de rôle"
   }
 }

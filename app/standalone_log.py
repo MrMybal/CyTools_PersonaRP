@@ -103,10 +103,16 @@ class Journal:
             return ('[Showing last 8 MiB]\n' if size>LIMIT and not full else '')+redact(data.decode('utf-8',errors='replace'))
         except OSError as exc:return str(exc)
     def draw_tab(self):
-        from ui_common import raw,label,tr
+        from ui_common import raw,label
         ui=raw();opened,_=ui.begin_tab_item(label('Application log'),flags=ui.TabItemFlags_.set_selected if self.test else 0)
         if not opened:return
-        try:
+        try:self.draw()
+        finally:ui.end_tab_item()
+    def draw(self):
+        """The page itself, for a tab or for the navigation of the window."""
+        from ui_common import raw,label,tr
+        ui=raw()
+        if True:
             choices=sorted(set((self.root/'data/logs').glob('*.log*'))|self.files,key=str)
             if self.selected not in choices:choices.insert(0,self.selected)
             changed,index=ui.combo(label('Log file'),choices.index(self.selected),[str(p.relative_to(self.root)) if p.is_relative_to(self.root) else str(p) for p in choices])
@@ -128,7 +134,6 @@ class Journal:
                 if self.frames==3:
                     # Exercise native clipboard, restoring the user's previous value.
                     text=self.read(full=True);old=ui.get_clipboard_text();ui.set_clipboard_text(text);assert ui.get_clipboard_text()==text;ui.set_clipboard_text(old)
-        finally:ui.end_tab_item()
 
 _journal=None
 def install(root):

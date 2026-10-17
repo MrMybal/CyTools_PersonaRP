@@ -20,9 +20,12 @@ REPORTS = ROOT / 'data/reports'
 LOG = ROOT / 'data/logs/desktop-error.log'
 
 TABS = ['Scene', 'Characters', 'Worlds', 'Assistant', 'Voice', 'Batches', 'Library', 'Models',
-        'Updates', 'Diagnostics']
+        'Updates', 'Diagnostics', 'log', 'compute', 'advanced', 'options']
 SHEET_TABS = {'Characters': ['Identity', 'Appearance', 'Relationships', 'Voice', 'Model'],
-              'Library': ['Pictures', 'ComfyUI']}
+              'Assistant': ['Proposal'],
+              'Voice': ['Stable voices', 'Create a voice', 'Engine and models'],
+              'Batches': ['Tasks'],
+              'Library': ['Pictures', 'Export and import', 'ComfyUI']}
 TIMEOUT = 300
 
 

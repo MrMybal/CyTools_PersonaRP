@@ -63,7 +63,8 @@ stale manifest silently rejects valid documents through output validation.
 ```
 app/
   tool.py                 Runtime and every operation handler
-  desktop.py              Dear ImGui window
+  desktop.py              Dear ImGui window: top bar, sidebar, pages, status bar
+  cyui.py                 CyUI for Python (copy of CyImgui_Interface/python/cyui.py)
   build_manifest.py       generates CyTool.json from the schemas
   llm-catalog.json        conversation models: repo, pinned revision, size, SHA-256, licence
   personarp/
@@ -499,6 +500,20 @@ Optional object parameters (an inline sheet, a mirror bond, a voice override) ca
 default in the manifest: the validator would expand `{}` into a complete blank document that
 then replaces the real one. `optional()` and `partial()` in `build_manifest.py` build them,
 and a test forbids a defaulted optional object.
+
+## Interface
+
+The window is drawn with CyUI, the CyTools interface library, through its Python port
+`app/cyui.py` — a copy, so the Tool depends on no other folder; update it by copying the
+library's file again. A top bar carries the selected character, unsaved edits and the running
+job with its cancel button; a sidebar groups the pages (Roleplay, Create, Voice, Library,
+System, Tool); a status bar keeps the last operation and notice; the audio player sits above
+it while a take is loaded. Settings are property tables (label left, control right) in
+sections, each page has at most one accent button, toolbar actions are icons with tooltips,
+and an empty page says why and what to do. `gui/widgets.py` holds the field helpers: inside
+`with widgets.properties('##id'):` they become property rows. Theme (five CyUI themes) and
+density (compact or comfortable) are chosen in Options. `--ui-test-theme=<key>` draws another
+theme for a screenshot without saving it.
 
 ## Interface languages
 

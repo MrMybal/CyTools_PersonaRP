@@ -8,6 +8,7 @@ from pathlib import Path
 
 from cytools_core import CyToolError
 from imgui_bundle import hello_imgui
+import cyui
 from ui_common import imgui, raw, tr
 
 from personarp.paths import DATA
@@ -40,10 +41,9 @@ def _thumbnail(path):
 
 def references(app, persona):
     """The photographs of a sheet: add, caption, describe, remove."""
-    imgui.separator_text(tr('Reference photographs'))
-    raw().text_wrapped(tr('Kept with the character and carried by an export. They are your '
-                          'reference, and the material the vision model reads to fill this tab. '
-                          'The roleplay model never sees them.'))
+    widgets.hint(tr('Kept with the character and carried by an export. They are your '
+                    'reference, and the material the vision model reads to fill this tab. '
+                    'The roleplay model never sees them.'))
 
     changed = False
     items = list(persona.get('references') or [])
@@ -51,46 +51,48 @@ def references(app, persona):
         imgui.push_id('ref-%d' % index)
         path = item.get('file', '')
         thumbnail = _thumbnail(path)
+        cyui.space(4.0)
+        cyui.begin_card('reference', '')
         if thumbnail is not None:
             texture, size = thumbnail
             imgui.image(texture, size)
-            imgui.same_line()
+            imgui.same_line(0.0, cyui.dp(12.0))
         imgui.begin_group()
         if thumbnail is None:
-            imgui.text_colored(imgui.ImVec4(1, 0.6, 0.6, 1), tr('Picture missing from disk'))
-        raw().text_disabled('%s · %d×%d · %.1f MB' % (Path(path).name, item.get('width', 0),
-                                                      item.get('height', 0),
-                                                      item.get('bytes', 0) / 1e6))
-        changed |= widgets.combo(item, 'role', tr('Shows'), ROLES, ROLE_CAPTIONS)
-        changed |= widgets.text_field(item, 'caption', tr('Caption'))
+            cyui.badge(tr('Picture missing from disk'), 'error')
+        cyui.text_faint('%s · %d×%d · %.1f MB' % (Path(path).name, item.get('width', 0),
+                                                  item.get('height', 0),
+                                                  item.get('bytes', 0) / 1e6))
+        with widgets.properties('##reference-fields', 110.0):
+            changed |= widgets.combo(item, 'role', 'Shows', ROLES, ROLE_CAPTIONS)
+            changed |= widgets.text_field(item, 'caption', 'Caption')
         imgui.begin_disabled(app.busy)
-        if widgets.small_button('Describe the character from this photo'):
+        if cyui.icon_text_button(cyui.icon.lightbulb,
+                                 tr('Describe the character from this photo'), 'outline'):
             app.submit('describe_image', {'persona_id': app.persona_id, 'file': path,
                                           'keep_loaded': False}, 'describe_image')
         imgui.same_line()
-        if widgets.small_button('See it large'):
+        if widgets.icon_button(cyui.icon.zoom_in, 'See it large'):
             app.viewing = path
         imgui.same_line()
-        if widgets.small_button('Open'):
+        if widgets.icon_button(cyui.icon.open_file, 'Open'):
             open_path(path)
         imgui.same_line()
-        if widgets.small_button('Move to trash'):
+        removed = widgets.icon_button(cyui.icon.trash, 'Move to trash')
+        imgui.end_disabled()
+        imgui.end_group()
+        cyui.end_card()
+        imgui.pop_id()
+        if removed:
             try:
                 app.call('remove_persona_image', {'persona_id': app.persona_id, 'file': path},
                          timeout=60)
                 app.notice = 'Photograph moved to the character image trash.'
                 app.load_persona()
                 app.refresh_images()
-                imgui.end_disabled()
-                imgui.end_group()
-                imgui.pop_id()
                 return changed
             except CyToolError as exc:
                 app.error = str(exc)
-        imgui.end_disabled()
-        imgui.end_group()
-        imgui.separator()
-        imgui.pop_id()
 
     if changed:
         persona['references'] = items
@@ -98,14 +100,19 @@ def references(app, persona):
     state = getattr(app, 'add_image', None)
     if state is None:
         state = app.add_image = {'path': '', 'role': 'portrait', 'caption': ''}
-    widgets.text_field(state, 'path', tr('Add a photograph (full path, or a file in data/inputs)'))
-    imgui.same_line()
-    if widgets.button('Open data/inputs##images'):
-        open_path(DATA / 'inputs')
-    widgets.combo(state, 'role', tr('What it shows'), ROLES, ROLE_CAPTIONS)
-    widgets.text_field(state, 'caption', tr('Caption'))
+    cyui.space(6.0)
+    cyui.overline(tr('Add a photograph').upper())
+    with widgets.properties('##add-reference'):
+        widgets.row('File (full path, or a file in data/inputs)')
+        raw().set_next_item_width(-imgui.get_frame_height() - cyui.dp(8.0))
+        _, state['path'] = raw().input_text('##reference-path', state['path'])
+        imgui.same_line()
+        if widgets.icon_button(cyui.icon.folder, 'Open data/inputs'):
+            open_path(DATA / 'inputs')
+        widgets.combo(state, 'role', 'What it shows', ROLES, ROLE_CAPTIONS)
+        widgets.text_field(state, 'caption', 'Caption')
     imgui.begin_disabled(app.busy or not state['path'].strip())
-    if widgets.button('Add this photograph'):
+    if cyui.icon_text_button(cyui.icon.add, tr('Add this photograph'), 'outline'):
         try:
             app.call('add_persona_image', {'persona_id': app.persona_id, 'image': state['path'],
                                            'role': state['role'], 'caption': state['caption']},
@@ -121,6 +128,6 @@ def references(app, persona):
 
     vision = [m for m in app.models if m.get('installed') and m.get('vision')]
     if not vision:
-        raw().text_disabled(tr('No vision model is installed, so a photograph cannot be read '
-                               'yet. Install one in Models.'))
+        cyui.callout('info', tr('No vision model is installed, so a photograph cannot be read '
+                                'yet. Install one in Models.'))
     return changed

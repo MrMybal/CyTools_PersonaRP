@@ -3,6 +3,7 @@
 Everything goes through the comfyui_nodes_status and install_comfyui_nodes operations, the
 same ones the CLI and MCP use.
 """
+import cyui
 from ui_common import imgui, raw, tr
 
 from . import widgets
@@ -34,7 +35,8 @@ def _install(app, state, path):
 
 def comfyui_tab(app):
     state = _state(app)
-    raw().text_wrapped(tr(
+    imgui.begin_child('comfyui-page', (0, 0), 0)
+    widgets.hint(tr(
         'Nodes for ComfyUI: a character and what an image model needs to draw it, a dialogue '
         'with its image and video prompts, a voice, a translation, reading a photograph, a '
         'voice task, and any operation of the Tool. They use this Tool through its local API: '
@@ -44,35 +46,39 @@ def comfyui_tab(app):
         refresh(app, state)
     status = state['status'] or {}
 
-    imgui.separator_text(tr('ComfyUI found on this computer'))
+    widgets.section('ComfyUI found on this computer')
     found = [entry for entry in status.get('comfyui', []) if entry.get('source') != 'given']
     if not found:
-        raw().text_disabled(tr('None found automatically (Comfy Desktop is looked for). Give the '
-                               'folder of your ComfyUI below.'))
+        cyui.text_faint(tr('None found automatically (Comfy Desktop is looked for). Give the '
+                           'folder of your ComfyUI below.'))
     imgui.begin_disabled(app.busy)
     for entry in found:
         imgui.push_id('comfyui-' + entry['path'])
+        cyui.begin_card('comfyui', '')
+        raw().align_text_to_frame_padding()
+        cyui.heading(entry.get('name', 'ComfyUI'), 3)
+        imgui.same_line()
         if entry.get('upToDate'):
-            imgui.text_colored(imgui.ImVec4(0.45, 0.85, 0.5, 1.0), tr('Installed, up to date'))
+            cyui.badge(tr('Installed, up to date'), 'success')
         elif entry.get('installed'):
-            imgui.text_colored(imgui.ImVec4(1.0, 0.75, 0.35, 1.0), tr('Installed, to update'))
+            cyui.badge(tr('Installed, to update'), 'warning')
         else:
-            raw().text_disabled(tr('Not installed'))
-        imgui.same_line()
-        raw().text_unformatted('%s — %s (%s)' % (entry.get('name', 'ComfyUI'), entry['path'],
-                                                 entry.get('source', '')))
-        imgui.same_line()
-        if widgets.small_button('Update here' if entry.get('installed') else 'Install here',
-                                'confirm'):
+            cyui.badge(tr('Not installed'))
+        cyui.text_faint('%s  (%s)' % (entry['path'], entry.get('source', '')))
+        if cyui.icon_text_button(cyui.icon.download,
+                                 tr('Update here' if entry.get('installed') else 'Install here'),
+                                 'outline'):
             _install(app, state, entry['path'])
         if entry.get('installed'):
             imgui.same_line()
-            if widgets.small_button('Open the folder'):
+            if widgets.icon_button(cyui.icon.folder, 'Open the folder'):
                 open_path(entry.get('folder', ''))
+        cyui.end_card()
+        cyui.space(4.0)
         imgui.pop_id()
     imgui.end_disabled()
 
-    imgui.separator_text(tr('Another ComfyUI'))
+    widgets.section('Another ComfyUI')
     dialog = state.get('dialog')
     if dialog is not None and dialog.ready():
         chosen = dialog.result()
@@ -80,31 +86,46 @@ def comfyui_tab(app):
             state['path'] = chosen
             state['status'] = None
         state['dialog'] = None
-    _, state['path'] = imgui.input_text('ComfyUI folder', state['path'])
-    imgui.same_line()
-    if widgets.button('Browse##comfyui'):
-        from imgui_bundle import portable_file_dialogs as pfd
-        state['dialog'] = pfd.select_folder(tr('ComfyUI folder'))
-    raw().text_disabled(tr('The folder that holds custom_nodes (a portable ComfyUI: its ComfyUI '
-                           'subfolder), or custom_nodes itself.'))
-    _, state['port'] = imgui.input_int('Port of the local API', int(state['port']))
-    state['port'] = max(1024, min(65535, state['port']))
-    _, state['auto_start'] = imgui.checkbox('ComfyUI starts PersonaRP when a node needs it',
-                                            state['auto_start'])
+    with widgets.properties('##comfyui-other'):
+        widgets.row('ComfyUI folder')
+        raw().set_next_item_width(-imgui.get_frame_height() - cyui.dp(8.0))
+        _, state['path'] = raw().input_text('##comfyui-folder', state['path'])
+        imgui.same_line()
+        if widgets.icon_button(cyui.icon.open_file, 'Browse'):
+            from imgui_bundle import portable_file_dialogs as pfd
+            state['dialog'] = pfd.select_folder(tr('ComfyUI folder'))
+        widgets.hint(tr('The folder that holds custom_nodes (a portable ComfyUI: its ComfyUI '
+                        'subfolder), or custom_nodes itself.'))
+        widgets.integer(state, 'port', 'Port of the local API', 1024, 8791)
+        state['port'] = max(1024, min(65535, int(state['port'])))
+        widgets.checkbox(state, 'auto_start', 'ComfyUI starts PersonaRP when a node needs it')
     given = next((entry for entry in status.get('comfyui', []) if entry.get('source') == 'given'),
                  None)
     if given and not given.get('valid'):
-        imgui.text_colored(imgui.ImVec4(1.0, 0.55, 0.45, 1.0), tr(given.get('reason', '')))
+        cyui.callout('error', tr(given.get('reason', '')))
     imgui.begin_disabled(app.busy or not state['path'].strip())
-    if widgets.button('Install into this folder', 'confirm'):
+    if cyui.icon_text_button(cyui.icon.download, tr('Install into this folder'), 'outline'):
         _install(app, state, state['path'].strip())
     imgui.end_disabled()
     imgui.same_line()
-    if widgets.button('Refresh##comfyui'):
+    if widgets.icon_button(cyui.icon.refresh, 'Refresh'):
         state['status'] = None
 
-    imgui.separator_text(tr('The nodes'))
-    for node in status.get('nodes', []):
-        raw().bullet_text('%s  (%s)' % (node['name'], node['id']))
-    raw().text_disabled(tr('Restart ComfyUI after installing or updating: it loads its nodes '
-                           'when it starts. They are in the CyTools/PersonaRP category.'))
+    widgets.section('The nodes')
+    flags = raw().TableFlags_.row_bg | raw().TableFlags_.borders_inner_h
+    nodes = status.get('nodes', [])
+    if nodes and raw().begin_table('##comfyui-nodes', 2, flags):
+        raw().table_setup_column(tr('Node'), raw().TableColumnFlags_.width_stretch)
+        raw().table_setup_column(tr('Identifier'), raw().TableColumnFlags_.width_stretch)
+        raw().table_headers_row()
+        for node in nodes:
+            raw().table_next_row()
+            raw().table_set_column_index(0)
+            raw().text_unformatted(node['name'])
+            raw().table_set_column_index(1)
+            cyui.text_faint(node['id'])
+        raw().end_table()
+    cyui.space(4.0)
+    cyui.callout('info', tr('Restart ComfyUI after installing or updating: it loads its nodes '
+                            'when it starts. They are in the CyTools/PersonaRP category.'))
+    imgui.end_child()

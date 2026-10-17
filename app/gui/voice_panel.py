@@ -5,9 +5,11 @@ explicit steps: capture a take of roughly a dozen seconds, listen to it, then ke
 take is written next to the library so it survives the job that produced it, and nothing is
 registered as a voice until you ask.
 """
+import sys
 import webbrowser
 
 from cytools_core import CyToolError
+import cyui
 from ui_common import imgui, raw, tr
 
 from personarp.paths import DATA
@@ -27,6 +29,8 @@ SPEAKERS = ['Ryan', 'Aiden', 'Vivian', 'Serena', 'Uncle_Fu', 'Dylan', 'Eric', 'O
 # Inside a sentence a language keeps its sentence form: "Dire en anglais", not "en Anglais".
 IN_LANGUAGE = {language: 'in ' + language for language in LANGUAGES}
 SOURCES = ['designed', 'generated', 'imported']
+# Lets an acceptance run open one page of this tab and photograph it.
+SHEET_TAB = sys.argv[sys.argv.index('--smoke-sheet') + 1] if '--smoke-sheet' in sys.argv else ''
 
 
 PHRASES = [
@@ -51,7 +55,7 @@ def language_combo(label, current, empty):
     choices = [''] + LANGUAGES
     captions = [tr(empty)] + [tr(language) for language in LANGUAGES]
     index = choices.index(current) if current in choices else 0
-    changed, index = imgui.combo(label, index, captions)
+    changed, index = widgets.choice(label, index, captions)
     return choices[index], changed
 
 
@@ -93,7 +97,6 @@ def language_summary(app, persona, language):
 
 def _bench(app):
     """Try any voice on any text, with nothing else open."""
-    imgui.separator_text(tr('Try a voice'))
     state = getattr(app, 'bench', None)
     if state is None:
         state = app.bench = {'voice_id': '', 'speaker': '', 'text': PHRASES[0],
@@ -103,33 +106,41 @@ def _bench(app):
         v['name'], v.get('persona_id') or 'libre',
         ' — ' + tr(v['language']) if v.get('language') not in (None, '', 'Auto') else '')}
         for v in app.voices]
-    chosen, picked = widgets.picker(tr('Voice'), state['voice_id'], voices,
-                                    '(the voice of the selected character)')
-    if picked:
-        state['voice_id'] = chosen
-        state['speaker'] = ''
-    if not state['voice_id']:
-        widgets.combo(state, 'speaker', tr('or a preset speaker'), [''] + SPEAKERS,
-                      [tr('(no, use the character)')] + SPEAKERS)
-    state['language'], _ = language_combo(tr('Language spoken'), state.get('language', ''),
-                                          "(the character's own language)")
-    if state['language'] and not state['voice_id'] and not state['speaker'] and app.persona:
-        # Said before it runs, so the choice made on the sheet is visible where it is heard.
-        raw().text_disabled(language_summary(app, app.persona, state['language']))
+    widgets.section('Who speaks')
+    with widgets.properties('##bench-who'):
+        chosen, picked = widgets.picker('Voice', state['voice_id'], voices,
+                                        '(the voice of the selected character)')
+        if picked:
+            state['voice_id'] = chosen
+            state['speaker'] = ''
+        if not state['voice_id']:
+            widgets.combo(state, 'speaker', 'or a preset speaker', [''] + SPEAKERS,
+                          [tr('(no, use the character)')] + SPEAKERS)
+        state['language'], _ = language_combo('Language spoken', state.get('language', ''),
+                                              "(the character's own language)")
+        if state['language'] and not state['voice_id'] and not state['speaker'] and app.persona:
+            # Said before it runs, so the choice made on the sheet is visible where it is heard.
+            widgets.hint(language_summary(app, app.persona, state['language']))
+        widgets.combo(state, 'device', 'Device', ['cuda', 'cpu'], [tr('NVIDIA GPU'), tr('CPU')])
 
-    imgui.text(tr('Text to say'))
-    _, state['text'] = imgui.input_text_multiline('##bench-text', state['text'], (-1, 54))
+    widgets.section('Text to say')
+    _, state['text'] = raw().input_text_multiline('##bench-text', state['text'],
+                                                  (-1, cyui.dp(70.0)))
+    raw().align_text_to_frame_padding()
+    cyui.text_faint(tr('Examples'))
     for index, phrase in enumerate(PHRASES_BY_LANGUAGE.get(state['language'], PHRASES)):
-        if index:
-            imgui.same_line()
-        if widgets.small_button(tr('Example %d') % (index + 1)):
+        imgui.same_line()
+        if cyui.button('%d##example-%d' % (index + 1, index), 'ghost', small=True):
             state['text'] = phrase
-    widgets.combo(state, 'device', tr('Device'), ['cuda', 'cpu'], [tr('NVIDIA GPU'), tr('CPU')])
+        cyui.tooltip(phrase)
+    widgets.hint(tr('Delivery marks work here: [ton: sourd], [pause: 400ms], '
+                    '[emotion: soulagement]. The player is at the bottom of the window.'))
+    cyui.space(4.0)
 
     ready = bool(state['text'].strip()) and (state['voice_id'] or state['speaker']
                                              or app.persona_id)
     imgui.begin_disabled(app.busy or not ready)
-    if widgets.button('Say it'):
+    if cyui.icon_text_button(cyui.icon.volume, tr('Say it'), 'primary'):
         payload = {'text': state['text'], 'device': state['device'],
                    'language': state.get('language', '')}
         if state['voice_id']:
@@ -142,97 +153,127 @@ def _bench(app):
     imgui.end_disabled()
     if app.busy and app.purpose == 'speak':
         imgui.same_line()
-        raw().text_disabled(tr('Speaking...'))
-    raw().text_disabled(tr('Delivery marks work here: [ton: sourd], [pause: 400ms], '
-                           '[emotion: soulagement]. The player is at the bottom of the window.'))
+        cyui.spinner('##speaking', 7.0)
+        imgui.same_line()
+        cyui.text_faint(tr('Speaking...'))
 
 
 def _engine(app):
     engine = (app.voice_engine or {})
     report = engine.get('report') or {}
     installed = bool(engine.get('installed'))
-    imgui.separator_text(tr('Speech engine'))
-    raw().text_wrapped(
-        (tr('Installed') + ' — torch %s, %s' % (report.get('torch', '?'),
-                                                report.get('device', 'cpu')))
-        if installed else
-        tr('Not installed. The engine is private to this Tool and takes about 8 GB. Nothing '
-           'can be spoken until it is built.'))
+    widgets.section('Speech engine')
+    raw().align_text_to_frame_padding()
+    cyui.status_dot(cyui.palette().success if installed else cyui.palette().warning)
+    imgui.same_line()
+    if installed:
+        raw().text_unformatted(tr('Installed') + ' — torch %s, %s' % (report.get('torch', '?'),
+                                                                     report.get('device', 'cpu')))
+    else:
+        raw().text_wrapped(tr('Not installed. The engine is private to this Tool and takes about '
+                              '8 GB. Nothing can be spoken until it is built.'))
+    workers = engine.get('workers') or {}
+    if workers:
+        widgets.hint(tr('Workers: ') + ', '.join(
+            '%s=%s' % (name, info.get('state', '?')) for name, info in workers.items()))
     imgui.begin_disabled(app.busy)
-    if widgets.button('Install / repair the speech engine'):
+    if cyui.icon_text_button(cyui.icon.repair, tr('Install / repair the speech engine'),
+                             'outline' if not installed else 'secondary'):
         app.submit('install_voice_engine', {'cpu_only': getattr(app, 'engine_cpu_only', False)},
                    'install_voice_engine')
     imgui.same_line()
-    _, app.engine_cpu_only = imgui.checkbox(tr('CPU only (much slower)'),
-                                            getattr(app, 'engine_cpu_only', False))
-    imgui.same_line()
-    if widgets.button('Release the speech processes'):
+    _, app.engine_cpu_only = cyui.toggle_switch(tr('CPU only (much slower)'),
+                                                getattr(app, 'engine_cpu_only', False))
+    imgui.same_line(0.0, cyui.dp(18.0))
+    if cyui.icon_text_button(cyui.icon.power, tr('Release the speech processes'), 'ghost'):
         app.submit('release_voice', {}, 'release_voice')
     imgui.end_disabled()
-    workers = engine.get('workers') or {}
-    if workers:
-        raw().text_disabled(tr('Workers: ') + ', '.join(
-            '%s=%s' % (name, info.get('state', '?')) for name, info in workers.items()))
 
 
 def _models(app):
-    imgui.separator_text(tr('Speech models'))
+    widgets.section('Speech models')
+    widgets.hint(tr('Cloning needs a Base variant; a preset speaker needs CustomVoice; an '
+                    'invented voice needs VoiceDesign. The Tool picks the right one for what you '
+                    'ask and says so when it substitutes.'))
     accepted = getattr(app, 'voice_license', None)
     if accepted is None:
         accepted = app.voice_license = {}
     imgui.begin_disabled(app.busy)
-    if widgets.button('Refresh##voice-models'):
+    if widgets.icon_button(cyui.icon.refresh, 'Refresh'):
         app.submit('list_voice_models', {'verify': False}, 'list_voice_models')
     imgui.same_line()
-    if widgets.button('Verify the installed weights##voice'):
+    if cyui.icon_text_button(cyui.icon.check, tr('Verify the installed weights') + '##voice',
+                             'ghost'):
         app.submit('list_voice_models', {'verify': True}, 'list_voice_models')
     imgui.end_disabled()
-    imgui.begin_child('voice-models', (0, 190), imgui.ChildFlags_.borders)
+    cyui.space(2.0)
     for item in app.voice_models:
         imgui.push_id('vm-' + item['id'])
-        state = tr('installed') if item['installed'] else (
-            tr('partly downloaded') if item.get('presentBytes') else tr('not installed'))
-        imgui.text('%s — %s' % (item['name'], state))
-        raw().text_disabled('%.2f GB · %s · %s' % (item['sizeBytes'] / 1e9, item['id'],
-                                                   item.get('verification', '')))
+        cyui.begin_card('voice-model', '')
+        raw().align_text_to_frame_padding()
+        cyui.heading(item['name'], 3)
+        imgui.same_line()
+        if item['installed']:
+            cyui.badge(tr('installed'), 'success')
+        elif item.get('presentBytes'):
+            cyui.badge(tr('partly downloaded'), 'warning')
+        else:
+            cyui.badge(tr('not installed'))
+        cyui.text_faint('%.2f GB · %s · %s' % (item['sizeBytes'] / 1e9, item['id'],
+                                               item.get('verification', '')))
         if item.get('notes'):
-            raw().text_wrapped(item['notes'])
-        raw().text_disabled(tr('Licence: ') + (item.get('license') or tr('not declared')))
-        if item.get('source') and widgets.small_button('Official page and licence'):
-            webbrowser.open(item['source'])
+            raw().push_text_wrap_pos(0.0)
+            raw().text_unformatted(item['notes'])
+            raw().pop_text_wrap_pos()
+        raw().align_text_to_frame_padding()
+        cyui.text_dim(tr('Licence: ') + (item.get('license') or tr('not declared')))
+        if item.get('source'):
+            imgui.same_line()
+            if widgets.icon_button(cyui.icon.link, 'Official page and licence'):
+                webbrowser.open(item['source'])
         checked = accepted.get(item['id'], item.get('licenseAccepted', False))
-        _, checked = imgui.checkbox(tr('I personally accept this licence'), checked)
+        _, checked = cyui.toggle_switch(tr('I personally accept this licence'), checked)
         accepted[item['id']] = checked
         imgui.begin_disabled(app.busy or not checked)
-        if widgets.button('Download / resume' if not item['installed'] else 'Repair / verify'):
+        if cyui.icon_text_button(cyui.icon.download if not item['installed'] else cyui.icon.repair,
+                                 tr('Download / resume' if not item['installed']
+                                    else 'Repair / verify'),
+                                 'outline' if not item['installed'] else 'secondary'):
             app.submit('install_voice_model', {'model': item['id'], 'accept_license': True},
                        'install_voice_model')
         imgui.end_disabled()
-        imgui.separator()
+        cyui.end_card()
+        cyui.space(4.0)
         imgui.pop_id()
-    imgui.end_child()
-    raw().text_wrapped(tr('Cloning needs a Base variant; a preset speaker needs CustomVoice; an '
-                          'invented voice needs VoiceDesign. The Tool picks the right one for '
-                          'what you ask and says so when it substitutes.'))
 
 
 def _library(app):
-    imgui.separator_text(tr('Stable voices'))
     if not app.voices:
-        raw().text_disabled(tr('No stable voice yet. Capture a take below to create one.'))
+        widgets.empty('No stable voice yet', 'Create one from a take or from your own recording.',
+                      cyui.icon.microphone)
+        return
     for item in app.voices:
         imgui.push_id('voice-' + item['id'])
-        raw().text('%s — %.0f s — %s — %s' % (item['name'], item['seconds'],
-                                              tr(item['source']),
-                                              tr(item.get('language') or 'Auto')))
-        raw().text_disabled('%s · %s%s' % (item['id'], item.get('model', ''),
-                                           '' if item.get('available')
-                                           else tr('  · recording missing')))
-        if widgets.small_button('Listen to the take'):
+        cyui.begin_card('voice', '')
+        raw().align_text_to_frame_padding()
+        cyui.heading(item['name'], 3)
+        imgui.same_line()
+        cyui.badge('%.0f s' % item['seconds'])
+        imgui.same_line()
+        cyui.badge(tr(item['source']))
+        imgui.same_line()
+        cyui.badge(tr(item.get('language') or 'Auto'), 'info')
+        if not item.get('available'):
+            imgui.same_line()
+            cyui.badge(tr('recording missing'), 'error')
+        # The actions of a voice, as icons on the right of its title.
+        imgui.same_line()
+        cyui.align_right(imgui.get_frame_height() * 5 + cyui.dp(28.0))
+        if widgets.icon_button(cyui.icon.play, 'Listen to the take'):
             app.play_file(item.get('reference_audio', ''))
         imgui.same_line()
         imgui.begin_disabled(app.busy)
-        if widgets.small_button('Test on a sentence'):
+        if widgets.icon_button(cyui.icon.volume, 'Test on a sentence'):
             bench = getattr(app, 'bench', None) or {}
             app.submit('speak', {'voice_id': item['id'],
                                  'text': bench.get('text') or PHRASES[0],
@@ -240,7 +281,7 @@ def _library(app):
                                  'device': bench.get('device', 'cuda')}, 'speak')
         imgui.end_disabled()
         imgui.same_line()
-        if widgets.small_button('Check'):
+        if widgets.icon_button(cyui.icon.check, 'Check that the voice is intact'):
             try:
                 result = app.call('verify_voice', {'voice_id': item['id']})
                 app.notice = (tr('Voice "%s" is intact.') % item['name']) if result['ok'] \
@@ -248,25 +289,29 @@ def _library(app):
             except CyToolError as exc:
                 app.error = str(exc)
         imgui.same_line()
-        if widgets.small_button('Attach to the selected character') and app.persona:
+        imgui.begin_disabled(not app.persona)
+        if widgets.icon_button(cyui.icon.contact, 'Attach to the selected character') \
+                and app.persona:
             app.persona['voice'] = {**app.persona['voice'], 'voice_id': item['id'],
                                     'enabled': True}
             app.save_persona()
+        imgui.end_disabled()
         imgui.same_line()
-        if widgets.small_button('Move to trash'):
+        if widgets.icon_button(cyui.icon.trash, 'Move to trash'):
             try:
                 app.call('remove_voice', {'voice_id': item['id']})
                 app.notice = 'Voice moved to data/voices/.trash — nothing was deleted.'
                 app.refresh_voices()
             except CyToolError as exc:
                 app.error = str(exc)
-        imgui.separator()
+        cyui.text_faint('%s · %s' % (item['id'], item.get('model', '')))
+        cyui.end_card()
+        cyui.space(4.0)
         imgui.pop_id()
 
 
 def _capture(app):
-    imgui.separator_text(tr('Create a stable voice'))
-    raw().text_wrapped(tr(
+    widgets.hint(tr(
         'Step 1 — produce about 12 to 24 seconds of speech. Describe the voice you want and it '
         'is invented, or pick a preset speaker. Step 2 — listen. Step 3 — keep it: every later '
         'line of the character is cloned from that recording.'))
@@ -274,25 +319,28 @@ def _capture(app):
     if state is None:
         state = app.capture = {'description': '', 'speaker': 'Vivian', 'text': '',
                                'use_speaker': False, 'name': '', 'device': 'cuda'}
-    widgets.checkbox(state, 'use_speaker', tr('Use a preset speaker instead of a description'))
-    if state['use_speaker']:
-        widgets.combo(state, 'speaker', tr('Preset speaker'), SPEAKERS)
-    else:
-        widgets.multiline(state, 'description', tr('Voice to invent'), 54)
-        raw().text_disabled(tr('For example: femme, fin de vingtaine, grave et posee, debit lent, '
-                               'chaleur contenue.'))
-    state['language'], _ = language_combo(tr('Language of the take'), state.get('language', ''),
-                                          "(the character's own language)")
-    if state['language'] and app.persona \
-            and state['language'] != own_language(app, app.persona):
-        raw().text_disabled(tr('A take read in this language gives a voice that really belongs '
-                               'to it. Describe it as a native speaker, write the text in that '
-                               'language — or leave it empty for a standard passage.'))
-    widgets.multiline(state, 'text', tr('What the take says (empty uses a standard passage)'), 54)
-    widgets.combo(state, 'device', tr('Device'), ['cuda', 'cpu'], ['NVIDIA GPU', 'CPU'])
+    with widgets.properties('##capture'):
+        widgets.checkbox(state, 'use_speaker', 'Use a preset speaker instead of a description')
+        if state['use_speaker']:
+            widgets.combo(state, 'speaker', 'Preset speaker', SPEAKERS)
+        else:
+            widgets.multiline(state, 'description', 'Voice to invent', 54)
+            widgets.hint(tr('For example: femme, fin de vingtaine, grave et posee, debit lent, '
+                            'chaleur contenue.'))
+        state['language'], _ = language_combo('Language of the take', state.get('language', ''),
+                                              "(the character's own language)")
+        if state['language'] and app.persona \
+                and state['language'] != own_language(app, app.persona):
+            widgets.hint(tr('A take read in this language gives a voice that really belongs to '
+                            'it. Describe it as a native speaker, write the text in that language '
+                            '— or leave it empty for a standard passage.'))
+        widgets.multiline(state, 'text', 'What the take says (empty uses a standard passage)', 54)
+        widgets.combo(state, 'device', 'Device', ['cuda', 'cpu'], ['NVIDIA GPU', 'CPU'])
 
+    take = getattr(app, 'take', None)
     imgui.begin_disabled(app.busy or not app.persona)
-    if widgets.button('Capture a take'):
+    if cyui.icon_text_button(cyui.icon.record, tr('Capture a take'),
+                             'secondary' if take else 'primary'):
         payload = {'persona_id': app.persona_id, 'text': state['text'],
                    'device': state['device'], 'transcribe': True,
                    'language': state.get('language', '')}
@@ -305,30 +353,39 @@ def _capture(app):
     imgui.end_disabled()
     if not app.persona:
         imgui.same_line()
-        raw().text_disabled(tr('Select a character first.'))
+        raw().align_text_to_frame_padding()
+        cyui.text_faint(tr('Select a character first.'))
 
-    take = getattr(app, 'take', None)
     if not take:
         return
-    imgui.separator()
-    imgui.text(tr('Take: %.1f s') % take.get('durationSeconds', 0.0))
+    cyui.space(6.0)
+    cyui.begin_card('take', '', 0.0, 'success' if take.get('inRange') else 'warning')
+    raw().align_text_to_frame_padding()
+    cyui.heading(tr('Take: %.1f s') % take.get('durationSeconds', 0.0), 3)
     imgui.same_line()
-    raw().text_disabled(tr('in the ideal range') if take.get('inRange')
-                        else take.get('advice', ''))
-    if widgets.button('Listen to the take'):
+    if take.get('inRange'):
+        cyui.badge(tr('in the ideal range'), 'success')
+    else:
+        cyui.text_faint(take.get('advice', ''))
+    imgui.same_line()
+    cyui.align_right(imgui.get_frame_height() * 2 + cyui.dp(8.0))
+    if widgets.icon_button(cyui.icon.play, 'Listen to the take'):
         app.play_file(take['file'])
     imgui.same_line()
-    if widgets.button('Open the take folder'):
+    if widgets.icon_button(cyui.icon.folder, 'Open the take folder'):
         open_path(DATA / 'voices' / 'takes')
-    imgui.text(tr('Exact words heard in the take (used to clone it)'))
-    _, take['transcript'] = imgui.input_text_multiline('##take-transcript',
-                                                       take.get('transcript', ''), (-1, 54))
-    _, state['name'] = imgui.input_text(tr('Name of the voice'),
-                                        state.get('name') or ((app.persona or {}).get('name', '')))
-    language = take.get('language') or ''
-    attach_as = _attach_as(app, state, language)
+    with widgets.properties('##take'):
+        widgets.row('Exact words heard in the take (used to clone it)')
+        _, take['transcript'] = raw().input_text_multiline('##take-transcript',
+                                                           take.get('transcript', ''),
+                                                           (-1, cyui.dp(54.0)))
+        widgets.row('Name of the voice')
+        _, state['name'] = raw().input_text(
+            '##voice-name', state.get('name') or ((app.persona or {}).get('name', '')))
+        language = take.get('language') or ''
+        attach_as = _attach_as(app, state, language)
     imgui.begin_disabled(app.busy or not state['name'].strip())
-    if widgets.button('Keep this take as a stable voice'):
+    if cyui.icon_text_button(cyui.icon.save, tr('Keep this take as a stable voice'), 'primary'):
         app.submit('create_stable_voice', {
             'name': state['name'], 'audio': take['file'], 'transcript': take['transcript'],
             'persona_id': app.persona_id, 'attach': True, 'for_language': attach_as,
@@ -337,8 +394,9 @@ def _capture(app):
             'description': state['description']}, 'create_stable_voice')
     imgui.end_disabled()
     imgui.same_line()
-    if widgets.button('Discard this take'):
+    if widgets.button('Discard this take', 'danger'):
         app.take = None
+    cyui.end_card()
 
 
 def _attach_as(app, state, language):
@@ -346,47 +404,51 @@ def _attach_as(app, state, language):
     if not app.persona:
         return ''
     if not language or language == own_language(app, app.persona):
-        raw().text_disabled(tr('It becomes the main voice of %s.') % app.persona.get('name', ''))
+        widgets.hint(tr('It becomes the main voice of %s.') % app.persona.get('name', ''))
         return ''
     choices = ['language', 'main']
     captions = [tr('Its voice %s only — the main voice is kept') % tr(IN_LANGUAGE[language]),
                 tr('Its main voice, replacing the current one')]
     current = state.get('attach_as', 'language')
     index = choices.index(current) if current in choices else 0
-    _, index = imgui.combo(tr('Keep it as'), index, captions)
+    _, index = widgets.choice('Keep it as', index, captions)
     state['attach_as'] = choices[index]
     return language if choices[index] == 'language' else ''
 
 
 def _import(app):
-    imgui.separator_text(tr('Use your own recording'))
-    raw().text_wrapped(tr('A WAV of roughly 12 to 24 seconds of one clear voice. It is '
-                          'transcribed so the clone knows what is being said.'))
+    widgets.hint(tr('A WAV of roughly 12 to 24 seconds of one clear voice. It is transcribed so '
+                    'the clone knows what is being said.'))
     state = getattr(app, 'import_voice', None)
     if state is None:
         state = app.import_voice = {'audio': '', 'name': '', 'transcript': '', 'language': ''}
-    widgets.text_field(state, 'audio', tr('Recording (full path, or a file in data/inputs)'))
-    imgui.same_line()
-    if widgets.button('Open data/inputs##voice'):
-        open_path(DATA / 'inputs')
-    # Or record it here: 12 to 24 seconds of one clear voice, the recording stops at 30 s.
-    recorder.microphone_picker(app)
-    recorded = recorder.controls(app, 'voice', 30.0, tr('Record from the microphone'))
-    if recorded:
-        state['audio'] = recorded
-        seconds = sf_seconds(recorded)
-        app.notice = tr('Recorded %.1f s: %s') % (seconds, recorded)
-        if not 12.0 <= seconds <= 24.0:
-            app.notice += ' ' + tr('Between 12 and 24 seconds gives the steadiest clone.')
-    widgets.text_field(state, 'name', tr('Name of the voice'))
-    widgets.multiline(state, 'transcript',
-                      tr('Exact words (leave empty to transcribe automatically)'), 44)
-    state['language'], _ = language_combo(tr('Language of the recording'),
-                                          state.get('language', ''),
-                                          "(the character's own language)")
-    attach_as = _attach_as(app, state, state['language'])
+    with widgets.properties('##import-voice'):
+        widgets.row('Recording (full path, or a file in data/inputs)')
+        raw().set_next_item_width(-imgui.get_frame_height() - cyui.dp(8.0))
+        _, state['audio'] = raw().input_text('##audio', state.get('audio', ''))
+        imgui.same_line()
+        if widgets.icon_button(cyui.icon.folder, 'Open data/inputs'):
+            open_path(DATA / 'inputs')
+        # Or record it here: 12 to 24 seconds of one clear voice, the recording stops at 30 s.
+        recorder.microphone_picker(app)
+        widgets.row('Or record it')
+        recorded = recorder.controls(app, 'voice', 30.0, tr('Record from the microphone'))
+        if recorded:
+            state['audio'] = recorded
+            seconds = sf_seconds(recorded)
+            app.notice = tr('Recorded %.1f s: %s') % (seconds, recorded)
+            if not 12.0 <= seconds <= 24.0:
+                app.notice += ' ' + tr('Between 12 and 24 seconds gives the steadiest clone.')
+        widgets.text_field(state, 'name', 'Name of the voice')
+        widgets.multiline(state, 'transcript',
+                          'Exact words (leave empty to transcribe automatically)', 44)
+        state['language'], _ = language_combo('Language of the recording',
+                                              state.get('language', ''),
+                                              "(the character's own language)")
+        attach_as = _attach_as(app, state, state['language'])
     imgui.begin_disabled(app.busy or not (state['audio'].strip() and state['name'].strip()))
-    if widgets.button('Create a stable voice from this recording'):
+    if cyui.icon_text_button(cyui.icon.save, tr('Create a stable voice from this recording'),
+                             'outline'):
         app.submit('create_stable_voice', {
             'name': state['name'], 'audio': state['audio'], 'transcript': state['transcript'],
             'persona_id': app.persona_id, 'attach': bool(app.persona_id), 'source': 'imported',
@@ -396,24 +458,40 @@ def _import(app):
     imgui.end_disabled()
 
 
+def _create(app):
+    """The two ways to make a stable voice, side by side as two sub-sections."""
+    if cyui.begin_section(tr('Create a stable voice') + '###create-take'):
+        _capture(app)
+        cyui.end_section()
+    if cyui.begin_section(tr('Use your own recording') + '###create-import', False):
+        _import(app)
+        cyui.end_section()
+
+
+def _engine_and_models(app):
+    _engine(app)
+    _models(app)
+
+
+VOICE_PAGES = {'Try a voice': _bench, 'Stable voices': _library, 'Create a voice': _create,
+               'Engine and models': _engine_and_models}
+
+
 def voice_tab(app):
     # Models are not shipped: on a fresh install, say first what has to be downloaded.
     engine = app.voice_engine or {}
-    warning = imgui.ImVec4(1.0, 0.75, 0.35, 1.0)
     if engine and not engine.get('installed'):
-        imgui.text_colored(warning, tr('The speech engine is not installed yet: install it below '
-                                       '(Speech engine), then the speech models you need. Nothing '
-                                       'can be spoken before.'))
+        cyui.callout('warning', tr('The speech engine is not installed yet: install it in '
+                                   'Engine and models, then the speech models you need. Nothing '
+                                   'can be spoken before.'))
     elif app.voice_models and not any(item.get('installed') for item in app.voice_models
                                       if item.get('backend', 'qwen3tts') == 'qwen3tts'):
-        imgui.text_colored(warning, tr('No speech model is installed yet: download at least the '
-                                       '1.7B Base model below (Speech models) to hear a stable '
-                                       'voice.'))
-    imgui.begin_child('voice-body', (0, 470), imgui.ChildFlags_.borders)
-    _bench(app)
-    _library(app)
-    _capture(app)
-    _import(app)
-    _engine(app)
-    _models(app)
+        cyui.callout('warning', tr('No speech model is installed yet: download at least the '
+                                   '1.7B Base model in Engine and models to hear a stable voice.'))
+    forced = SHEET_TAB
+    page = widgets.page_tabs('voice-pages', ['Try a voice', 'Stable voices', 'Create a voice',
+                                             'Engine and models'], forced)
+    imgui.begin_child('voice-body', (0, 0), 0)
+    VOICE_PAGES[page](app)
+    cyui.space(12.0)
     imgui.end_child()

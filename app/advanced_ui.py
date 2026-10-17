@@ -32,9 +32,15 @@ class Panel:
         for key in ('priority','queue','execution'):
             if key in value.get('uiState',{}).get('invocation',{}):state[key]=value['uiState']['invocation'][key]
     def draw_tab(self):
-        from ui_common import raw,label,tr,ROOT,current_recipe
+        from ui_common import raw,label
         ui=raw();opened,_=ui.begin_tab_item(label('Advanced operations'),flags=ui.TabItemFlags_.set_selected if self.test else 0)
         if not opened:return
+        try:self.draw()
+        finally:ui.end_tab_item()
+    def draw(self):
+        """The page itself, for a tab or for the navigation of the window."""
+        from ui_common import raw,label,tr,ROOT,current_recipe
+        ui=raw()
         try:
             self.frames+=1
             if self.runtime is None:ui.text_wrapped(tr('Runtime unavailable'));return
@@ -89,7 +95,6 @@ class Panel:
                 ui.input_text_multiline('##job',json.dumps(self.job,indent=2,ensure_ascii=False),ui.ImVec2(-1,180),flags=ui.InputTextFlags_.read_only)
             if self.message:ui.input_text_multiline('##result',self.message,ui.ImVec2(-1,120),flags=ui.InputTextFlags_.read_only)
         except Exception as exc:self.message=str(exc)
-        finally:ui.end_tab_item()
     def close(self):
         self.executor.shutdown(wait=True,cancel_futures=True)
         if self.runtime is not None:

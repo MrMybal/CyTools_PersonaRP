@@ -22,7 +22,7 @@ DEFAULT_TARGET = ROOT.parent / 'CyTools_PersonaRP_Colab'
 # What the Colab project leaves out of app/: the desktop window, the developer material, and
 # anything that only exists on the machine that builds it.
 EXCLUDED = {'gui', 'tests', 'Docs', 'packages', 'colab', 'comfyui', 'locales', '__pycache__',
-            'desktop.py', 'advanced_ui.py', 'model_options_ui.py', 'ui_common.py',
+            'desktop.py', 'advanced_ui.py', 'model_options_ui.py', 'ui_common.py', 'cyui.py',
             'launcher.cpp', 'build_launcher.cmd', 'build_launcher.ps1', 'dev_launch.cmd',
             'build_colab.py', 'build_example_voices.py', 'build_tts_catalog.py',
             'CyToolsGuide.md', 'AGENTS.md'}
