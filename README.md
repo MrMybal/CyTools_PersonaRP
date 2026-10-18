@@ -10,6 +10,27 @@ SDK. Characters live in a shared world, remember what you tell them to, speak wi
 voice, and every reply comes with a machine-readable description of what a camera would see.
 French user guide: [LISEZ-MOI.md](LISEZ-MOI.md). Developer guide: [app/README.md](app/README.md).
 
+## Screenshots
+
+<table>
+  <tr>
+    <td><img src="docs/screenshots/character-model.png" alt="Character sheet, Model section: conversation model, device, instructions and sampling"></td>
+    <td><img src="docs/screenshots/character-voice.png" alt="Character sheet, Voice section: stable voice, what is spoken, speed and pitch"></td>
+  </tr>
+  <tr>
+    <td align="center">Character sheet — model settings</td>
+    <td align="center">Character sheet — voice</td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/worlds.png" alt="Worlds page: cast, world description, places and factions"></td>
+    <td><img src="docs/screenshots/assistant.png" alt="Assistant discussion: a picture read by the vision model, and two character ideas"></td>
+  </tr>
+  <tr>
+    <td align="center">Shared world and its cast</td>
+    <td align="center">Assistant, starting from a picture</td>
+  </tr>
+</table>
+
 ## What it does
 
 - **Characters**: a complete sheet (identity, appearance, personality, way of speaking, past,

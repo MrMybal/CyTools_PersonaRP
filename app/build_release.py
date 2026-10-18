@@ -49,7 +49,8 @@ ROOT = APP.parent
 NAME = 'CyTools_PersonaRP'
 BUILD = ROOT / 'runtime' / 'build' / 'release'
 # The repository's own files that make no sense in a Windows binary package.
-LEFT_OUT = {'.gitignore', '.gitattributes', NAME + '.sh'}
+# docs/ holds the screenshots of the GitHub page, not something the application uses.
+LEFT_OUT = {'.gitignore', '.gitattributes', NAME + '.sh', 'docs'}
 INTERPRETER = ('python.exe', 'pythonw.exe', 'python3.dll', 'python311.dll',
                'vcruntime140.dll', 'vcruntime140_1.dll')
 PYTHON_FOLDERS = ('DLLs', 'Lib', 'libs', 'include')
