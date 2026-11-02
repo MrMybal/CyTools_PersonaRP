@@ -504,8 +504,8 @@ and a test forbids a defaulted optional object.
 ## Interface
 
 The window is drawn with CyUI, the CyTools interface library, through its Python port
-`app/cyui.py` — a copy, so the Tool depends on no other folder; update it by copying the
-library's file again. A top bar carries the selected character, unsaved edits and the running
+`app/cyui.py` plus selected `app/cyui_modules/` sources, unchanged at the revision in
+`app/cyui-source.json`; refresh with `app/scripts/sync_cyui.py` rather than manual copying. A top bar carries the selected character, unsaved edits and the running
 job with its cancel button; a sidebar groups the pages (Roleplay, Create, Voice, Library,
 System, Tool); a status bar keeps the last operation and notice; the audio player sits above
 it while a take is loaded. Settings are property tables (label left, control right) in
@@ -546,3 +546,9 @@ model relocation — the migration here was an explicit, receipted, reversible a
 ## Application icon
 
 The logo source is assets/branding/logo.png. build_icon.ps1 derives the 16-256 px Windows ICO and assets/app_settings/icon.png for Hello ImGui. build_launcher.ps1 embeds the ICO in the launcher. branding.py selects assets independently of the working directory and assigns this Tool its own Windows taskbar identity.
+
+## Modular CyUI
+
+The standalone interface uses the pinned, selected CyUI 1.2 modules. See
+[the migration and validation notes](Docs/CyUIMigration.md) for replacements, retained host
+adaptations, source hashes and reproducible refresh instructions.

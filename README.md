@@ -161,3 +161,13 @@ built on the [CyToolsCore](https://github.com/MrMybal/CyToolsCore) 0.10.1 SDK, l
 listed in [app/licenses.json](app/licenses.json), in the model catalogues and in the Options tab;
 the Models tab asks for acceptance before downloading. Releases 0.1.0 and 0.1.1 were built on
 CyToolsCore 0.9.0 under GPL-3.0-only; copies received under that licence keep it.
+
+## Modular CyUI
+
+The standalone interface uses the pinned, selected CyUI 1.2 modules. See
+[the migration and validation notes](app/Docs/CyUIMigration.md) for replacements, retained host
+adaptations, source hashes and reproducible refresh instructions.
+
+CyUI: MIT. Full license: LICENCES/CyUI-MIT.txt.
+Upstream license: https://github.com/MrMybal/CyUI/blob/main/LICENSE
+Repository: https://github.com/MrMybal/CyUI (currently private; no upstream access required to run this application).

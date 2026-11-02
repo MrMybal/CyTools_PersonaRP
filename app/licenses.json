@@ -108,5 +108,13 @@
     "license": "Not applicable",
     "url": "",
     "notes": "Voice synthesis, cloning and dictation are not installed. Nothing is redistributed for them."
+  },
+  {
+    "kind": "Interface library",
+    "name": "CyUI 1.2.0 (ff023e6)",
+    "license": "MIT",
+    "url": "https://github.com/MrMybal/CyUI/blob/main/LICENSE",
+    "notes": "MIT license text is included in LICENCES/CyUI-MIT.txt. The upstream repository is currently private; installed applications do not need access to it.",
+    "repository": "https://github.com/MrMybal/CyUI"
   }
 ]

@@ -11930,5 +11930,13 @@
   "Jeu de rôle": {
     "en": "Roleplay",
     "fr": "Jeu de rôle"
+  },
+  "Structured log": {
+    "en": "Structured log",
+    "fr": "Journal structuré"
+  },
+  "Selectable text": {
+    "en": "Selectable text",
+    "fr": "Texte sélectionnable"
   }
 }

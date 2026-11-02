@@ -59,3 +59,15 @@ Lire Docs/AutomaticInputs.md (AutomaticInputs.md depuis Docs) : chemins absolus 
 ## Task-owned files (SDK 0.9.0)
 
 Read Docs/TaskFiles.md (TaskFiles.md from this Docs directory). Configure input roots and all file fields for automatic imports; AI sessions are temporary by default. FinishTask removes imported copies and generated workspaces after workers stop; export wanted results first. Standalone sessions explicitly use temporary=False.
+
+## Modular CyUI maintenance
+
+Read Docs/CyUIMigration.md before changing the standalone UI. The selected upstream
+files in cyui.py and cyui_modules/ are unchanged and pinned/hash-checked by
+cyui-source.json. Do not patch them in the application or reintroduce a private
+palette/widget implementation. Refresh from the recorded checkout with
+scripts/sync_cyui.py. Keep host adapters outside the library and import only used
+families. Domain validation, decoding/rendering, jobs, persistence, task ownership
+and Undo remain in this application. Preserve documented advanced-editor gaps and
+all existing interactions. Run tests/test_modular_ui.py and the relevant native
+UI tests; keep the root LICENCES/CyUI-MIT.txt and Options source attribution.

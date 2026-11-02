@@ -9,6 +9,7 @@ from pathlib import Path
 from cytools_core import CyToolError
 from imgui_bundle import hello_imgui
 import cyui
+from cyui_modules.images import ImageData, ImageState, image_viewport
 from . import widgets
 from .images_panel import ROLE_CAPTIONS, ROLES
 from ui_common import imgui, raw, tr
@@ -19,7 +20,7 @@ THUMBNAIL = 132.0
 CONTACT = 96.0
 
 
-def texture(path, box):
+def texture(path, box, native_size=False):
     """Texture and displayed size for one picture, or None when it cannot be shown."""
     try:
         data = Path(path).read_bytes()
@@ -31,7 +32,7 @@ def texture(path, box):
         return None
     if image.size.x <= 0 or image.size.y <= 0:
         return None
-    size = hello_imgui.image_proportional_size(imgui.ImVec2(box[0], box[1]), image.size)
+    size = image.size if native_size else hello_imgui.image_proportional_size(imgui.ImVec2(box[0], box[1]), image.size)
     return imgui.ImTextureRef(image.texture_id), size
 
 
@@ -52,12 +53,15 @@ def viewer(app, height=440.0):
     if widgets.icon_button(cyui.icon.close, 'Close the picture'):
         app.viewing = ''
     available = imgui.get_content_region_avail()
-    drawn = texture(path, (max(220.0, available.x - 20.0), height))
+    drawn = texture(path, (max(cyui.dp(220), available.x - cyui.dp(20)), height), native_size=True)
     if drawn is None:
         cyui.callout('error', tr('This picture can no longer be read: ') + str(path))
     else:
         handle, size = drawn
-        imgui.image(handle, size)
+        if not hasattr(app,'_picture_view_state'):app._picture_view_state=ImageState();app._picture_view_path=''
+        if app._picture_view_path!=str(path):
+            app._picture_view_state=ImageState();app._picture_view_path=str(path)
+        image_viewport('##picture-view',app._picture_view_state,ImageData(handle,int(size.x),int(size.y)),(0,cyui.dp(height)))
         cyui.text_faint('%.0f×%.0f' % (size.x, size.y))
     cyui.end_card()
 

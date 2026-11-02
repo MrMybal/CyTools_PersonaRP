@@ -7,6 +7,9 @@ mistake is not a discussion lost.
 """
 from cytools_core import CyToolError
 import cyui
+from cyui_modules.documents import TranscriptState, TranscriptMessage, transcript
+from hashlib import blake2b
+import webbrowser
 from ui_common import imgui, raw, tr
 
 from personarp.paths import DATA
@@ -58,29 +61,26 @@ def _threads_bar(app):
 
 
 def _transcript(thread, app, height):
-    p = cyui.palette()
-    with cyui.scoped_color(raw().Col_.child_bg, p.bg0):
-        imgui.begin_child('discussion-transcript', (0, height), imgui.ChildFlags_.borders
-                          | imgui.ChildFlags_.always_use_window_padding)
-    turns = thread.get('turns') or []
+    states=getattr(app,'_cyui_transcripts',None)
+    if states is None:states=app._cyui_transcripts={}
+    # A view belongs to its discussion, not to another model or scene.
+    live={str(t['id']) for t in app.threads}
+    for key in list(states):
+        if key not in live:states.pop(key)
+    key=str(thread['id'])
+    state=states.setdefault(key,TranscriptState())
+    turns=thread.get('turns') or []
     if not turns and not app.busy:
-        widgets.empty('Nothing said yet', 'Write below: an idea, a question, a draft to discuss.',
-                      cyui.icon.lightbulb)
-    for turn in turns:
-        mine = turn.get('role') == 'user'
-        cyui.overline((tr('You') if mine else tr('Assistant')).upper(),
-                      p.textDim if mine else 0)
-        raw().push_text_wrap_pos(0.0)
-        raw().text_unformatted(str(turn.get('content', '')))
-        raw().pop_text_wrap_pos()
-        cyui.space(8.0)
-    if app.busy and app.purpose == 'assistant_chat':
-        cyui.overline(tr('Assistant').upper())
-        cyui.spinner('##assistant-writing', 7.0)
-        imgui.same_line()
-        cyui.text_faint(tr('Writing...'))
-        raw().set_scroll_here_y(1.0)
-    imgui.end_child()
+        widgets.empty('Nothing said yet','Write below: an idea, a question, a draft to discuss.',cyui.icon.lightbulb)
+    messages=[]
+    for index,turn in enumerate(turns):
+        identity=str(turn.get('id') or f'{key}:{index}')
+        stable=int.from_bytes(blake2b(identity.encode('utf-8'),digest_size=8).digest(),'big') or 1
+        messages.append(TranscriptMessage(stable,tr('You') if turn.get('role')=='user' else tr('Assistant'),str(turn.get('content',''))))
+    result=transcript('discussion-transcript',state,messages,(0,max(cyui.dp(50),height-(cyui.dp(35) if app.busy else 0))))
+    if result['link'].startswith(('https://','http://')):webbrowser.open(result['link'])
+    if app.busy and app.purpose=='assistant_chat':
+        cyui.spinner('##assistant-writing',7.);imgui.same_line();cyui.text_faint(tr('Writing...'))
 
 
 def discussion(app):

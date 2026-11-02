@@ -38,3 +38,13 @@ Not part of the Tool - downloaded separately, each under its own licence
   (app/tts-catalog.json), the llama.cpp engine (https://github.com/ggml-org/llama.cpp, MIT) and
   the speech engine's packages (app/engines.json). The application shows each licence and asks
   for acceptance before downloading; app/licenses.json lists them.
+
+CyUI 1.2.0 (MIT)
+Repository: https://github.com/MrMybal/CyUI
+Revision: ff023e646c6a3038b3dfbfd53f6d2b4a2f5955e3
+Selected Python modules and SHA-256: app/cyui-source.json
+Full license: LICENCES/CyUI-MIT.txt
+
+CyUI: MIT. Full license: LICENCES/CyUI-MIT.txt.
+Upstream license: https://github.com/MrMybal/CyUI/blob/main/LICENSE
+Repository: https://github.com/MrMybal/CyUI (currently private; no upstream access required to run this application).
