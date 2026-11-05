@@ -1,5 +1,7 @@
 # CyTools_PersonaRP — developer documentation
 
+[Documentation](https://mrmybal.github.io/CyTools_PersonaRP/#/en/guide-app-readme) · [Français](https://mrmybal.github.io/CyTools_PersonaRP/#/fr/overview)
+
 `cy.tool.personarp`, built on CyToolsCore 0.10.1. Local roleplay with persistent characters,
 a shared world, relationships, and machine-readable scene descriptions for image and video
 tools. No model is part of the repository: engines and weights are downloaded from the

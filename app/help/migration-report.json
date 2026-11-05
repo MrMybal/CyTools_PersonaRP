@@ -5,13 +5,13 @@
       "source": "LISEZ-MOI.md",
       "id": "guide-lisez-moi",
       "locale": "fr",
-      "sha256": "95c73042169659d214614c6d7442c24c4eab54f797732c36405e0f54b1211ae3"
+      "sha256": "e8a11e58c1ea2fb51ebb01f1ebc4a840c22f4ae11cc47cfd8587382eda8b9b6f"
     },
     {
       "source": "README.md",
       "id": "guide-readme",
       "locale": "en",
-      "sha256": "eaa4994179a4ddfd08bcb09a76932b275c824f20f770fa66eccadd3767cd3d7d"
+      "sha256": "e239791fb00736eedaae054264d520eaaf288a37cd88c3060c5a6b5b6ff2e9e8"
     },
     {
       "source": "app/Docs/Architecture.md",
@@ -239,7 +239,7 @@
       "source": "app/README.md",
       "id": "guide-app-readme",
       "locale": "en",
-      "sha256": "253893ceffb800f51d3f8bbe3c10b2fb031c0905e009702f076c6747b0d29a87"
+      "sha256": "7420150c84418eef5d7ebfbe1d773d27a71e52d543b2b08c632e92c8412f5f8c"
     },
     {
       "source": "app/colab/LISEZ-MOI.md",
@@ -254,22 +254,28 @@
       "sha256": "6f079a03a1433ecaacbf71d192de35d9e6aa1bf4b3d4cf18f088c8902df310ec"
     },
     {
-      "source": "app/examples/LISEZ-MOI.md",
-      "id": "guide-app-examples-lisez-moi",
-      "locale": "fr",
-      "sha256": "b9b526d6dba26c865fd31494e886435f972c4fcfd825fcbfa982eee4186b04cb"
+      "source": "app/documentation/PUBLISHING.md",
+      "id": "guide-app-documentation-publishing",
+      "locale": "en",
+      "sha256": "d0280b9c1e8ab3e54fe3bced98effb8d91ddea6b0ca9188838894aa8d577f282"
     },
     {
       "source": "app/documentation/README.md",
       "id": "guide-app-documentation-readme",
       "locale": "en",
-      "sha256": "aebad11f76f73968b71d99a280f47c556fd97038915ae0992b784e5b205616da"
+      "sha256": "77c268a59d2e9f92a3ac66d1922565e3e2a9260203c15092f4ba9f6bcae731c4"
     },
     {
       "source": "app/documentation/VALIDATION.md",
       "id": "guide-app-documentation-validation",
       "locale": "en",
       "sha256": "54bf1d94dab3ac58e5af64fb1ebf956ed379a22cb0502066f782e5ef1f409411"
+    },
+    {
+      "source": "app/examples/LISEZ-MOI.md",
+      "id": "guide-app-examples-lisez-moi",
+      "locale": "fr",
+      "sha256": "b9b526d6dba26c865fd31494e886435f972c4fcfd825fcbfa982eee4186b04cb"
     }
   ],
   "issues": [],

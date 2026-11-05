@@ -1,5 +1,7 @@
 # CyTools PersonaRP — 0.1.3
 
+[Documentation](https://mrmybal.github.io/CyTools_PersonaRP/#/fr/overview) · [English](https://mrmybal.github.io/CyTools_PersonaRP/#/en/overview)
+
 Lancer **CyTools_PersonaRP.exe**. La fenêtre s'ouvre directement : pas de terminal, pas de
 JSON à écrire.
 
@@ -474,4 +476,4 @@ Documentation technique : `app/README.md`.
 
 ## Documentation locale
 
-Dans l’application, ouvrir **Options → Ouvrir le manuel local (F1)** ou appuyer sur **F1**. Le lecteur hors ligne complet est livré dans [`app/help/index.html`](app/help/index.html). [Régénérer le manuel](app/documentation/README.md).
+Dans l’application, ouvrir **Options → Ouvrir le manuel local (F1)** ou appuyer sur **F1**. Le lecteur hors ligne complet est livré dans `app/help/index.html`. [Régénérer le manuel](app/documentation/README.md).

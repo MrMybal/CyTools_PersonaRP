@@ -43,9 +43,10 @@
     "app/README.md": "guide-app-readme",
     "app/colab/LISEZ-MOI.md": "guide-app-colab-lisez-moi",
     "app/comfyui/cytools_personarp/LISEZ-MOI.md": "guide-app-comfyui-cytools-personarp-lisez-moi",
-    "app/examples/LISEZ-MOI.md": "guide-app-examples-lisez-moi",
+    "app/documentation/PUBLISHING.md": "guide-app-documentation-publishing",
     "app/documentation/README.md": "guide-app-documentation-readme",
-    "app/documentation/VALIDATION.md": "guide-app-documentation-validation"
+    "app/documentation/VALIDATION.md": "guide-app-documentation-validation",
+    "app/examples/LISEZ-MOI.md": "guide-app-examples-lisez-moi"
   },
   "pages": {
     "guide-app-colab-lisez-moi": {
@@ -350,9 +351,19 @@
       ],
       "locale": "fr"
     },
+    "guide-app-documentation-publishing": {
+      "headings": [
+        "publishing-the-cydoc-reader",
+        "regenerate-and-stage",
+        "automatic-deployment",
+        "embedded-help"
+      ],
+      "locale": "en"
+    },
     "guide-app-documentation-readme": {
       "headings": [
-        "local-documentation-cydoc"
+        "local-documentation-cydoc",
+        "web-documentation"
       ],
       "locale": "en"
     },

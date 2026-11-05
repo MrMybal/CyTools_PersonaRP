@@ -32,10 +32,16 @@
       "expectedRevision": "167bda94a58434c9"
     },
     {
+      "id": "guide-app-documentation-publishing",
+      "title": "Publishing the CyDoc reader",
+      "locale": "fr",
+      "expectedRevision": "38b2a377043aa49c"
+    },
+    {
       "id": "guide-app-documentation-readme",
       "title": "Local documentation (CyDoc)",
       "locale": "fr",
-      "expectedRevision": "7813cec244e6cdf6"
+      "expectedRevision": "2e1e52f5eee95fd8"
     },
     {
       "id": "guide-app-documentation-validation",
@@ -47,13 +53,13 @@
       "id": "guide-app-readme",
       "title": "CyTools_PersonaRP — developer documentation",
       "locale": "fr",
-      "expectedRevision": "6fd87bb1953c3642"
+      "expectedRevision": "61f3a4e3826f05e0"
     },
     {
       "id": "guide-readme",
       "title": "CyTools PersonaRP",
       "locale": "fr",
-      "expectedRevision": "eaf8e4b24bf4e63d"
+      "expectedRevision": "ed4cb9f3332943b6"
     },
     {
       "id": "licenses",
