@@ -1,0 +1,363 @@
+{
+  "defaultLocale": "en",
+  "missing": [
+    {
+      "id": "guide-app-docs-cyuimigration",
+      "title": "Modular CyUI integration",
+      "locale": "fr",
+      "expectedRevision": "78d4a6736b308787"
+    },
+    {
+      "id": "guide-app-docs-taskfiles",
+      "title": "Task files — SDK 0.9.0",
+      "locale": "fr",
+      "expectedRevision": "9b6360df7060f26c"
+    },
+    {
+      "id": "guide-app-docs-toolfinalization",
+      "title": "Tool delivery checklist",
+      "locale": "fr",
+      "expectedRevision": "fde78db2e97192ae"
+    },
+    {
+      "id": "guide-app-docs-unrealintegration",
+      "title": "Unreal integration",
+      "locale": "fr",
+      "expectedRevision": "fa331fd59c1854d2"
+    },
+    {
+      "id": "guide-app-docs-validation",
+      "title": "Validation",
+      "locale": "fr",
+      "expectedRevision": "167bda94a58434c9"
+    },
+    {
+      "id": "guide-app-documentation-readme",
+      "title": "Local documentation (CyDoc)",
+      "locale": "fr",
+      "expectedRevision": "7813cec244e6cdf6"
+    },
+    {
+      "id": "guide-app-documentation-validation",
+      "title": "CyDoc migration validation",
+      "locale": "fr",
+      "expectedRevision": "e4b1dd22ce7c3655"
+    },
+    {
+      "id": "guide-app-readme",
+      "title": "CyTools_PersonaRP — developer documentation",
+      "locale": "fr",
+      "expectedRevision": "6fd87bb1953c3642"
+    },
+    {
+      "id": "guide-readme",
+      "title": "CyTools PersonaRP",
+      "locale": "fr",
+      "expectedRevision": "eaf8e4b24bf4e63d"
+    },
+    {
+      "id": "licenses",
+      "title": "Licenses",
+      "locale": "fr",
+      "expectedRevision": "c99592d9fc6b7fdf"
+    },
+    {
+      "id": "migration-notes",
+      "title": "Migration notes",
+      "locale": "fr",
+      "expectedRevision": "32c69573c2dd226f"
+    },
+    {
+      "id": "reference-app-docs-agentguide-md",
+      "title": "app/Docs/AgentGuide.md",
+      "locale": "fr",
+      "expectedRevision": "a7c4679bb02b9b3c"
+    },
+    {
+      "id": "reference-app-docs-agentprompt-md",
+      "title": "app/Docs/AgentPrompt.md",
+      "locale": "fr",
+      "expectedRevision": "3bdaeeaba5acf55e"
+    },
+    {
+      "id": "reference-app-licenses-json",
+      "title": "app/licenses.json",
+      "locale": "fr",
+      "expectedRevision": "4217b97758bafbb9"
+    },
+    {
+      "id": "reference-licences-cydoc-mit-txt",
+      "title": "LICENCES/CyDoc-MIT.txt",
+      "locale": "fr",
+      "expectedRevision": "1513dc9b71717581"
+    },
+    {
+      "id": "reference-licences-cytoolscore-mit-txt",
+      "title": "LICENCES/CyToolsCore-MIT.txt",
+      "locale": "fr",
+      "expectedRevision": "d604437eff19de43"
+    },
+    {
+      "id": "reference-licences-cyui-mit-txt",
+      "title": "LICENCES/CyUI-MIT.txt",
+      "locale": "fr",
+      "expectedRevision": "d4ddcf0e401b8515"
+    },
+    {
+      "id": "reference-licences-sources-txt",
+      "title": "LICENCES/SOURCES.txt",
+      "locale": "fr",
+      "expectedRevision": "e5fc6e9c7a9c4686"
+    },
+    {
+      "id": "reference-license",
+      "title": "LICENSE",
+      "locale": "fr",
+      "expectedRevision": "aaa62e7f14d30e88"
+    }
+  ],
+  "outdated": [],
+  "untracked": [
+    {
+      "id": "guide-app-colab-lisez-moi",
+      "title": "CyTools PersonaRP sur Google Colab — tâches de voix",
+      "locale": "fr",
+      "expectedRevision": "2baeea2a16f3a1fd"
+    },
+    {
+      "id": "guide-app-comfyui-cytools-personarp-lisez-moi",
+      "title": "Nodes CyTools PersonaRP pour ComfyUI",
+      "locale": "fr",
+      "expectedRevision": "80c9637f65810e57"
+    },
+    {
+      "id": "guide-app-docs-architecture",
+      "title": "Architecture",
+      "locale": "fr",
+      "expectedRevision": "0dcfb7df60b228e3"
+    },
+    {
+      "id": "guide-app-docs-automaticinputs",
+      "title": "Entrées locales automatiques",
+      "locale": "fr",
+      "expectedRevision": "9cec7b10b5b2f376"
+    },
+    {
+      "id": "guide-app-docs-creatingyourfirstcytool",
+      "title": "Créer son premier CyTool",
+      "locale": "fr",
+      "expectedRevision": "b97866cef66537cd"
+    },
+    {
+      "id": "guide-app-docs-dependencies",
+      "title": "Dépendances",
+      "locale": "fr",
+      "expectedRevision": "5aa82f11150127ad"
+    },
+    {
+      "id": "guide-app-docs-downloads",
+      "title": "Téléchargements",
+      "locale": "fr",
+      "expectedRevision": "f6a27cf30df3f6af"
+    },
+    {
+      "id": "guide-app-docs-errormodel",
+      "title": "Erreurs",
+      "locale": "fr",
+      "expectedRevision": "0a75614678bbc1fc"
+    },
+    {
+      "id": "guide-app-docs-events",
+      "title": "Événements et logs",
+      "locale": "fr",
+      "expectedRevision": "efe31372dbb9d8e2"
+    },
+    {
+      "id": "guide-app-docs-fulloperationaccess",
+      "title": "Capacités complètes et orchestration",
+      "locale": "fr",
+      "expectedRevision": "2f11750de6a6a853"
+    },
+    {
+      "id": "guide-app-docs-generationconfigurations",
+      "title": "Sauvegarder et recharger une configuration de generation",
+      "locale": "fr",
+      "expectedRevision": "81c5efd2ae4bdc8f"
+    },
+    {
+      "id": "guide-app-docs-implementationstatus",
+      "title": "État de l'implémentation 0.9.0",
+      "locale": "fr",
+      "expectedRevision": "0dcf1dbc2c9baf77"
+    },
+    {
+      "id": "guide-app-docs-index",
+      "title": "Documentation CyToolsCore",
+      "locale": "fr",
+      "expectedRevision": "16fd982f2de0d73d"
+    },
+    {
+      "id": "guide-app-docs-jobs",
+      "title": "Jobs",
+      "locale": "fr",
+      "expectedRevision": "d35b2039cb606bc8"
+    },
+    {
+      "id": "guide-app-docs-localization",
+      "title": "Interface multilingue, Options et licences",
+      "locale": "fr",
+      "expectedRevision": "a282ebab9d695694"
+    },
+    {
+      "id": "guide-app-docs-mcp",
+      "title": "Adaptateur MCP",
+      "locale": "fr",
+      "expectedRevision": "dc280b287b5d6ff6"
+    },
+    {
+      "id": "guide-app-docs-meshviewer",
+      "title": "Visualisation 3D obligatoire pour les Tools de maillage",
+      "locale": "fr",
+      "expectedRevision": "397e9f2de22b0e6e"
+    },
+    {
+      "id": "guide-app-docs-models",
+      "title": "Backends et modèles",
+      "locale": "fr",
+      "expectedRevision": "a45b1c3998273744"
+    },
+    {
+      "id": "guide-app-docs-multiclient",
+      "title": "Plusieurs clients sur un même Tool",
+      "locale": "fr",
+      "expectedRevision": "3bf1d8fa2d43208c"
+    },
+    {
+      "id": "guide-app-docs-operations",
+      "title": "Opérations",
+      "locale": "fr",
+      "expectedRevision": "9752ee1fb34dbdae"
+    },
+    {
+      "id": "guide-app-docs-outputs",
+      "title": "Sorties",
+      "locale": "fr",
+      "expectedRevision": "5bbb6eaaa99d681b"
+    },
+    {
+      "id": "guide-app-docs-overview",
+      "title": "Vue d'ensemble",
+      "locale": "fr",
+      "expectedRevision": "2ae69402e1312ed7"
+    },
+    {
+      "id": "guide-app-docs-parameters",
+      "title": "Paramètres et génération d'UI",
+      "locale": "fr",
+      "expectedRevision": "250317af72ec2bcf"
+    },
+    {
+      "id": "guide-app-docs-platforms",
+      "title": "Plateformes",
+      "locale": "fr",
+      "expectedRevision": "908b579145427030"
+    },
+    {
+      "id": "guide-app-docs-protocol",
+      "title": "CyTools protocol 1.0",
+      "locale": "fr",
+      "expectedRevision": "bde2008d14ccdd96"
+    },
+    {
+      "id": "guide-app-docs-resources",
+      "title": "Ressources",
+      "locale": "fr",
+      "expectedRevision": "9dacee039a847976"
+    },
+    {
+      "id": "guide-app-docs-scheduler",
+      "title": "Scheduler local",
+      "locale": "fr",
+      "expectedRevision": "763d356c93dee337"
+    },
+    {
+      "id": "guide-app-docs-sharedinstallation",
+      "title": "Stockage des installations et téléchargements",
+      "locale": "fr",
+      "expectedRevision": "8933ecdd2cf395af"
+    },
+    {
+      "id": "guide-app-docs-standalonedelivery",
+      "title": "Livraison obligatoire d'un CyTool autonome",
+      "locale": "fr",
+      "expectedRevision": "c6177aaab32449f9"
+    },
+    {
+      "id": "guide-app-docs-standalonediagnosticsandmodels",
+      "title": "Journaux, modèles personnalisés, LoRA et périphériques",
+      "locale": "fr",
+      "expectedRevision": "b15d340bd82eafbd"
+    },
+    {
+      "id": "guide-app-docs-toolmanifest",
+      "title": "Manifest du Tool",
+      "locale": "fr",
+      "expectedRevision": "89ad1ceaa9d2ce1d"
+    },
+    {
+      "id": "guide-app-docs-transports",
+      "title": "Transports",
+      "locale": "fr",
+      "expectedRevision": "da794edd5bf1c6b7"
+    },
+    {
+      "id": "guide-app-docs-versioning",
+      "title": "Versions et compatibilité",
+      "locale": "fr",
+      "expectedRevision": "f800295039071a79"
+    },
+    {
+      "id": "guide-app-docs-workers",
+      "title": "Workers et libération",
+      "locale": "fr",
+      "expectedRevision": "e39433700a99d363"
+    },
+    {
+      "id": "guide-app-examples-lisez-moi",
+      "title": "Mondes d'exemple",
+      "locale": "fr",
+      "expectedRevision": "e93d7d4489ce887b"
+    },
+    {
+      "id": "guide-lisez-moi",
+      "title": "CyTools PersonaRP — 0.1.3",
+      "locale": "fr",
+      "expectedRevision": "7a85eb41fa905f69"
+    },
+    {
+      "id": "python-resolve-persona-resolve-persona",
+      "title": "resolve_persona",
+      "locale": "fr",
+      "expectedRevision": "28668c14aa64"
+    },
+    {
+      "id": "python-resolve-world-resolve-world",
+      "title": "resolve_world",
+      "locale": "fr",
+      "expectedRevision": "5128e470c4b4"
+    },
+    {
+      "id": "python-generation-settings-generation-settings",
+      "title": "generation_settings",
+      "locale": "fr",
+      "expectedRevision": "4efca0eaca98"
+    },
+    {
+      "id": "python-create-runtime-create-runtime",
+      "title": "create_runtime",
+      "locale": "fr",
+      "expectedRevision": "9922d620787a"
+    }
+  ],
+  "current": 69
+}

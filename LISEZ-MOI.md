@@ -470,3 +470,8 @@ processeur, Linux, une mise à jour d'une release publiée à la suivante, et le
 complet depuis zéro des modèles de conversation et de parole.
 
 Documentation technique : `app/README.md`.
+
+
+## Documentation locale
+
+Dans l’application, ouvrir **Options → Ouvrir le manuel local (F1)** ou appuyer sur **F1**. Le lecteur hors ligne complet est livré dans [`app/help/index.html`](app/help/index.html). [Régénérer le manuel](app/documentation/README.md).
