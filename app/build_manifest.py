@@ -13,7 +13,7 @@ from personarp.authoring import PERSONA_TARGETS, WORLD_TARGETS
 from personarp import exclusion
 
 APP = Path(__file__).resolve().parent
-VERSION = '0.1.4'
+VERSION = '0.1.5'
 
 STR = {'type': 'string'}
 BOOL = {'type': 'boolean'}

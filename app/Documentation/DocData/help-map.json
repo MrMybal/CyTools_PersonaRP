@@ -1,0 +1,780 @@
+{
+  "schemaVersion": 2,
+  "legacyPaths": {
+    "LISEZ-MOI.md": "guide-lisez-moi",
+    "README.md": "guide-readme",
+    "app/Docs/Architecture.md": "guide-app-docs-architecture",
+    "app/Docs/AutomaticInputs.md": "guide-app-docs-automaticinputs",
+    "app/Docs/CreatingYourFirstCyTool.md": "guide-app-docs-creatingyourfirstcytool",
+    "app/Docs/CyUIMigration.md": "guide-app-docs-cyuimigration",
+    "app/Docs/Dependencies.md": "guide-app-docs-dependencies",
+    "app/Docs/Downloads.md": "guide-app-docs-downloads",
+    "app/Docs/ErrorModel.md": "guide-app-docs-errormodel",
+    "app/Docs/Events.md": "guide-app-docs-events",
+    "app/Docs/FullOperationAccess.md": "guide-app-docs-fulloperationaccess",
+    "app/Docs/GenerationConfigurations.md": "guide-app-docs-generationconfigurations",
+    "app/Docs/ImplementationStatus.md": "guide-app-docs-implementationstatus",
+    "app/Docs/Index.md": "guide-app-docs-index",
+    "app/Docs/Jobs.md": "guide-app-docs-jobs",
+    "app/Docs/Localization.md": "guide-app-docs-localization",
+    "app/Docs/MCP.md": "guide-app-docs-mcp",
+    "app/Docs/MeshViewer.md": "guide-app-docs-meshviewer",
+    "app/Docs/Models.md": "guide-app-docs-models",
+    "app/Docs/MultiClient.md": "guide-app-docs-multiclient",
+    "app/Docs/Operations.md": "guide-app-docs-operations",
+    "app/Docs/Outputs.md": "guide-app-docs-outputs",
+    "app/Docs/Overview.md": "guide-app-docs-overview",
+    "app/Docs/Parameters.md": "guide-app-docs-parameters",
+    "app/Docs/Platforms.md": "guide-app-docs-platforms",
+    "app/Docs/Protocol.md": "guide-app-docs-protocol",
+    "app/Docs/Resources.md": "guide-app-docs-resources",
+    "app/Docs/Scheduler.md": "guide-app-docs-scheduler",
+    "app/Docs/SharedInstallation.md": "guide-app-docs-sharedinstallation",
+    "app/Docs/StandaloneDelivery.md": "guide-app-docs-standalonedelivery",
+    "app/Docs/StandaloneDiagnosticsAndModels.md": "guide-app-docs-standalonediagnosticsandmodels",
+    "app/Docs/TaskFiles.md": "guide-app-docs-taskfiles",
+    "app/Docs/ToolFinalization.md": "guide-app-docs-toolfinalization",
+    "app/Docs/ToolManifest.md": "guide-app-docs-toolmanifest",
+    "app/Docs/Transports.md": "guide-app-docs-transports",
+    "app/Docs/UnrealIntegration.md": "guide-app-docs-unrealintegration",
+    "app/Docs/Validation.md": "guide-app-docs-validation",
+    "app/Docs/Versioning.md": "guide-app-docs-versioning",
+    "app/Docs/Workers.md": "guide-app-docs-workers",
+    "app/README.md": "guide-app-readme",
+    "app/colab/LISEZ-MOI.md": "guide-app-colab-lisez-moi",
+    "app/comfyui/cytools_personarp/LISEZ-MOI.md": "guide-app-comfyui-cytools-personarp-lisez-moi",
+    "app/documentation/PUBLISHING.md": "guide-app-documentation-publishing",
+    "app/documentation/README.md": "guide-app-documentation-readme",
+    "app/documentation/VALIDATION.md": "guide-app-documentation-validation",
+    "app/examples/LISEZ-MOI.md": "guide-app-examples-lisez-moi"
+  },
+  "aliases": {
+    "guide-app-docs-architecture": "overview",
+    "guide-app-docs-automaticinputs": "overview",
+    "guide-app-docs-creatingyourfirstcytool": "overview",
+    "guide-app-docs-cyuimigration": "overview",
+    "guide-app-docs-dependencies": "overview",
+    "guide-app-docs-downloads": "overview",
+    "guide-app-docs-errormodel": "overview",
+    "guide-app-docs-events": "overview",
+    "guide-app-docs-fulloperationaccess": "overview",
+    "guide-app-docs-generationconfigurations": "overview",
+    "guide-app-docs-implementationstatus": "overview",
+    "guide-app-docs-index": "overview",
+    "guide-app-docs-jobs": "overview",
+    "guide-app-docs-localization": "overview",
+    "guide-app-docs-mcp": "overview",
+    "guide-app-docs-meshviewer": "overview",
+    "guide-app-docs-models": "overview",
+    "guide-app-docs-multiclient": "overview",
+    "guide-app-docs-operations": "overview",
+    "guide-app-docs-outputs": "overview",
+    "guide-app-docs-overview": "overview",
+    "guide-app-docs-parameters": "overview",
+    "guide-app-docs-platforms": "overview",
+    "guide-app-docs-protocol": "overview",
+    "guide-app-docs-resources": "overview",
+    "guide-app-docs-scheduler": "overview",
+    "guide-app-docs-sharedinstallation": "overview",
+    "guide-app-docs-standalonedelivery": "overview",
+    "guide-app-docs-standalonediagnosticsandmodels": "overview",
+    "guide-app-docs-taskfiles": "overview",
+    "guide-app-docs-toolfinalization": "overview",
+    "guide-app-docs-toolmanifest": "overview",
+    "guide-app-docs-transports": "overview",
+    "guide-app-docs-unrealintegration": "overview",
+    "guide-app-docs-validation": "overview",
+    "guide-app-docs-versioning": "overview",
+    "guide-app-docs-workers": "overview",
+    "guide-app-readme": "operations",
+    "guide-app-documentation-publishing": "overview",
+    "guide-app-documentation-readme": "overview",
+    "guide-app-documentation-validation": "overview",
+    "home": "overview",
+    "readme": "guide-readme",
+    "help": "overview",
+    "user-guide": "guide-lisez-moi",
+    "api": "operations",
+    "migration-notes": "overview",
+    "reference-app-docs-agentguide-md": "overview",
+    "reference-app-docs-agentprompt-md": "overview",
+    "reference-app-licenses-json": "overview",
+    "reference-licences-cydoc-mit-txt": "overview",
+    "reference-licences-cytoolscore-mit-txt": "overview",
+    "reference-licences-cyui-mit-txt": "overview",
+    "reference-licences-sources-txt": "overview",
+    "reference-license": "overview",
+    "python-resolve-persona-resolve-persona": "operations",
+    "python-resolve-world-resolve-world": "operations",
+    "python-generation-settings-generation-settings": "operations",
+    "source-sources-tool-py": "operations",
+    "translation-report": "overview"
+  },
+  "pages": {
+    "guide-app-colab-lisez-moi": {
+      "headings": [
+        "cytools-personarp-sur-google-colab-taches-de-voix",
+        "mise-en-place-une-fois",
+        "deroule-d-une-session",
+        "une-tache",
+        "les-resultats",
+        "plusieurs-repliques-a-la-fois",
+        "ce-qui-a-ete-verifie-et-ce-qui-ne-l-a-pas-ete"
+      ],
+      "locale": "fr"
+    },
+    "guide-app-comfyui-cytools-personarp-lisez-moi": {
+      "headings": [
+        "nodes-cytools-personarp-pour-comfyui",
+        "installation",
+        "comment-ca-marche",
+        "la-memoire-graphique",
+        "les-nodes",
+        "reglages"
+      ],
+      "locale": "fr"
+    },
+    "guide-app-examples-lisez-moi": {
+      "headings": [
+        "mondes-d-exemple",
+        "valdrenn-fantasy-epique",
+        "station-meridienne-science-fiction",
+        "neo-marseille-2089-cyberpunk",
+        "saint-aubin-des-brumes-1887-horreur-gothique",
+        "les-terres-cendrees-post-apocalyptique",
+        "l-auberge-du-carrefour-fantasy-douce"
+      ],
+      "locale": "fr"
+    },
+    "guide-lisez-moi": {
+      "headings": [
+        "cytools-personarp-0-1-3",
+        "installer-la-version-binaire-windows-x64",
+        "premier-lancement",
+        "ce-que-fait-l-outil",
+        "mondes-d-exemple",
+        "les-descriptions-d-image-de-video-et-de-mouvement",
+        "les-photos-de-personnage",
+        "extraire-la-description-visuelle",
+        "la-voix",
+        "creer-une-voix-stable",
+        "le-jeu-vocal",
+        "traduire-une-scene-et-l-entendre-dans-une-autre-langue",
+        "faire-dire-toute-une-liste-de-repliques-les-taches-de-l-onglet-lots",
+        "personarp-dans-comfyui",
+        "les-taches-sur-google-colab",
+        "moteur-et-modeles",
+        "langue-de-l-interface",
+        "modeles",
+        "mises-a-jour",
+        "ou-sont-les-choses"
+      ],
+      "locale": "fr"
+    },
+    "guide-readme": {
+      "headings": [
+        "workflow",
+        "requirements"
+      ],
+      "locale": "fr"
+    },
+    "installation": {
+      "headings": [
+        "start",
+        "models",
+        "storage"
+      ],
+      "locale": "fr"
+    },
+    "licenses": {
+      "headings": [
+        "application",
+        "models"
+      ],
+      "locale": "fr"
+    },
+    "operation-add-persona-image": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-apply-proposal": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-assistant-chat": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-author": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-capture-voice-take": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-chat": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-choose-take": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-comfyui-nodes-status": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-create-persona": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-create-stable-voice": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-create-world": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-describe-image": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-diagnose-backend": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-drop-relation": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-duplicate-persona": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-export-personas": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-get-assistant-thread": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-get-persona": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-get-session": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-get-world": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-import-personas": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-install-comfyui-nodes": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-install-cuda": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-install-llm": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-install-voice-engine": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-install-voice-model": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-list-assistant-threads": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-list-batches": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-list-examples": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-list-images": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-list-models": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-list-personas": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-list-sessions": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-list-voice-models": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-list-voices": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-list-worlds": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-new-assistant-thread": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-new-session": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-persona-revisions": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-preview-prompt": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-release-voice": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-remember": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-remove-assistant-thread": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-remove-persona-image": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-remove-persona": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-remove-session": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-remove-take": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-remove-voice": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-remove-world": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-restore-persona": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-save-assistant-thread": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-save-persona": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-save-world": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-scene-prompts": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-set-relation": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-set-term-translations": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-speak-batch-file": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-speak-batch": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-speak-turn": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-speak": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-transcribe": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-translate": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-translation-terms": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-unload-model": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-update": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-verify-persona-images": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operation-verify-voice": {
+      "headings": [
+        "contract",
+        "returns",
+        "behaviour"
+      ],
+      "locale": "fr"
+    },
+    "operations": {
+      "headings": [
+        "cli",
+        "mcp",
+        "task-files",
+        "operations"
+      ],
+      "locale": "fr"
+    },
+    "overview": {
+      "headings": [
+        "getting-started",
+        "topics"
+      ],
+      "locale": "fr"
+    },
+    "screenshots": {
+      "headings": [],
+      "locale": "fr"
+    },
+    "settings": {
+      "headings": [
+        "appearance",
+        "configurations",
+        "help"
+      ],
+      "locale": "fr"
+    },
+    "troubleshooting": {
+      "headings": [
+        "installation",
+        "jobs",
+        "outputs"
+      ],
+      "locale": "fr"
+    },
+    "python-create-runtime-create-runtime": {
+      "headings": [
+        "signature",
+        "returns"
+      ],
+      "locale": "fr"
+    }
+  },
+  "modules": [
+    "gallery",
+    "image"
+  ]
+}
