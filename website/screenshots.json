@@ -1,0 +1,26 @@
+[
+  {
+    "file": "assets/showcase/character.webp",
+    "origin": "Repository screenshot: docs/screenshots/character-model.png",
+    "originalSha256": "b52def57d3874420d928e74369f6aad8d78000523bb1adba2a6a85f2855f3b6e",
+    "transform": "Full frame, converted to WebP; metadata omitted. No compositing or generative editing."
+  },
+  {
+    "file": "assets/showcase/voice.webp",
+    "origin": "Repository screenshot: docs/screenshots/character-voice.png",
+    "originalSha256": "d01ca19508d74c90cb867da97a611719922e747dcbe02bbbb78b0e9291f11a1f",
+    "transform": "Full frame, converted to WebP; metadata omitted. No compositing or generative editing."
+  },
+  {
+    "file": "assets/showcase/worlds.webp",
+    "origin": "Repository screenshot: docs/screenshots/worlds.png",
+    "originalSha256": "cdf504ae976e968cdb58f9b8f87b5831321a1f5f1dbd738dcc0b0a72f799aed1",
+    "transform": "Full frame, converted to WebP; metadata omitted. No compositing or generative editing."
+  },
+  {
+    "file": "assets/showcase/assistant.webp",
+    "origin": "Repository screenshot: docs/screenshots/assistant.png",
+    "originalSha256": "6d746dc339bce1f4327055a42270f1849263fb1f785ae2ffbe8ed3e181b64fd6",
+    "transform": "Full frame, converted to WebP; metadata omitted. No compositing or generative editing."
+  }
+]

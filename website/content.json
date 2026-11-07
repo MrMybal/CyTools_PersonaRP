@@ -1,0 +1,231 @@
+{
+  "accent": "#ef91ba",
+  "category": {
+    "en": "Characters / worlds, dialogue & voice",
+    "fr": "Personnages / univers, dialogues et voix"
+  },
+  "intro": {
+    "en": "Build characters with a world around them.",
+    "fr": "Créez des personnages et leur univers."
+  },
+  "description": {
+    "en": "Write character sheets, connect relationships and keep roleplay scenes with local models. Add stable voices, translation and structured visual directions.",
+    "fr": "Écrivez les fiches, reliez les personnages et conservez vos scènes avec des modèles locaux. Ajoutez des voix stables, la traduction et des indications visuelles structurées."
+  },
+  "audience": {
+    "en": "For writers, roleplayers and creators preparing characters, dialogue and spoken scenes.",
+    "fr": "Pour les auteurs, les joueurs de rôle et les créateurs de personnages, de dialogues et de scènes parlées."
+  },
+  "tags": [
+    {
+      "en": "Characters",
+      "fr": "Personnages"
+    },
+    {
+      "en": "Worlds",
+      "fr": "Univers"
+    },
+    {
+      "en": "Local LLM",
+      "fr": "LLM local"
+    },
+    {
+      "en": "Voice",
+      "fr": "Voix"
+    }
+  ],
+  "hero": "character",
+  "heroCaption": {
+    "en": "Character sheet · conversation model, instructions and sampling settings.",
+    "fr": "Fiche de personnage · modèle, instructions et réglages de génération."
+  },
+  "sections": [
+    {
+      "id": "characters",
+      "label": {
+        "en": "01 / Character sheets",
+        "fr": "01 / Fiches de personnages"
+      },
+      "title": {
+        "en": "Give the character a consistent foundation.",
+        "fr": "Donnez des bases cohérentes au personnage."
+      },
+      "body": {
+        "en": "Define identity, appearance, personality, history, relationships and voice. Keep revisions of the sheet and add memories explicitly rather than extracting them silently from every conversation.",
+        "fr": "Définissez identité, apparence, personnalité, passé, relations et voix. Conservez les révisions de la fiche et ajoutez les souvenirs explicitement, sans extraction silencieuse de chaque échange."
+      },
+      "points": [
+        {
+          "en": "Per-character model and generation settings",
+          "fr": "Modèle et réglages de génération par personnage"
+        },
+        {
+          "en": "Explicit memories and relationships",
+          "fr": "Souvenirs et relations explicites"
+        },
+        {
+          "en": "Saved roleplay sessions and visual scene descriptions",
+          "fr": "Sessions enregistrées et descriptions visuelles de scène"
+        }
+      ],
+      "image": "character",
+      "caption": {
+        "en": "Model settings belong to the character sheet.",
+        "fr": "Les réglages du modèle appartiennent à la fiche du personnage."
+      },
+      "doc": "guide-lisez-moi"
+    },
+    {
+      "id": "worlds",
+      "label": {
+        "en": "02 / Shared worlds",
+        "fr": "02 / Univers partagés"
+      },
+      "title": {
+        "en": "Let the cast share more than a chat.",
+        "fr": "Reliez les personnages au-delà du dialogue."
+      },
+      "body": {
+        "en": "Keep places, factions, lore and world rules together. Characters can share a world, while translation terms help keep names consistent between languages.",
+        "fr": "Rassemblez lieux, factions, histoire et règles de l’univers. Les personnages peuvent partager un monde ; le lexique de traduction aide à conserver les noms entre les langues."
+      },
+      "points": [
+        {
+          "en": "World description, places and factions",
+          "fr": "Description du monde, lieux et factions"
+        },
+        {
+          "en": "Shared cast and character relationships",
+          "fr": "Distribution partagée et relations"
+        },
+        {
+          "en": "Per-world terminology for translation",
+          "fr": "Terminologie de traduction par univers"
+        }
+      ],
+      "image": "worlds",
+      "caption": {
+        "en": "World workspace · cast, descriptions and shared lore.",
+        "fr": "Espace univers · personnages, descriptions et histoire commune."
+      },
+      "doc": "guide-lisez-moi"
+    },
+    {
+      "id": "voices",
+      "label": {
+        "en": "03 / Voice & performance",
+        "fr": "03 / Voix et interprétation"
+      },
+      "title": {
+        "en": "Keep a voice from one line to the next.",
+        "fr": "Gardez la même voix d’une réplique à l’autre."
+      },
+      "body": {
+        "en": "A stable reference voice can be reused for later lines. Qwen3-TTS components provide compatible voice generation paths; speed, pitch, delivery and selected takes are managed separately from the text model.",
+        "fr": "Une référence vocale stable peut être réutilisée pour les répliques suivantes. Les composants Qwen3-TTS offrent les parcours compatibles ; vitesse, hauteur, interprétation et prises choisies restent distinctes du modèle textuel."
+      },
+      "points": [
+        {
+          "en": "Per-character voice and delivery settings",
+          "fr": "Voix et interprétation par personnage"
+        },
+        {
+          "en": "Keep and choose alternate takes",
+          "fr": "Conservation et choix des prises"
+        },
+        {
+          "en": "Voice batches and language-specific voices",
+          "fr": "Lots vocaux et voix propres à chaque langue"
+        }
+      ],
+      "image": "voice",
+      "caption": {
+        "en": "Character voice settings · stable voice, speed and pitch.",
+        "fr": "Réglages vocaux · voix stable, vitesse et hauteur."
+      },
+      "doc": "guide-lisez-moi"
+    },
+    {
+      "id": "assistant",
+      "label": {
+        "en": "04 / A separate assistant",
+        "fr": "04 / Un assistant distinct"
+      },
+      "title": {
+        "en": "Develop the idea before applying it.",
+        "fr": "Développez l’idée avant de l’appliquer."
+      },
+      "body": {
+        "en": "Use a conversation outside roleplay to draft a character or a world. A compatible vision model can describe a reference picture. Review proposals before applying them to stored sheets.",
+        "fr": "Discutez hors du jeu de rôle pour préparer un personnage ou un univers. Un modèle de vision compatible peut décrire une référence. Relisez les propositions avant de les appliquer aux fiches."
+      },
+      "points": [
+        {
+          "en": "Assistant threads separate from character scenes",
+          "fr": "Conversations d’assistant distinctes des scènes"
+        },
+        {
+          "en": "Optional local image description",
+          "fr": "Description locale d’images facultative"
+        },
+        {
+          "en": "Reviewable sheet and world proposals",
+          "fr": "Propositions de fiches et d’univers à relire"
+        }
+      ],
+      "image": "assistant",
+      "caption": {
+        "en": "Assistant workspace · reference-based character exploration.",
+        "fr": "Espace assistant · exploration de personnages depuis une référence."
+      },
+      "doc": "guide-lisez-moi"
+    }
+  ],
+  "limits": {
+    "en": "Windows x64 is tested; the Linux launcher is unvalidated. CPU and compatible NVIDIA CUDA paths depend on the selected language, vision or speech engine. Engines and model weights are installed separately and retain their own licences.",
+    "fr": "Windows x64 est testé ; le lanceur Linux n’est pas validé. Les parcours CPU et NVIDIA CUDA compatibles dépendent du moteur de langage, de vision ou de voix choisi. Moteurs et poids sont installés séparément et conservent leurs propres licences."
+  },
+  "shortName": "PersonaRP",
+  "repository": "CyTools_PersonaRP",
+  "private": false,
+  "licence": "GPL-3.0-only",
+  "logo": "assets/showcase/logo.png",
+  "images": {
+    "character": {
+      "file": "assets/showcase/character.webp",
+      "width": 1240,
+      "height": 899,
+      "caption": {
+        "en": "Character sheet · conversation model, instructions and sampling settings.",
+        "fr": "Fiche de personnage · modèle, instructions et réglages de génération."
+      }
+    },
+    "voice": {
+      "file": "assets/showcase/voice.webp",
+      "width": 1240,
+      "height": 899,
+      "caption": {
+        "en": "Character voice settings · stable voice, speed and pitch.",
+        "fr": "Réglages vocaux · voix stable, vitesse et hauteur."
+      }
+    },
+    "worlds": {
+      "file": "assets/showcase/worlds.webp",
+      "width": 1240,
+      "height": 899,
+      "caption": {
+        "en": "World workspace · cast, descriptions and shared lore.",
+        "fr": "Espace univers · personnages, descriptions et histoire commune."
+      }
+    },
+    "assistant": {
+      "file": "assets/showcase/assistant.webp",
+      "width": 1240,
+      "height": 899,
+      "caption": {
+        "en": "Assistant workspace · reference-based character exploration.",
+        "fr": "Espace assistant · exploration de personnages depuis une référence."
+      }
+    }
+  }
+}
