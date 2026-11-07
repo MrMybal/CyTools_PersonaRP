@@ -1,180 +1,148 @@
-# CyTools PersonaRP
-
-[Documentation](https://mrmybal.github.io/CyTools_PersonaRP/#/en/overview) · [Website](https://mrmybal.github.io/CyTools_PersonaRP/) · [Français](https://mrmybal.github.io/CyTools_PersonaRP/#/fr/overview)
-
-<p align="center">
-  <img src="app/assets/branding/logo.png" alt="CyTools PersonaRP logo" width="160">
-</p>
-
-Local roleplay with persistent characters, for Windows: a desktop application, a command line
-and an MCP server on one runtime, built on the [CyToolsCore](https://github.com/MrMybal/CyToolsCore)
-SDK. Characters live in a shared world, remember what you tell them to, speak with a stable
-voice, and every reply comes with a machine-readable description of what a camera would see.
-French user guide: [LISEZ-MOI.md](LISEZ-MOI.md). Developer guide: [app/README.md](app/README.md).
-
-## Screenshots
-
-<table>
+<table width="100%">
   <tr>
-    <td><img src="docs/screenshots/character-model.png" alt="Character sheet, Model section: conversation model, device, instructions and sampling"></td>
-    <td><img src="docs/screenshots/character-voice.png" alt="Character sheet, Voice section: stable voice, what is spoken, speed and pitch"></td>
-  </tr>
-  <tr>
-    <td align="center">Character sheet — model settings</td>
-    <td align="center">Character sheet — voice</td>
-  </tr>
-  <tr>
-    <td><img src="docs/screenshots/worlds.png" alt="Worlds page: cast, world description, places and factions"></td>
-    <td><img src="docs/screenshots/assistant.png" alt="Assistant discussion: a picture read by the vision model, and two character ideas"></td>
-  </tr>
-  <tr>
-    <td align="center">Shared world and its cast</td>
-    <td align="center">Assistant, starting from a picture</td>
+    <td width="300" align="left" valign="top">
+      <a href="https://mrmybal.github.io/CyTools_PersonaRP/">Website</a><br>
+      <a href="https://mrmybal.github.io/CyTools_PersonaRP/Documentation.html#/en/overview">Documentation</a><br>
+      <a href="https://github.com/MrMybal/CyTools_PersonaRP">GitHub</a><br><br>
+      <sub>README</sub><br>
+      <a href="README.md">English</a> · <a href="README.fr.md">Français</a>
+    </td>
+    <td width="400" align="center" valign="middle">
+      <a href="https://mrmybal.github.io/CyTools_PersonaRP/"><img src="app/assets/branding/logo.png" alt="CyTools PersonaRP logo" width="128"></a>
+    </td>
+    <td width="300" align="right" valign="top">
+      <p><sub>Application license</sub><br><a href="LICENSE"><strong>GPL-3.0-only</strong></a></p>
+      <p><sub>Application version</sub><br><a href="VERSION.md"><strong>0.1.5</strong></a><br><strong>EXPERIMENTAL</strong></p>
+      <p><a href="https://github.com/MrMybal/CyTools_PersonaRP/releases/download/v0.1.5/CyTools_PersonaRP-0.1.5-windows-x64.zip"><strong>Download</strong></a><br><sub>Windows x64 · portable</sub></p>
+    </td>
   </tr>
 </table>
 
-## What it does
+<h1 align="center">CyTools PersonaRP</h1>
 
-- **Characters**: a complete sheet (identity, appearance, personality, way of speaking, past,
-  current state, memory, relationships, voice, visual direction, model settings). Every save is
-  a revision; earlier ones are kept and can be restored.
-- **Worlds**: shared lore (places, factions, laws, timeline, glossary, what must stay true and
-  what never happens). Characters sharing a world know who else lives in it.
-- **Relationships** with feeling, trust, shared history, tension and secrets; the reverse link
-  can be written on the other sheet automatically.
-- **Scenes**: one saved conversation per character, resumed later as it was. Memory is
-  explicit: nothing is extracted from a conversation unless you add it.
-- **Scene descriptions** for image, video and motion tools, generated alongside each reply.
-- **Assistant** that drafts a sheet, a world or one section of either; nothing is applied until
-  you accept it. It can start from a **photograph** read by a local vision model
-  (Qwen2.5-VL) under constrained decoding.
-- **Voice**: Qwen3-TTS (Base, VoiceDesign, CustomVoice), a **stable voice** captured once from a
-  12–24 s take (a file, or recorded from the microphone) and cloned for every later line,
-  acting annotations written by the character, a per-character **speed and pitch**, every
-  **take of a line kept** (step through them, choose one, send one to the trash), Whisper
-  large-v3 turbo transcription and **dictation** from the microphone. Runs on an NVIDIA GPU
-  or, more slowly, on the CPU.
-- **Translation** of a scene with its context (world, character, earlier lines) and a per-world,
-  per-language **lexicon** so names of places, factions and things stay the same across
-  translations; each language can have its own voice.
-- **Voice tasks (batches)**: import complete characters with their stable voices per language,
-  give a list of lines (script, CSV or JSON, each with an ID), and get one folder per task with
-  every WAV and a results table. Lines are generated several at a time, sized to the free VRAM.
-- **Six example worlds**, ready to import, each with three or four characters and their voices.
-- **ComfyUI nodes** (`app/comfyui/cytools_personarp`), installed from the application, that use
-  the Tool: character, dialogue, voice, scene prompts, translation, reading a photograph, voice
-  tasks.
-- **Google Colab project** built by `app/build_colab.py`, for voice tasks on a rented GPU: no
-  model inside, weights downloaded through the Tool's command line and kept on Drive.
-- **Models and engines** installed from the application (state, size, source, licence, pinned
-  revision, SHA-256 check, cancel and resume) and **GitHub updates** for the application, the
-  engine and the model catalogue, staged, verified and reversible.
 
-The interface is in English by default and fully in French from **Options**, including the
-messages operations send back (errors, notes, update states), which the CLI and MCP keep in
-English.
+Write character sheets, connect relationships and keep roleplay scenes with local models. Add stable voices, translation and structured visual directions. For writers, roleplayers and creators preparing characters, dialogue and spoken scenes.
 
-## Requirements
+> **EXPERIMENTAL · 0.1.5**
+>
+> Published Windows build for evaluation; some engine paths remain unvalidated. Read the [version notes and known limitations](VERSION.md).
 
-- Windows 10/11 x64 (the only platform executed by the author; a Linux launcher script is
-  provided but was never run). The release archive brings its own Python; installing from
-  source needs Python 3.11 and Git on the PATH.
-- An NVIDIA GPU with CUDA for comfortable use; conversation models also run on the CPU. The
-  speech engine is about 8 GB on disk.
-- Model weights are **not** in this repository; they are downloaded from the Models and Voice
-  tabs.
+[![Character sheet · conversation model, instructions and sampling settings.](website/assets/showcase/character.webp)](website/assets/showcase/character.webp)
 
-## Download (Windows x64)
+*Character sheet · conversation model, instructions and sampling settings.*
 
-Each [release](https://github.com/MrMybal/CyTools_PersonaRP/releases) carries
-`CyTools_PersonaRP-<version>-windows-x64.zip`: the launcher, the application and a private
-Python 3.11 with every package the application needs. Extract it into any folder you can write
-to, then double-click `CyTools_PersonaRP.exe`; no Python, git or compiler is needed. Models and
-engines are not in the archive: install them from the application (see *First launch* below).
-Keep the folder where it is once the speech engine is installed, since that engine is a virtual
-environment tied to its path. `SHA256SUMS.txt` lists the checksums of the release files;
-`cytools-app.zip` is the application alone, used by the Updates tab.
 
-## Installation from source
+## The application
+
+### Character sheets
+
+Define identity, appearance, personality, history, relationships and voice. Keep revisions of the sheet and add memories explicitly rather than extracting them silently from every conversation.
+
+### Shared worlds
+
+Keep places, factions, lore and world rules together. Characters can share a world, while translation terms help keep names consistent between languages.
+
+[![World workspace · cast, descriptions and shared lore.](website/assets/showcase/worlds.webp)](website/assets/showcase/worlds.webp)
+
+*World workspace · cast, descriptions and shared lore.*
+
+
+### Voice & performance
+
+A stable reference voice can be reused for later lines. Qwen3-TTS components provide compatible voice generation paths; speed, pitch, delivery and selected takes are managed separately from the text model.
+
+[![Character voice settings · stable voice, speed and pitch.](website/assets/showcase/voice.webp)](website/assets/showcase/voice.webp)
+
+*Character voice settings · stable voice, speed and pitch.*
+
+
+### A separate assistant
+
+Use a conversation outside roleplay to draft a character or a world. A compatible vision model can describe a reference picture. Review proposals before applying them to stored sheets.
+
+## Features
+
+- **Characters:** identity, appearance, personality, explicit memory, model settings, relationships and restorable revisions.
+- **Scenes and worlds:** persistent roleplay conversations, shared lore and structured visual scene directions.
+- **Assistant and references:** separate assistant threads, reviewable sheet/world proposals and optional local picture description.
+- **Speech:** optional Qwen3-TTS voice design/cloning, stable reference voices, delivery, speed/pitch, alternate takes and transcription/dictation.
+- **Translation and delivery:** per-world terminology, language-specific voices, voice batches, ComfyUI nodes and a generated Colab project. External services and engines remain separate.
+
+**Desktop and automation:** English is the default interface language; French is selectable in Options. Save/load generation configurations, follow copyable application logs and use the declared operations through the CLI or MCP. The [manual](https://mrmybal.github.io/CyTools_PersonaRP/Documentation.html#/en/overview) describes the real parameters and output contracts.
+
+---
+
+## Installation
+
+The published application build is **Windows x64**. The portable ZIP includes its private Python runtime and base UI/media dependencies. Models and optional heavy engines are separate downloads.
+
+1. [Download CyTools PersonaRP 0.1.5](https://github.com/MrMybal/CyTools_PersonaRP/releases/download/v0.1.5/CyTools_PersonaRP-0.1.5-windows-x64.zip).
+2. Extract the complete ZIP into a writable folder. Keep `app/` and `runtime/` beside the launcher.
+3. Open **CyTools_PersonaRP.exe**. Use the installation/model workspace for the components you need; review each component licence and any provider access conditions before download.
+
+No machine Python is needed just to open the portable application. Source setup and some optional engine installers require additional tools such as Git. Keep the full release folder; the standalone `.exe` or an `app` update ZIP alone is not a complete installation.
+
+Windows x64 is tested; the Linux launcher is unvalidated. CPU and compatible NVIDIA CUDA paths depend on the selected language, vision or speech engine. Engines and model weights are installed separately and retain their own licences.
+
+### Updates and data
+
+For an existing compatible installation, use its Updates page and the matching application update package. Keep `data/`, installed engines and models. An update for another runtime ABI must not be forced. If the required runtime changes, use the complete portable release in a separate folder and follow the migration instructions.
+
+## Source, build and required libraries
+
+<details>
+<summary>Windows source setup and optional build tools</summary>
+
+
+Use Python **3.11** for the base source environment. Git is needed for cloning and pinned Git requirements. Building the launcher needs the MSVC x64 Build Tools; use a developer command prompt.
 
 ```powershell
 git clone https://github.com/MrMybal/CyTools_PersonaRP.git
 cd CyTools_PersonaRP
-# 1. private Python environment of the application (interface, CLI, MCP)
 py -3.11 -m venv runtime\python
-.\runtime\python\Scripts\python.exe -m pip install -r app\requirements.txt
-# 2. Windows launcher (Visual C++ Build Tools)
+runtime\python\Scripts\python.exe -m pip install -r app\requirements.txt
 app\build_launcher.cmd
+.\CyTools_PersonaRP.exe
 ```
 
-Then double-click `CyTools_PersonaRP.exe`, or run `runtime\python\Scripts\pythonw.exe app\desktop.py`.
-The release archive itself is built with `.\runtime\python\Scripts\python.exe app\build_release.py`
-and checked with `app\tests\acceptance_release.py` (see [app/README.md](app/README.md)).
+The exact base requirements are in [app/requirements.txt](app/requirements.txt). Engines use their own environments and model catalogues; installing the base environment does not install them. Follow the [developer setup](app/README.md) for the detailed build and optional components.
 
-## First launch
+</details>
 
-1. **Models** tab: install the conversation engine (CUDA or CPU), then at least one
-   conversation model.
-2. **Voice** tab: install the speech engine, then the speech models you need (1.7B Base for
-   stable voices, VoiceDesign to invent a voice, CustomVoice for preset voices, Whisper to
-   transcribe takes). The speech engine can also be built with
-   `.\runtime\python\Scripts\python.exe app\setup_engine.py voice`.
-3. Optional, **Models** tab: a vision model to read character photographs.
+---
 
-## Command line and MCP
+## License
 
-```powershell
-.\runtime\python\Scripts\python.exe app\tool.py describe
-.\runtime\python\Scripts\python.exe app\tool.py list-operations
-.\runtime\python\Scripts\python.exe app\tool.py invoke chat --params-file request.json
-.\runtime\python\Scripts\python.exe app\tool.py mcp          # MCP stdio server
-```
+**CyTools PersonaRP is licensed under [GPL-3.0-only](LICENSE).** CyToolsCore, CyUI and CyDoc remain MIT components; their licences do not change the application licence. Optional engines, plugins and model weights retain their own terms.
 
-Input paths must be absolute. Operations that download or read files outside the Tool need
-the matching permission (`create-client --permission network`, `filesystemExternal`); the
-interface has them.
+### Main components and third-party libraries
 
-## Repository layout
+| Library · source | License · terms | Use / scope |
+| --- | --- | --- |
+| [CyToolsCore 0.10.1](https://github.com/MrMybal/CyToolsCore) | [MIT](LICENCES/CyToolsCore-MIT.txt) | SDK/runtime: jobs, sessions, resources, CLI and MCP. |
+| [CyUI 1.2.0](https://github.com/MrMybal/CyUI) | [MIT](LICENCES/CyUI-MIT.txt) | Selected bundled Python UI modules. |
+| [CyDoc 0.1.0](https://github.com/MrMybal/CyDoc) | [MIT](LICENCES/CyDoc-MIT.txt) | Bundled offline reader; Node/npm are authoring/build tools only. |
+| [Dear ImGui / imgui-bundle](https://github.com/pthom/imgui_bundle) | [MIT + component notices](https://github.com/pthom/imgui_bundle/blob/main/LICENSE) | Desktop renderer and its bundled native components. |
+| [CPython 3.11](https://www.python.org/) | [PSF + component notices](https://docs.python.org/3.11/license.html) | Private runtime included in the Windows portable archive. |
+| [NumPy / sounddevice / soundfile](app/requirements.txt) | [BSD / MIT + native component notices](LICENCES/SOURCES.txt) | Base arrays, playback, microphone and audio files. |
+| [llama.cpp](https://github.com/ggml-org/llama.cpp) | [MIT](https://github.com/ggml-org/llama.cpp/blob/master/LICENSE) | Optional local language/vision engine; CUDA libraries have separate terms. |
+| [PyTorch / transformers / Qwen3-TTS](app/requirements-engine-voice.txt) | [BSD-3-Clause / Apache-2.0](LICENCES/SOURCES.txt) | Optional speech environment; model weights and voices have separate licences. |
 
-```
-CyTools_PersonaRP.exe   Windows launcher (built locally, not in git)
-CyTools_PersonaRP.sh    Linux launcher (never executed by the author)
-LICENCES/               licence texts and sources: CyToolsCore (MIT), SOURCES.txt
-LISEZ-MOI.md            user guide (French)
-app/                    code, manifest (CyTool.json), interface, workers, tests, docs,
-                        example worlds, ComfyUI nodes, Colab project sources
-data/                   characters, worlds, scenes, voices, models, tasks, jobs, logs (not in git)
-runtime/                private Python, engines, staged updates, backups (not in git)
-```
+This table indexes the main components; it does not replace their complete transitive notices. Retain [LICENCES/](LICENCES/), [app/licenses.json](app/licenses.json), the licences beside installed packages and the notices in each optional engine/model. CUDA libraries, when installed, also retain NVIDIA’s terms.
 
-Tests (fixtures only, no GPU): `.\runtime\python\Scripts\python.exe -m pip install pytest`, then
-`.\runtime\python\Scripts\python.exe -m pytest app\tests -q`.
-What was actually executed is recorded in `data/reports/VALIDATION.md` of an installation and
-summarised at the end of [LISEZ-MOI.md](LISEZ-MOI.md).
+## References and links
 
-## Licence
+- [Documentation](https://mrmybal.github.io/CyTools_PersonaRP/Documentation.html#/en/overview)
+- [Website](https://mrmybal.github.io/CyTools_PersonaRP/)
+- [Source repository](https://github.com/MrMybal/CyTools_PersonaRP) · [Releases and checksums](https://github.com/MrMybal/CyTools_PersonaRP/releases)
+- [Issue tracker](https://github.com/MrMybal/CyTools_PersonaRP/issues) · [Version notes](VERSION.md)
+- [Developer setup](app/README.md)
 
-Free software under the **GNU General Public License v3.0 only** ([LICENSE](LICENSE)). This covers
-the code, the interface, the ComfyUI nodes, the Colab project and the example worlds. The Tool is
-built on the [CyToolsCore](https://github.com/MrMybal/CyToolsCore) 0.10.1 SDK, licensed under
-**MIT** (Copyright (c) 2026 Cyberalien): full text in
-[LICENCES/CyToolsCore-MIT.txt](LICENCES/CyToolsCore-MIT.txt), sources of every component in
-[LICENCES/SOURCES.txt](LICENCES/SOURCES.txt). Engines and model weights keep their own licences,
-listed in [app/licenses.json](app/licenses.json), in the model catalogues and in the Options tab;
-the Models tab asks for acceptance before downloading. Releases 0.1.0 and 0.1.1 were built on
-CyToolsCore 0.9.0 under GPL-3.0-only; copies received under that licence keep it.
+<details>
+<summary><strong>AI Usage</strong></summary>
 
-## Modular CyUI
+- [Start here: project agent guide](app/AGENTS.md) — product rules and important files.
+- [Operations and AI integration](app/Documentation/DocAI.md) — actual tool contracts and task usage.
+- [Build this application](app/README.md) — source setup and application-specific commands.
 
-The standalone interface uses the pinned, selected CyUI 1.2 modules. See
-[the migration and validation notes](app/Docs/CyUIMigration.md) for replacements, retained host
-adaptations, source hashes and reproducible refresh instructions.
-
-CyUI: MIT. Full license: LICENCES/CyUI-MIT.txt.
-Upstream license: https://github.com/MrMybal/CyUI/blob/main/LICENSE
-Repository: https://github.com/MrMybal/CyUI (currently private; no upstream access required to run this application).
-
-
-## Local documentation
-
-Open **Options → Open local manual (F1)** or press **F1** in the application. The complete offline reader is shipped in `app/Documentation/Documentation.html`. [Regenerate the manual](app/.CyDocBuild/README.md).
+</details>
