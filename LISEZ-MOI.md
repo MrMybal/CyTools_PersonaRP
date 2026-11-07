@@ -1,6 +1,6 @@
 # CyTools PersonaRP — 0.1.3
 
-[Documentation](https://mrmybal.github.io/CyTools_PersonaRP/#/fr/overview) · [English](https://mrmybal.github.io/CyTools_PersonaRP/#/en/overview)
+[Documentation](https://mrmybal.github.io/CyTools_PersonaRP/#/fr/overview) · [Site web](https://mrmybal.github.io/CyTools_PersonaRP/?lang=fr) · [English](https://mrmybal.github.io/CyTools_PersonaRP/#/en/overview)
 
 Lancer **CyTools_PersonaRP.exe**. La fenêtre s'ouvre directement : pas de terminal, pas de
 JSON à écrire.
