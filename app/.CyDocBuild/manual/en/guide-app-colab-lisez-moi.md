@@ -5,14 +5,14 @@ description: CyTools PersonaRP on Google Colab — voice tasks
 section: Guide
 order: 40
 parent: guide-lisez-moi
-revision: 79685302e5f414f0
+revision: 3f9545c7e4f0d0e8
 ---
 
 ## CyTools PersonaRP on Google Colab — voice tasks {#cytools-personarp-sur-google-colab-taches-de-voix}
 
 This folder is a separate project, made for Google Colab and stored in your Google Drive. It makes your characters say lists of lines, multiple at once on the rented GPU, and stores everything on Drive. It does not contain any models: the tool downloads them itself via command line on Colab, then they are copied to Drive, where the tool re-reads them for the next sessions.
 
-The SDK CyToolsCore 0.10.1 is public (https://github.com/MrMybal/CyToolsCore, license MIT): the Install step takes it from GitHub, at the commit that the tool fixes in `app/requirements.txt`.
+The SDK CyToolsCore 0.11.0 is public (https://github.com/MrMybal/CyToolsCore, license MIT): the Install step takes it from GitHub, at the commit that the tool fixes in `app/requirements.txt`.
 
 ## Setup (one time) {#mise-en-place-une-fois}
 

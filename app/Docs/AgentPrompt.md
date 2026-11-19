@@ -79,3 +79,32 @@ avec ressources et exécution cohérentes. Conserver ces sélections dans Save/L
 
 
 Lire [FullOperationAccess.md](FullOperationAccess.md) : inventaire des capacités natives, parité complète des options métier entre IA et standalone, contrats de sorties composables et preuves de validation. Un formulaire simplifié ne limite pas le contrat du Tool.
+
+Appliquer aussi `Docs/Scheduler.md` (SDK 0.10.0 ou ultérieur) : déclarer les groupes
+`exclusiveGroups` des opérations qui doivent partager un GPU sans concurrence, utiliser
+la file du SDK et vérifier les priorités, les délais et l'annulation réelle. Les opérations
+indépendantes doivent pouvoir continuer ; ne pas confondre cette coordination locale
+au Runtime avec un verrou entre des processus autonomes.
+
+## Produit déjà intégré
+
+Pour une mise à jour plutôt qu’un nouveau Tool, suivre [UpdateExistingProducts.md](UpdateExistingProducts.md).
+
+
+## Native communication (Core 0.11.0)
+
+Read [NativeCommunication.md](NativeCommunication.md). Use the platform Core wheel
+containing CyMCPSDK C++ communication; source builds must compile Native/ first.
+Do not add the Python MCP runtime or copy an old CLI/HTTP/MCP implementation.
+Keep the Tool handlers, manifest, task files and standalone UI integration.
+CLI `invoke` tasks are temporary; export wanted files with `--export-dir` or ExportJob.
+
+
+## Effective AI capability discovery (0.11.0)
+
+Before starting the runtime, call `cytools_core.communication.register_operations(runtime)`.
+The read-only `ai_communication_status` operation reports the actually loaded native
+Core/CyMCPSDK versions, lifecycle rules and, with `includeOperations: true`, the
+complete effective operation schemas, permissions and resources. It does not start
+a server, call a provider or grant permissions. The scaffold includes this registration.
+MCP catalogues are paginated: follow `nextCursor` to inspect every operation.

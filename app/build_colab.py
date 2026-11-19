@@ -159,8 +159,7 @@ def build(target=DEFAULT_TARGET):
         shutil.rmtree(tool)
     shutil.copytree(APP, tool / 'app', ignore=_ignore)
     # No wheel: CyToolsCore is public, and the runner installs the commit requirements.txt pins.
-    sdk = next(line for line in (APP / 'requirements.txt').read_text(encoding='utf-8').splitlines()
-               if line.startswith('cytools-core'))
+    sdk = 'CyToolsCore v0.11.0 / CyMCPSDK v0.7.1: Linux native source build'
 
     shutil.copy2(APP / 'colab' / 'personarp_colab.py', target / 'personarp_colab.py')
     shutil.copy2(APP / 'colab' / 'LISEZ-MOI.md', target / 'LISEZ-MOI.md')

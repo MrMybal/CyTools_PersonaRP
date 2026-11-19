@@ -1,6 +1,6 @@
 {
-  "version": "0.1.5",
-  "runtime_abi": "python311-cytools010-imgui192-personarp01",
+  "version": "0.1.6",
+  "runtime_abi": "python311-cytools011-imgui192-personarp01",
   "platform": "any",
   "repository": "MrMybal/CyTools_PersonaRP"
 }

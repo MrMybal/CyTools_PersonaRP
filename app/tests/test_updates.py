@@ -117,11 +117,11 @@ def _staging(tmp_path, monkeypatch, installed_abi):
                         'digest': 'sha256:' + digest, 'size': built.stat().st_size}]}
 
 
-def test_an_application_for_the_sdk_010_runtime_is_refused_by_an_older_installation(
+def test_an_application_for_the_sdk_011_runtime_is_refused_by_an_older_installation(
         tmp_path, monkeypatch):
     """0.1.2 declares SDK 0.10 exclusion groups an SDK 0.9 runtime would silently ignore."""
     release = json.loads((APP / 'release.json').read_text(encoding='utf-8'))
-    assert 'cytools010' in release['runtime_abi'] and release['runtime_abi'] == maintenance.RUNTIME_ABI
+    assert 'cytools011' in release['runtime_abi'] and release['runtime_abi'] == maintenance.RUNTIME_ABI
     state = _staging(tmp_path, monkeypatch, 'python311-cytools09-imgui192-personarp01')
     with pytest.raises(CyToolError) as refused:
         maintenance.stage_update(_Context(), state)

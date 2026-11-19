@@ -25,7 +25,7 @@ def test_the_sdk_is_declared_mit_and_the_tool_gpl_3_only():
     assert manifest['homepage'] == 'https://github.com/MrMybal/CyTools_PersonaRP'
     entries = {entry['kind']: entry for entry in json.loads(_text(APP / 'licenses.json'))}
     assert entries['Tool']['license'] == 'GPL-3.0-only'
-    assert entries['SDK']['license'] == 'MIT' and entries['SDK']['name'] == 'CyToolsCore 0.10.1'
+    assert entries['SDK']['license'] == 'MIT' and entries['SDK']['name'] == 'CyToolsCore 0.11.0'
 
 
 def test_licences_holds_the_full_mit_text_of_the_sdk_and_its_sources():
@@ -42,13 +42,16 @@ def test_licences_holds_the_full_mit_text_of_the_sdk_and_its_sources():
 def test_the_installed_sdk_is_the_pinned_mit_release():
     import importlib.metadata as metadata
     requirement = _text(APP / 'requirements.txt')
-    pinned = requirement.split('CyToolsCore.git@')[1].split()[0]
+    lock = json.loads(_text(APP / 'packages/native-core.json'))
+    assert lock['wheel'] in requirement
     distribution = metadata.distribution('cytools-core')
     assert distribution.metadata.get('License-Expression') == 'MIT'
-    assert distribution.version == '0.10.1'
-    origin = json.loads(distribution.read_text('direct_url.json') or '{}')
-    assert origin.get('vcs_info', {}).get('commit_id') == pinned
-    assert pinned in _text(ROOT / 'LICENCES' / 'SOURCES.txt')
+    assert distribution.version == lock['version'] == '0.11.0'
+    import hashlib
+    wheel = APP / 'packages' / lock['wheel']
+    assert hashlib.sha256(wheel.read_bytes()).hexdigest() == lock['sha256']
+    assert (Path(distribution.locate_file('cytools_core')) / 'native/cytools_communication.dll').is_file()
+
 
 
 def test_the_copies_carried_elsewhere_have_their_licences():

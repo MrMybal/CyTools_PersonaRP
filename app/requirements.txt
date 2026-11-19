@@ -1,6 +1,5 @@
-# CyToolsCore 0.10.1 (MIT), https://github.com/MrMybal/CyToolsCore, pinned to the commit this
-# Tool was migrated to and verified against. Needs git on the PATH.
-cytools-core[mcp] @ git+https://github.com/MrMybal/CyToolsCore.git@a8d200f2d0baaade1633e0683663b4506c595f74
+cytools-core @ https://github.com/MrMybal/CyToolsCore/releases/download/v0.11.0/cytools_core-0.11.0-py3-none-win_amd64.whl ; sys_platform == "win32"
+cytools-core==0.11.0 ; sys_platform != "win32"
 imgui-bundle==1.92.900
 numpy==2.4.6
 pywin32==312; sys_platform == "win32"

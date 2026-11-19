@@ -114,3 +114,6 @@ première session est donc aussi un test ; chaque étape dit clairement ce qui n
 CyTools PersonaRP: GNU General Public License v3.0 only (`LICENSE`). CyToolsCore 0.10.1, which
 the Install step takes from GitHub: MIT (`LICENCES/CyToolsCore-MIT.txt`). Sources of every
 component: `LICENCES/SOURCES.txt`. Models keep their own licences and are downloaded separately.
+
+
+Core 0.11.0 : Colab compile la bibliothèque native Linux de CyMCPSDK 0.7.1 avec CMake et un compilateur C++20. Ce chemin a été adapté mais reste à valider sur Colab ; les tests Windows ne valident pas Linux. Aucun wheel Windows n’est installé sur Colab.
