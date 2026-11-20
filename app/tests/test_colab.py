@@ -147,7 +147,7 @@ def test_the_project_carries_no_model_and_no_window(project):
     assert (project / 'taches' / 'exemple-valdrenn' / 'personnages' / 'valdrenn.zip').is_file()
     version = json.loads((project / 'outil' / 'VERSION.json').read_text(encoding='utf-8'))
     assert version['tool'] == 'cy.tool.personarp' and 'none' in version['models']
-    assert version['sdk'] == 'CyToolsCore v0.11.0 / CyMCPSDK v0.7.1: Linux native source build'
+    assert version['sdk'] == 'CyToolsCore v0.12.0 / CyMCPSDK v0.7.1: Linux native source build'
 
 
 def test_the_notebook_runs_the_runner_step_by_step(project):

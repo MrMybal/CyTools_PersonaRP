@@ -206,17 +206,19 @@ def install(places, cpu_only=False, skip_engine=False):
         packages.mkdir(parents=True)
     say('Code copié dans %s' % places.local)
 
-    # Core 0.11 ships platform binaries; Colab builds its Linux library locally.
+    # Core 0.12 ships platform binaries; Colab builds its Linux library locally.
     # This source-build path must be validated on Colab; Windows is not evidence for it.
-    native = places.local / 'runtime' / 'native-sdk-0110'
+    native = places.local / 'runtime' / 'native-sdk-0120'
     core = native / 'CyToolsCore'
     sdk_source = native / 'CyMCPSDK'
     native.mkdir(parents=True, exist_ok=True)
     run([places.tool_python(), '-m', 'pip', 'install', '--quiet', 'cmake>=3.24', 'build', 'setuptools>=77', 'wheel'])
-    for repository, version, target in [('CyMCPSDK', 'v0.7.1', sdk_source), ('CyToolsCore', 'v0.11.0', core)]:
+    for repository, version, target in [('CyMCPSDK', '34d4bcae126bc83d1a2925b5047dac36e3d09d92', sdk_source), ('CyToolsCore', 'v0.12.0', core)]:
         if not target.exists():
-            run(['git', 'clone', '--depth', '1', '--branch', version,
+            run(['git', 'clone', '--filter=blob:none', '--no-checkout',
                  'https://github.com/MrMybal/' + repository + '.git', str(target)])
+            run(['git', '-C', str(target), 'fetch', '--depth', '1', 'origin', version])
+            run(['git', '-C', str(target), 'checkout', '--detach', 'FETCH_HEAD'])
     run([places.tool_python(), str(core / 'scripts/build_native.py'), '--cymcp-source', str(sdk_source)], cwd=str(core))
     run([places.tool_python(), '-m', 'pip', 'install', '--quiet', str(core)] + TOOL_PACKAGES)
 

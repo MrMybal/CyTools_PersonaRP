@@ -25,7 +25,7 @@ def test_the_sdk_is_declared_mit_and_the_tool_gpl_3_only():
     assert manifest['homepage'] == 'https://github.com/MrMybal/CyTools_PersonaRP'
     entries = {entry['kind']: entry for entry in json.loads(_text(APP / 'licenses.json'))}
     assert entries['Tool']['license'] == 'GPL-3.0-only'
-    assert entries['SDK']['license'] == 'MIT' and entries['SDK']['name'] == 'CyToolsCore 0.11.0'
+    assert entries['SDK']['license'] == 'MIT' and entries['SDK']['name'] == 'CyToolsCore 0.12.0'
 
 
 def test_licences_holds_the_full_mit_text_of_the_sdk_and_its_sources():
@@ -43,10 +43,11 @@ def test_the_installed_sdk_is_the_pinned_mit_release():
     import importlib.metadata as metadata
     requirement = _text(APP / 'requirements.txt')
     lock = json.loads(_text(APP / 'packages/native-core.json'))
-    assert lock['wheel'] in requirement
+    assert 'cytools-core==' + lock['version'] in requirement
+    assert lock['cymcpRevision'] == '34d4bcae126bc83d1a2925b5047dac36e3d09d92'
     distribution = metadata.distribution('cytools-core')
     assert distribution.metadata.get('License-Expression') == 'MIT'
-    assert distribution.version == lock['version'] == '0.11.0'
+    assert distribution.version == lock['version'] == '0.12.0'
     import hashlib
     wheel = APP / 'packages' / lock['wheel']
     assert hashlib.sha256(wheel.read_bytes()).hexdigest() == lock['sha256']

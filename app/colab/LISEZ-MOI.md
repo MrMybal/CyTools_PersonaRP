@@ -116,4 +116,4 @@ the Install step takes from GitHub: MIT (`LICENCES/CyToolsCore-MIT.txt`). Source
 component: `LICENCES/SOURCES.txt`. Models keep their own licences and are downloaded separately.
 
 
-Core 0.11.0 : Colab compile la bibliothèque native Linux de CyMCPSDK 0.7.1 avec CMake et un compilateur C++20. Ce chemin a été adapté mais reste à valider sur Colab ; les tests Windows ne valident pas Linux. Aucun wheel Windows n’est installé sur Colab.
+Core 0.12.0 : Colab compile la bibliothèque native Linux de CyMCPSDK 0.7.1 avec CMake et un compilateur C++20. Ce chemin a été adapté mais reste à valider sur Colab ; les tests Windows ne valident pas Linux. Aucun wheel Windows n’est installé sur Colab.

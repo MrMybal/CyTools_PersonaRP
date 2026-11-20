@@ -155,7 +155,7 @@ def install_packages(python, requirements, pinned):
     run([python, '-m', 'ensurepip', '--default-pip'], env=environment, capture_output=True)
     run([python, '-m', 'pip', 'install', '--isolated', '--no-compile', '--no-warn-script-location',
          '--disable-pip-version-check', '--progress-bar', 'off', '-q',
-         '-r', requirements, '-c', pinned], env=environment)
+         '--find-links', str(APP / 'packages'), '-r', requirements, '-c', pinned], env=environment)
 
 
 def tidy_python(target):
@@ -209,7 +209,7 @@ def check_isolation(stage, python):
     """Run the packaged interpreter from elsewhere and see where everything comes from."""
     probe = ('import sys, site, json, importlib\n'
              'names = ["cytools_core", "imgui_bundle", "numpy", "PIL", "soundfile", "sounddevice",\n'
-             '         "gguf", "win32api", "mcp", "psutil", "venv", "ensurepip", "ssl", "sqlite3"]\n'
+             '         "gguf", "win32api", "psutil", "venv", "ensurepip", "ssl", "sqlite3"]\n'
              'files = {n: getattr(importlib.import_module(n), "__file__", "") for n in names}\n'
              'print(json.dumps({"prefix": sys.prefix, "base": sys.base_prefix, "path": sys.path,\n'
              '                  "userSite": site.ENABLE_USER_SITE, "files": files}))\n')

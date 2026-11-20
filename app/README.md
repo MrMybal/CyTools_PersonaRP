@@ -2,14 +2,14 @@
 
 [Documentation](https://mrmybal.github.io/CyTools_PersonaRP/#/en/guide-app-readme) · [Français](https://mrmybal.github.io/CyTools_PersonaRP/#/fr/overview)
 
-`cy.tool.personarp`, built on CyToolsCore 0.11.0. Local roleplay with persistent characters,
+`cy.tool.personarp`, built on CyToolsCore 0.12.0. Local roleplay with persistent characters,
 a shared world, relationships, and machine-readable scene descriptions for image and video
 tools. No model is part of the repository: engines and weights are downloaded from the
 interface (Models tab, Voice tab), each at a pinned revision and verified by SHA-256.
 
 License: GPL-3.0-only (`../LICENSE`). It covers the code, the window, the ComfyUI node pack
 (which carries its own copy of the licence), the Colab project and the example worlds. The SDK,
-CyToolsCore 0.11.0, is MIT: `../LICENCES/CyToolsCore-MIT.txt` and `LICENSE-CyToolsCore.txt`
+CyToolsCore 0.12.0, is MIT: `../LICENCES/CyToolsCore-MIT.txt` and `LICENSE-CyToolsCore.txt`
 (the notice the 0.10.1 scaffold puts beside a Tool's code) hold its full text, and
 `../LICENCES/SOURCES.txt` lists the sources of every component. `LICENCES/` is in git, in the
 release zip (with `Python-Runtime-Notices.txt` written by `build_release.py`) and in the Colab
@@ -23,7 +23,7 @@ py -3.11 -m venv runtime/python
 cd app && ../runtime/python/Scripts/python.exe -m pip install -r requirements.txt
 ```
 
-The requirement file selects the Windows native platform wheel of Core 0.11.0. See Native distribution below. Going
+The requirement file selects the Windows native platform wheel of Core 0.12.0. See Native distribution below. Going
 back to 0.1.1 means its commit and its requirement (CyToolsCore 0.9.0 at `442f53740fc6`);
 `release.json` carries `runtime_abi` `python311-cytools010-…`, so the Updates tab refuses to put
 this application on a runtime that still has the 0.9 SDK, which would ignore the exclusion groups.
@@ -559,7 +559,7 @@ adaptations, source hashes and reproducible refresh instructions.
 Windows x64 source installation uses the pinned native platform wheel:
 
 ```powershell
-python -m pip install "cytools-core @ https://github.com/MrMybal/CyToolsCore/releases/download/v0.11.0/cytools_core-0.11.0-py3-none-win_amd64.whl"
+python -m pip install "cytools-core==0.12.0" --find-links app/packages
 ```
 
 The same wheel and SHA-256 are included in `app/packages/native-core.json`.
