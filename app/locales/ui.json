@@ -11954,13 +11954,5 @@
   "The manual opens locally in your browser and works offline.": {
     "en": "The manual opens locally in your browser and works offline.",
     "fr": "Le manuel s’ouvre localement dans le navigateur et fonctionne hors ligne."
-  },
-  "Whisper runtime": {
-    "en": "Whisper runtime",
-    "fr": "Moteur Whisper"
-  },
-  "Auto selects ZML when the host has a Whisper ZML configuration.": {
-    "en": "Auto selects ZML when the host has a Whisper ZML configuration.",
-    "fr": "Le mode automatique sélectionne le moteur ZML local quand il est configuré."
   }
 }

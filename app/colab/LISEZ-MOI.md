@@ -117,10 +117,3 @@ component: `LICENCES/SOURCES.txt`. Models keep their own licences and are downlo
 
 
 Core 0.12.0 : Colab compile la bibliothèque native Linux de CyMCPSDK 0.7.1 avec CMake et un compilateur C++20. Ce chemin a été adapté mais reste à valider sur Colab ; les tests Windows ne valident pas Linux. Aucun wheel Windows n’est installé sur Colab.
-
-## Transcription Whisper
-
-L’édition Colab est générée à partir des sources de PersonaRP et conserve
-PyTorch comme moteur par défaut. Le chemin optionnel ZML exige un exécutable
-ZML Linux, les poids convertis et un moteur PJRT compatible dans l’environnement
-Colab. Le binaire Windows de PersonaRP requiert Windows.

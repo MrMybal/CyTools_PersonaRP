@@ -4,7 +4,7 @@ Two uses, one model: getting the exact words of a reference take so a cloned voi
 what it is imitating, and dictating a message to a character instead of typing it.
 
 transcribe {"model_dir": "<dir>", "input": "<audio>", "language": "" (auto) | "fr" | ...,
-            "device": "cuda|cpu", "timestamps": true, "runtime": "torch|zml", "workspace": "..."}
+            "device": "cuda|cpu", "timestamps": true}
 """
 import sys
 import time
@@ -12,7 +12,6 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from workers._protocol import serve, WorkerError, memory_report  # noqa: E402
-from workers import stt_zml  # noqa: E402
 
 _state = {}
 
@@ -59,20 +58,12 @@ def unload(request, reporter):
 
 
 def transcribe(request, reporter):
+    import soundfile as sf
+    from scipy.signal import resample_poly
     started = time.monotonic()
     source = Path(request['input'])
     if not source.is_file():
         raise WorkerError('MissingInput', 'Recording not found: ' + str(source))
-    if request.get('runtime') == 'zml':
-        if _state:
-            unload({}, reporter)
-        result = stt_zml.transcribe(request, source, reporter)
-        reporter.progress(100, step='Transcribed')
-        return {**result, 'seconds': round(time.monotonic() - started, 3)}
-
-    import soundfile as sf
-    from scipy.signal import resample_poly
-
     pipe = _load(request['model_dir'], request.get('device', 'cuda'), reporter)
     reporter.progress(20, step='Reading the recording')
     try:
@@ -105,7 +96,7 @@ def transcribe(request, reporter):
     reporter.progress(100, step='Transcribed')
     return {'text': (result.get('text') or '').strip(), 'segments': segments,
             'durationSeconds': duration, 'seconds': round(time.monotonic() - started, 3),
-            'runtime': 'torch', **memory_report()}
+            **memory_report()}
 
 
 def diagnose(request, reporter):

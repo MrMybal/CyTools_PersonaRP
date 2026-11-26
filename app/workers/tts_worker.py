@@ -25,7 +25,6 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from workers._protocol import serve, WorkerError, inside, memory_report  # noqa: E402
-from workers import qwen_tts_zml  # noqa: E402
 
 _model = None
 _model_key = None
@@ -95,21 +94,13 @@ def unload(request, reporter):
 def synthesize(request, reporter):
     import numpy as np
     import soundfile as sf
+    import torch
     from personarp.voice.annotations import AnnotationError, build_plan, render_plan
 
     started = time.monotonic()
     device = request.get('device', 'cuda')
-    selected = qwen_tts_zml.runtime(request)
-    zml = selected == 'zml'
-    if zml:
-        if _model is not None:
-            unload({}, reporter)
-        session = qwen_tts_zml.load()
-    else:
-        import torch
-
-        model = _load(request['model_path'], device, reporter, request.get('precision', 'auto'))
-        torch.manual_seed(int(request.get('seed', 42)) & 0x7fffffff)
+    model = _load(request['model_path'], device, reporter, request.get('precision', 'auto'))
+    torch.manual_seed(int(request.get('seed', 42)) & 0x7fffffff)
     mode = request.get('mode', 'custom')
     try:
         plan = build_plan(request['text'], enabled=bool(request.get('annotations', True)),
@@ -125,7 +116,7 @@ def synthesize(request, reporter):
                   max_new_tokens=int(request.get('max_new_tokens', 2048)), do_sample=True)
 
     prompt = None
-    if mode == 'clone' and not zml:
+    if mode == 'clone':
         reference = request.get('reference_audio') or ''
         if not Path(reference).is_file():
             raise WorkerError('MissingInput', 'Reference recording not found: ' + reference)
@@ -144,8 +135,6 @@ def synthesize(request, reporter):
     def synthesize_item(item):
         reporter.progress(5 + 90 * len(chunks) / max(1, len(plan)),
                           step='Speaking', message=item['text'][:80])
-        if zml:
-            return qwen_tts_zml.render(session, request, item)
         if mode == 'custom':
             waves, rate = model.generate_custom_voice(
                 text=item['text'], speaker=request.get('speaker', 'Ryan'),
@@ -179,8 +168,7 @@ def synthesize(request, reporter):
             'durationSeconds': float(len(audio)) / rate, 'channels': 1, 'chunks': chunks,
             'segments': timeline, 'passages': len(passages), 'mode': mode,
             'model': request.get('model', ''),
-            'runtime': selected, 'generationSeconds': round(time.monotonic() - started, 3),
-            **({} if zml else memory_report())}
+            'generationSeconds': round(time.monotonic() - started, 3), **memory_report()}
 
 
 def _is_out_of_memory(exc):
@@ -200,21 +188,13 @@ def synthesize_batch(request, reporter):
     """
     import numpy as np
     import soundfile as sf
+    import torch
     from personarp.voice import batching
     from personarp.voice.annotations import AnnotationError, build_plan, render_plan
 
     started = time.monotonic()
     device = request.get('device', 'cuda')
-    selected = qwen_tts_zml.runtime(request)
-    zml = selected == 'zml'
-    if zml:
-        if _model is not None:
-            unload({}, reporter)
-        session = qwen_tts_zml.load()
-    else:
-        import torch
-
-        model = _load(request['model_path'], device, reporter, request.get('precision', 'auto'))
+    model = _load(request['model_path'], device, reporter, request.get('precision', 'auto'))
     mode = request.get('mode', 'clone')
     items = request['items']
     workspace = request.get('workspace')
@@ -236,7 +216,7 @@ def synthesize_batch(request, reporter):
 
     # One voice prompt per reference, however many lines it speaks.
     prompts = {}
-    if mode == 'clone' and not zml:
+    if mode == 'clone':
         reporter.progress(3, step='Encoding the reference voices')
         for key, _ in plans:
             item = by_id[key]
@@ -256,13 +236,9 @@ def synthesize_batch(request, reporter):
                   top_k=int(request.get('top_k', 50)), top_p=float(request.get('top_p', 1.0)),
                   repetition_penalty=float(request.get('repetition_penalty', 1.05)),
                   max_new_tokens=int(request.get('max_new_tokens', 2048)), do_sample=True)
-    if not zml:
-        torch.manual_seed(int(request.get('seed', 42)) & 0x7fffffff)
+    torch.manual_seed(int(request.get('seed', 42)) & 0x7fffffff)
 
     def generate(chunk):
-        if zml:
-            return [qwen_tts_zml.render(session, request, {**by_id[part['line']], **part['item']})
-                    for part in chunk]
         texts = [passage['item']['text'] for passage in chunk]
         lines = [by_id[passage['line']] for passage in chunk]
         languages = [line.get('language') or 'Auto' for line in lines]
@@ -286,7 +262,7 @@ def synthesize_batch(request, reporter):
     passages = batching.collect(plans)
     free = limit = base = None
     measured = {'perPassage': None, 'peak': 0, 'largest': 0}
-    cuda = not zml and device == 'cuda' and torch.cuda.is_available()
+    cuda = device == 'cuda' and torch.cuda.is_available()
     if cuda:
         torch.cuda.empty_cache()
         free, total = torch.cuda.mem_get_info()
@@ -300,9 +276,7 @@ def synthesize_batch(request, reporter):
         limit = base + free - batching.HEADROOM_BYTES
         torch.cuda.set_per_process_memory_fraction(max(0.05, min(1.0, limit / total)))
         torch.cuda.reset_peak_memory_stats()
-    if zml:
-        size = 1
-    elif requested > 0:
+    if requested > 0:
         size = requested
     elif cuda:
         # Measure before trusting: the first, dearest passages go in a small batch.
@@ -329,7 +303,7 @@ def synthesize_batch(request, reporter):
                           message='%d/%d passages, %d at a time' % (done, total, current))
 
     def out_of_memory(exc):
-        if not zml and _is_out_of_memory(exc):
+        if _is_out_of_memory(exc):
             torch.cuda.empty_cache()
             return True
         return False
@@ -364,8 +338,8 @@ def synthesize_batch(request, reporter):
               'calls': statistics['calls'], 'memoryRetries': statistics['retries'],
               'passages': len(passages), 'freeVramBytes': free, 'limitBytes': limit,
               'perPassageBytes': measured['perPassage'],
-              'runtime': selected, 'precision': 'float32' if zml else resolve_precision(request.get('precision', 'auto'), device),
-              'generationSeconds': round(time.monotonic() - started, 3), **({} if zml else memory_report())}
+              'precision': resolve_precision(request.get('precision', 'auto'), device),
+              'generationSeconds': round(time.monotonic() - started, 3), **memory_report()}
     if measured['peak']:
         report['vramPeakBytes'] = max(measured['peak'], report.get('vramPeakBytes') or 0)
     return report

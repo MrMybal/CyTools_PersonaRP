@@ -110,9 +110,6 @@
  "English": {
   "fr": "anglais"
  },
- "Expected auto, torch or zml for Qwen3-TTS runtime": {
-  "fr": "Choisissez auto, torch ou zml pour le moteur Qwen3-TTS."
- },
  "Expected a GitHub repository as owner/name.": {
   "fr": "Un dépôt GitHub de la forme propriétaire/nom était attendu."
  },
@@ -631,23 +628,5 @@
  },
  "{0} is not a PersonaRP character bundle.": {
   "fr": "{0} n'est pas un paquet de personnages PersonaRP."
- },
-  "Invalid Whisper ZML result: {0}": {
-    "fr": "Résultat Whisper ZML invalide ({0})."
-  },
-  "Invalid {0}: {1}": {
-    "fr": "Configuration {0} invalide ({1})."
-  },
-  "Set {0} to a Whisper ZML configuration file": {
-    "fr": "Indiquez le fichier de configuration Whisper ZML dans {0}."
-  },
-  "This file could not be read as audio. Supply a WAV or FLAC.": {
-    "fr": "Impossible de lire ce fichier audio. Fournissez un WAV ou un FLAC."
-  },
-  "Whisper ZML accepts CPU or CUDA": {
-    "fr": "Whisper ZML accepte les périphériques CPU et CUDA."
-  },
-  "Whisper ZML exited with status {0}": {
-    "fr": "Whisper ZML s’est arrêté avec le code {0}."
-  }
+ }
 }
