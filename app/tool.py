@@ -529,7 +529,8 @@ def create_runtime(data_dir, **options):
                 context.progress(72, currentStep='Transcribing the take')
                 heard = voice_runner.transcribe(
                     context, {'model_dir': _whisper_directory(), 'input': result['file'],
-                              'device': parameters.get('device', 'cuda'), 'timestamps': False},
+                              'device': parameters.get('device', 'cuda'), 'timestamps': False,
+                              'runtime': parameters.get('transcription_runtime', 'auto')},
                     offset=72.0, scale=0.25)
                 transcript = heard['text'] or text
             # A job workspace is private and short-lived; a take you may want to register
@@ -573,7 +574,8 @@ def create_runtime(data_dir, **options):
                     context.progress(5, currentStep='Transcribing the recording')
                 heard = voice_runner.transcribe(
                     context, {'model_dir': _whisper_directory(), 'input': str(source),
-                              'device': parameters.get('device', 'cuda'), 'timestamps': False},
+                              'device': parameters.get('device', 'cuda'), 'timestamps': False,
+                              'runtime': parameters.get('transcription_runtime', 'auto')},
                     offset=5.0, scale=0.8)
                 transcript = heard['text'] or transcript
             document = voice_stable.create(
@@ -631,6 +633,7 @@ def create_runtime(data_dir, **options):
                 context, {'model_dir': _whisper_directory(), 'input': str(source),
                           'device': parameters.get('device', 'cuda'),
                           'language': parameters.get('language', ''),
+                          'runtime': parameters.get('runtime', 'auto'),
                           'timestamps': parameters.get('timestamps', True)})
             path = context.path('outputs/transcript.json')
             write_json(path, result)
@@ -1837,16 +1840,31 @@ def create_runtime(data_dir, **options):
     runtime.register('speak', speak, estimate=lambda p, b, m: {
         'ramBytes': 8 * 1024 ** 3, 'cpuThreads': 4,
         'vramBytes': {'auto': 6 * 1024 ** 3} if p.get('device', 'cuda') == 'cuda' else {}})
-    runtime.register('capture_voice_take', capture_voice_take, estimate=lambda p, b, m: {
-        'ramBytes': 8 * 1024 ** 3, 'cpuThreads': 4,
-        'vramBytes': {'auto': 6 * 1024 ** 3} if p.get('device', 'cuda') == 'cuda' else {}})
-    runtime.register('create_stable_voice', create_stable_voice)
+    def transcription_resources(parameters, runtime_parameter='runtime'):
+        gpu = parameters.get('device', 'cuda') == 'cuda'
+        zml = voice_runner.whisper_runtime(parameters.get(runtime_parameter, 'auto')) == 'zml'
+        return {'ramBytes': (8 if zml else 6) * 1024 ** 3, 'cpuThreads': 8 if zml and not gpu else 4,
+                'vramBytes': {'auto': (8 if zml else 4) * 1024 ** 3} if gpu else {}}
+
+    def capture_resources(parameters, _backend, _model):
+        if parameters.get('transcribe') and voice_runner.whisper_runtime(
+                parameters.get('transcription_runtime', 'auto')) == 'zml':
+            # The synthesis and transcription workers use the GPU in sequence.
+            return transcription_resources(parameters, 'transcription_runtime')
+        return {'ramBytes': 8 * 1024 ** 3, 'cpuThreads': 4,
+                'vramBytes': {'auto': 6 * 1024 ** 3} if parameters.get('device', 'cuda') == 'cuda' else {}}
+
+    def stable_voice_resources(parameters, _backend, _model):
+        if parameters.get('transcribe') or not (parameters.get('transcript') or '').strip():
+            return transcription_resources(parameters, 'transcription_runtime')
+        return {}
+
+    runtime.register('capture_voice_take', capture_voice_take, estimate=capture_resources)
+    runtime.register('create_stable_voice', create_stable_voice, estimate=stable_voice_resources)
     runtime.register('list_voices', list_voices)
     runtime.register('verify_voice', verify_voice)
     runtime.register('remove_voice', remove_voice)
-    runtime.register('transcribe', transcribe, estimate=lambda p, b, m: {
-        'ramBytes': 6 * 1024 ** 3, 'cpuThreads': 4,
-        'vramBytes': {'auto': 4 * 1024 ** 3} if p.get('device', 'cuda') == 'cuda' else {}})
+    runtime.register('transcribe', transcribe, estimate=lambda p, b, m: transcription_resources(p))
     runtime.register('list_voice_models', list_voice_models)
     runtime.register('install_voice_model', install_voice_model,
                      estimate=lambda p, b, m: voice_catalog.installation_resources(p['model']))

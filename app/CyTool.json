@@ -23313,6 +23313,20 @@
             "maximum": 2147483647,
             "default": null
           },
+          "transcription_runtime": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "torch",
+              "zml"
+            ],
+            "default": "auto",
+            "title": "Whisper runtime",
+            "description": "Auto selects ZML when the host has a Whisper ZML configuration.",
+            "x-cy-ui": {
+              "advanced": true
+            }
+          },
           "transcribe": {
             "type": "boolean",
             "default": false,
@@ -23458,6 +23472,20 @@
               "designed"
             ],
             "default": "generated"
+          },
+          "transcription_runtime": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "torch",
+              "zml"
+            ],
+            "default": "auto",
+            "title": "Whisper runtime",
+            "description": "Auto selects ZML when the host has a Whisper ZML configuration.",
+            "x-cy-ui": {
+              "advanced": true
+            }
           },
           "transcribe": {
             "type": "boolean",
@@ -23761,6 +23789,20 @@
             ],
             "default": "cuda"
           },
+          "runtime": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "torch",
+              "zml"
+            ],
+            "default": "auto",
+            "title": "Whisper runtime",
+            "description": "Auto selects ZML when the host has a Whisper ZML configuration.",
+            "x-cy-ui": {
+              "advanced": true
+            }
+          },
           "timestamps": {
             "type": "boolean",
             "default": true
@@ -23791,6 +23833,35 @@
           },
           "file": {
             "type": "string"
+          },
+          "runtime": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "placement": {
+            "type": "object",
+            "required": [
+              "backend",
+              "pjrt",
+              "device",
+              "shards"
+            ],
+            "properties": {
+              "backend": {
+                "type": "string"
+              },
+              "pjrt": {
+                "type": "string"
+              },
+              "device": {
+                "type": "string"
+              },
+              "shards": {
+                "type": "integer"
+              }
+            }
           }
         }
       },

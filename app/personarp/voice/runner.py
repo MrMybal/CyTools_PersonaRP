@@ -61,9 +61,17 @@ def speak_batch(context, parameters, *, offset=0.0, scale=1.0, timeout=6 * 3600)
                                progress_offset=offset, progress_scale=scale)
 
 
+def whisper_runtime(requested='auto'):
+    if requested == 'auto':
+        return 'zml' if os.environ.get('CYTOOLS_WHISPER_ZML_CONFIG') else 'torch'
+    return requested
+
+
 def transcribe(context, parameters, *, offset=0.0, scale=1.0, timeout=900):
     POOL.make_exclusive('stt')
-    return host('stt').run_job(context, 'transcribe', parameters, timeout=timeout,
+    payload = {**parameters, 'runtime': whisper_runtime(parameters.get('runtime', 'auto')),
+               'workspace': str(context.workspace)}
+    return host('stt').run_job(context, 'transcribe', payload, timeout=timeout,
                                progress_offset=offset, progress_scale=scale)
 
 

@@ -20,6 +20,10 @@ BOOL = {'type': 'boolean'}
 NUM = {'type': 'number'}
 INT = {'type': 'integer'}
 ANY_OBJECT = {'type': 'object'}
+WHISPER_RUNTIME = {'type': 'string', 'enum': ['auto', 'torch', 'zml'], 'default': 'auto',
+                   'title': 'Whisper runtime',
+                   'description': 'Auto selects ZML when the host has a Whisper ZML configuration.',
+                   'x-cy-ui': {'advanced': True}}
 
 
 def text(title, default='', limit=200000, kind=''):
@@ -737,6 +741,7 @@ OPERATIONS = [
                                     'given, the default take is written in this language.'},
         'device': {'type': 'string', 'enum': ['cuda', 'cpu'], 'default': 'cuda'},
         'seed': {'type': ['integer', 'null'], 'minimum': -1, 'maximum': 2 ** 31 - 1, 'default': None},
+        'transcription_runtime': WHISPER_RUNTIME,
         'transcribe': {'type': 'boolean', 'default': False,
                        'title': 'Transcribe the take instead of trusting the written text',
                        'description': 'Slower, but it records what the model really said.'}},
@@ -766,6 +771,7 @@ OPERATIONS = [
         'description': text('Notes on the voice', '', 2000),
         'source': {'type': 'string', 'enum': ['generated', 'imported', 'designed'],
                    'default': 'generated'},
+        'transcription_runtime': WHISPER_RUNTIME,
         'transcribe': {'type': 'boolean', 'default': False,
                        'title': 'Transcribe the recording to obtain the exact words'},
         'device': {'type': 'string', 'enum': ['cuda', 'cpu'], 'default': 'cuda'}},
@@ -793,10 +799,13 @@ OPERATIONS = [
        {'audio': text('Recording', '', 1000, 'File'),
         'language': text('Language code (empty detects it)', '', 8),
         'device': {'type': 'string', 'enum': ['cuda', 'cpu'], 'default': 'cuda'},
+        'runtime': WHISPER_RUNTIME,
         'timestamps': {'type': 'boolean', 'default': True}},
        ['audio'],
        {'text': STR, 'segments': {'type': 'array', 'items': ANY_OBJECT}, 'durationSeconds': NUM,
-        'seconds': NUM, 'file': STR},
+        'seconds': NUM, 'file': STR, 'runtime': STR, 'language': STR,
+        'placement': {'type': 'object', 'required': ['backend', 'pjrt', 'device', 'shards'],
+                      'properties': {'backend': STR, 'pjrt': STR, 'device': STR, 'shards': INT}}},
        progress=True, permissions=['filesystemExternal'],
        resources={'ramBytes': 6 * 1024 ** 3, 'vramBytes': {'auto': 4 * 1024 ** 3}}),
 

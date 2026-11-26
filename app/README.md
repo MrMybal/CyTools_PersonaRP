@@ -109,6 +109,62 @@ The workers import `personarp.voice.annotations` and nothing else of ours, which
 mark vocabulary sits in `personarp/marks.py` on the standard library alone — the SDK is not
 installed in the engine.
 
+### Whisper transcription with ZML
+
+PersonaRP uses the same Whisper worker for dictation, reference recordings and
+voice takes. Set `CYTOOLS_WHISPER_ZML_CONFIG` before starting PersonaRP to select
+ZML for those paths. With the setting absent, automatic selection uses PyTorch.
+The `transcribe` operation accepts `runtime=auto|torch|zml`. The operations
+`capture_voice_take` and `create_stable_voice` use `transcription_runtime` when
+they transcribe a take. The `device` parameter selects CPU or CUDA.
+
+1. Install Whisper Large v3 Turbo via the Voice tab or the model catalogue.
+2. Build `//libraries/whisper:whisper_probe` in the local `zml_lib` checkout.
+   Prepare the ZML files with `libraries/whisper/prepare.py` from the installed
+   `model.safetensors`. See the Whisper README in `zml_lib` for the native build,
+   checkpoint conversion and PJRT DLLs.
+3. Save the runtime configuration with absolute paths. `expected_cuda_device`
+   is optional. The same configuration can be used with CyTools AudioStudio.
+
+```json
+{
+  "launcher": "D:/AI/zml_lib/libraries/whisper/transcribe.py",
+  "probe": "D:/AI/zml_lib/validation-output/bin/libraries/whisper/whisper_probe.exe",
+  "weights": "D:/models/whisper-large-v3-turbo-zml",
+  "expected_cuda_device": "RTX 3090"
+}
+```
+
+From the PersonaRP root in the shell where the PJRT DLL paths are set:
+
+```powershell
+$env:CYTOOLS_WHISPER_ZML_CONFIG = 'D:\models\whisper-zml.json'
+$client = & .\runtime\python\Scripts\python.exe .\app\tool.py create-client --name 'Local Whisper CLI' --permission filesystemExternal |
+    ConvertFrom-Json
+$env:CYTOOLS_TOKEN = $client.token
+@{audio = 'D:/audio/voice.wav'; runtime = 'zml'; device = 'cuda'; timestamps = $true} |
+    ConvertTo-Json | Set-Content -Encoding UTF8 .\whisper-request.json
+& .\runtime\python\Scripts\python.exe .\app\tool.py invoke transcribe --params-file .\whisper-request.json
+```
+
+For ZML, the JSON result and `outputs/transcript.json` include the effective
+runtime, detected or requested language, and verified PJRT placement. A configured
+ZML failure is reported by the job. Whisper reads formats supported by SoundFile,
+including WAV and FLAC. The worker uses the private voice Python environment for
+audio preparation and token selection. Zig/ZML runs the encoder and decoder.
+To retain the report after a CLI task ends, pass `--export-dir` with an absolute path.
+
+The Windows x64 CLI reproduced the expected transcript and two timestamped
+segments on `cpu:0` (5.45 s). The RTX 3090 via `iree_cuda` returned four
+expected segments and detected English on a 35.45 s recording. The
+`create_stable_voice` operation used the transcribed text to register the
+short recording as a reference on CPU. The checkpoint files matched the
+SHA-256 values in `tts-catalog.json`.
+
+The generated Colab project carries the same transcription operation. PyTorch is
+the default in Colab. The optional ZML path requires a compatible Linux probe,
+prepared weights and PJRT runtime supplied in the Colab environment.
+
 ### Speed, pitch and takes
 
 `personarp/voice/prosody.py` applies the sheet's `voice.speed` (0.25–4) and `voice.pitch`
@@ -580,3 +636,7 @@ explicitly by `--python`. The builder reads committed application sources, verif
 the official Python archive, selects the tested base dependencies, includes the
 native Core library and notices, and excludes user data and optional model engines.
 No GitHub workflow is required.
+
+## Optional local ZML voice engine
+
+Set CYTOOLS_QWEN3_TTS_ZML_CONFIG to the absolute JSON path described in zml_lib/libraries/qwen3_tts/README.md before launching PersonaRP. The desktop, CLI and MCP use the configured ZML engine for Qwen3-TTS takes, including project lines and stable voice clones. Project batches run one passage at a time with ZML. The prepared Mimi encoder enables ICL with a recording and its transcription. Existing model, reference and output paths stay owned by the normal task workspace. Host that workspace on a drive other than C. The worker passed Colab L4 tests for a Base 1.7B ICL batch and a VoiceDesign 1.7B take. The ICL WAV differed from the direct ZML launcher by at most one PCM unit. Native Windows CUDA inference remains to be verified.
